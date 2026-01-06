@@ -6,7 +6,6 @@ Versão: 2.0
 
 from flask import Flask, render_template, request, jsonify, send_file, redirect, url_for, flash
 from flask_cors import CORS
-from calculadora import calculadora
 import sys
 from pathlib import Path
 from datetime import datetime, timedelta
@@ -1286,123 +1285,6 @@ def api_teste_calculadora():
 
 
 # Configuracao para Railway/Heroku
-
-
-# ============================================================================
-# ROTAS DA CALCULADORA DE ATUALIZAÇÃO DE PRECATÓRIOS
-# ============================================================================
-
-
-
-@app.route('/calculadora')
-def calculadora_page():
-    """Página da calculadora"""
-    return send_from_directory('.', 'calculadora.html')
-
-@app.route('/api/calculadora/calcular', methods=['POST'])
-def api_calculadora_calcular():
-    """
-    API para cálculo completo de atualização de precatório
-    """
-    try:
-        data = request.json
-        
-        # Validar dados obrigatórios
-        if not data.get('valor_original'):
-            return jsonify({'error': 'Valor original é obrigatório'}), 400
-        if not data.get('data_inicio'):
-            return jsonify({'error': 'Data inicial é obrigatória'}), 400
-        if not data.get('data_fim'):
-            return jsonify({'error': 'Data final é obrigatória'}), 400
-        
-        # Parâmetros
-        valor_original = float(data['valor_original'])
-        data_inicio = data['data_inicio']
-        data_fim = data['data_fim']
-        indice = data.get('indice', 'IPCA-E')
-        incluir_juros = data.get('incluir_juros_mora', True)
-        taxa_juros = float(data.get('taxa_juros', 1.0))
-        percentual_honorarios = float(data.get('percentual_honorarios', 0))
-        
-        # Calcular
-        resultado = calculadora.calculo_completo(
-            valor_original=valor_original,
-            data_inicio=data_inicio,
-            data_fim=data_fim,
-            indice=indice,
-            incluir_juros_mora=incluir_juros,
-            taxa_juros=taxa_juros,
-            percentual_honorarios=percentual_honorarios
-        )
-        
-        return jsonify({
-            'success': True,
-            'resultado': resultado
-        })
-        
-    except Exception as e:
-        return jsonify({'error': str(e)}), 500
-
-
-@app.route('/api/calculadora/indices-disponiveis', methods=['GET'])
-def api_calculadora_indices():
-    """
-    Retorna lista de índices disponíveis para cálculo
-    """
-    indices = [
-        {'id': 'IPCA-E', 'nome': 'IPCA-E', 'descricao': 'Índice de Preços ao Consumidor Amplo Especial'},
-        {'id': 'INPC', 'nome': 'INPC', 'descricao': 'Índice Nacional de Preços ao Consumidor'},
-        {'id': 'TR', 'nome': 'TR', 'descricao': 'Taxa Referencial'},
-        {'id': 'SELIC', 'nome': 'SELIC', 'descricao': 'Sistema Especial de Liquidação e Custódia'},
-        {'id': 'POUPANCA', 'nome': 'Poupança', 'descricao': 'Caderneta de Poupança'},
-        {'id': 'IGP-DI', 'nome': 'IGP-DI', 'descricao': 'Índice Geral de Preços - Disponibilidade Interna'}
-    ]
-    
-    return jsonify({
-        'success': True,
-        'indices': indices
-    })
-
-
-@app.route('/api/calculadora/simular-multiplos-indices', methods=['POST'])
-def api_calculadora_simular_multiplos():
-    """
-    Simula cálculo com múltiplos índices para comparação
-    """
-    try:
-        data = request.json
-        
-        valor_original = float(data['valor_original'])
-        data_inicio = data['data_inicio']
-        data_fim = data['data_fim']
-        incluir_juros = data.get('incluir_juros_mora', True)
-        taxa_juros = float(data.get('taxa_juros', 1.0))
-        percentual_honorarios = float(data.get('percentual_honorarios', 0))
-        
-        indices = ['IPCA-E', 'INPC', 'TR', 'SELIC', 'POUPANCA', 'IGP-DI']
-        resultados = {}
-        
-        for indice in indices:
-            resultado = calculadora.calculo_completo(
-                valor_original=valor_original,
-                data_inicio=data_inicio,
-                data_fim=data_fim,
-                indice=indice,
-                incluir_juros_mora=incluir_juros,
-                taxa_juros=taxa_juros,
-                percentual_honorarios=percentual_honorarios
-            )
-            resultados[indice] = resultado['resumo']
-        
-        return jsonify({
-            'success': True,
-            'comparacao': resultados
-        })
-        
-    except Exception as e:
-        return jsonify({'error': str(e)}), 500
-
-
 if __name__ == '__main__':
     import os
     port = int(os.environ.get('PORT', 8080))
@@ -1424,7 +1306,5 @@ if __name__ == '__main__':
     print("="*60 + "\n")
     
     app.run(debug=True, host='0.0.0.0', port=8080)
-
-
 
 

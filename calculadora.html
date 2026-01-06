@@ -1,0 +1,475 @@
+﻿<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de Atualização - Tax Master</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        
+        .header h1 {
+            color: #667eea;
+            font-size: 28px;
+            margin-bottom: 5px;
+        }
+        
+        .header p {
+            color: #666;
+            font-size: 14px;
+        }
+        
+        .calculator-card {
+            background: white;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 600;
+        }
+        
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .checkbox-group input {
+            width: auto;
+            margin-right: 10px;
+        }
+        
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 40px;
+            border: none;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            width: 100%;
+            margin-top: 10px;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(102, 126, 234, 0.4);
+        }
+        
+        .btn:active {
+            transform: translateY(0);
+        }
+        
+        .btn-secondary {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            margin-left: 10px;
+        }
+        
+        .result-card {
+            background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+            border-radius: 10px;
+            padding: 30px;
+            color: white;
+            margin-top: 20px;
+            display: none;
+        }
+        
+        .result-card.show {
+            display: block;
+            animation: slideIn 0.5s ease-out;
+        }
+        
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .result-item {
+            background: rgba(255,255,255,0.2);
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+        
+        .result-item h3 {
+            font-size: 16px;
+            margin-bottom: 8px;
+            opacity: 0.9;
+        }
+        
+        .result-item .value {
+            font-size: 32px;
+            font-weight: bold;
+        }
+        
+        .detalhamento {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+            color: #333;
+        }
+        
+        .detalhamento h3 {
+            color: #667eea;
+            margin-bottom: 15px;
+        }
+        
+        .detalhamento-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+        
+        .detalhamento-table th,
+        .detalhamento-table td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        .detalhamento-table th {
+            background: #f5f5f5;
+            font-weight: 600;
+            color: #667eea;
+        }
+        
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 20px;
+        }
+        
+        .loading.show {
+            display: block;
+        }
+        
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .alert {
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: none;
+        }
+        
+        .alert.error {
+            background: #fee;
+            border-left: 4px solid #f00;
+            color: #c00;
+            display: block;
+        }
+        
+        .alert.success {
+            background: #efe;
+            border-left: 4px solid #0f0;
+            color: #0c0;
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>💰 Calculadora de Atualização de Precatórios</h1>
+            <p>Cálculo completo com correção monetária, juros e honorários</p>
+        </div>
+        
+        <div class="calculator-card">
+            <div id="alert" class="alert"></div>
+            
+            <form id="calculatorForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="valorOriginal">Valor Original (R$)</label>
+                        <input type="number" id="valorOriginal" step="0.01" required placeholder="Ex: 100000.00">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="indice">Índice de Correção</label>
+                        <select id="indice" required>
+                            <option value="IPCA-E">IPCA-E</option>
+                            <option value="INPC">INPC</option>
+                            <option value="TR">TR</option>
+                            <option value="SELIC">SELIC</option>
+                            <option value="POUPANCA">Poupança</option>
+                            <option value="IGP-DI">IGP-DI</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="dataInicio">Data Inicial</label>
+                        <input type="date" id="dataInicio" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="dataFim">Data Final</label>
+                        <input type="date" id="dataFim" required>
+                    </div>
+                </div>
+                
+                <div class="checkbox-group">
+                    <input type="checkbox" id="incluirJuros" checked>
+                    <label for="incluirJuros">Incluir Juros de Mora</label>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="taxaJuros">Taxa de Juros Moratórios (% ao mês)</label>
+                        <input type="number" id="taxaJuros" step="0.01" value="1.00">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="percentualHonorarios">Honorários Advocatícios (%)</label>
+                        <input type="number" id="percentualHonorarios" step="0.01" value="0" min="0" max="100">
+                    </div>
+                </div>
+                
+                <button type="submit" class="btn">🧮 Calcular Atualização</button>
+                <button type="button" class="btn btn-secondary" onclick="compararIndices()">📊 Comparar Índices</button>
+            </form>
+            
+            <div class="loading" id="loading">
+                <div class="spinner"></div>
+                <p>Calculando...</p>
+            </div>
+        </div>
+        
+        <div class="result-card" id="resultCard">
+            <h2 style="margin-bottom: 20px;">📊 Resultado do Cálculo</h2>
+            
+            <div class="result-item">
+                <h3>Valor Original</h3>
+                <div class="value" id="valorOriginalResult">R$ 0,00</div>
+            </div>
+            
+            <div class="result-item">
+                <h3>Valor Corrigido</h3>
+                <div class="value" id="valorCorrigidoResult">R$ 0,00</div>
+            </div>
+            
+            <div class="result-item" id="jurosSection">
+                <h3>Juros de Mora</h3>
+                <div class="value" id="valorJurosResult">R$ 0,00</div>
+            </div>
+            
+            <div class="result-item" id="honorariosSection">
+                <h3>Honorários Advocatícios</h3>
+                <div class="value" id="valorHonorariosResult">R$ 0,00</div>
+            </div>
+            
+            <div class="result-item" style="background: rgba(255,255,255,0.4);">
+                <h3>💰 Valor Líquido Final</h3>
+                <div class="value" id="valorFinalResult">R$ 0,00</div>
+            </div>
+            
+            <div class="detalhamento" id="detalhamento">
+                <h3>📋 Detalhamento Mensal</h3>
+                <div id="detalhamentoContent"></div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        document.getElementById('calculatorForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const loading = document.getElementById('loading');
+            const resultCard = document.getElementById('resultCard');
+            const alert = document.getElementById('alert');
+            
+            // Mostrar loading
+            loading.classList.add('show');
+            resultCard.classList.remove('show');
+            alert.style.display = 'none';
+            
+            // Coletar dados
+            const data = {
+                valor_original: parseFloat(document.getElementById('valorOriginal').value),
+                data_inicio: document.getElementById('dataInicio').value,
+                data_fim: document.getElementById('dataFim').value,
+                indice: document.getElementById('indice').value,
+                incluir_juros_mora: document.getElementById('incluirJuros').checked,
+                taxa_juros: parseFloat(document.getElementById('taxaJuros').value),
+                percentual_honorarios: parseFloat(document.getElementById('percentualHonorarios').value)
+            };
+            
+            try {
+                const response = await fetch('/api/calculadora/calcular', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    mostrarResultado(result.resultado);
+                    resultCard.classList.add('show');
+                } else {
+                    mostrarErro(result.error || 'Erro ao calcular');
+                }
+            } catch (error) {
+                mostrarErro('Erro de conexão: ' + error.message);
+            } finally {
+                loading.classList.remove('show');
+            }
+        });
+        
+        function mostrarResultado(resultado) {
+            document.getElementById('valorOriginalResult').textContent = 
+                formatMoeda(resultado.resumo.valor_original);
+            
+            document.getElementById('valorCorrigidoResult').textContent = 
+                formatMoeda(resultado.resumo.valor_corrigido);
+            
+            const jurosSection = document.getElementById('jurosSection');
+            if (resultado.juros_mora) {
+                jurosSection.style.display = 'block';
+                document.getElementById('valorJurosResult').textContent = 
+                    formatMoeda(resultado.juros_mora.valor_juros);
+            } else {
+                jurosSection.style.display = 'none';
+            }
+            
+            const honorariosSection = document.getElementById('honorariosSection');
+            if (resultado.honorarios) {
+                honorariosSection.style.display = 'block';
+                document.getElementById('valorHonorariosResult').textContent = 
+                    formatMoeda(resultado.honorarios.valor_honorarios);
+            } else {
+                honorariosSection.style.display = 'none';
+            }
+            
+            document.getElementById('valorFinalResult').textContent = 
+                formatMoeda(resultado.resumo.valor_liquido);
+            
+            // Detalhamento
+            if (resultado.correcao_monetaria.detalhamento) {
+                let html = '<table class="detalhamento-table">';
+                html += '<tr><th>Mês</th><th>Índice</th><th>Taxa (%)</th><th>Correção</th><th>Valor Acumulado</th></tr>';
+                
+                resultado.correcao_monetaria.detalhamento.forEach(item => {
+                    html += `<tr>
+                        <td>${item.mes}</td>
+                        <td>${item.indice}</td>
+                        <td>${item.taxa.toFixed(2)}%</td>
+                        <td>${formatMoeda(item.valor_correcao)}</td>
+                        <td>${formatMoeda(item.valor_acumulado)}</td>
+                    </tr>`;
+                });
+                
+                html += '</table>';
+                document.getElementById('detalhamentoContent').innerHTML = html;
+            }
+        }
+        
+        function formatMoeda(valor) {
+            return new Intl.NumberFormat('pt-BR', {
+                style: 'currency',
+                currency: 'BRL'
+            }).format(valor);
+        }
+        
+        function mostrarErro(mensagem) {
+            const alert = document.getElementById('alert');
+            alert.className = 'alert error';
+            alert.textContent = mensagem;
+            alert.style.display = 'block';
+        }
+        
+        async function compararIndices() {
+            // Implementar comparação de índices
+            alert('Funcionalidade de comparação será implementada em breve!');
+        }
+        
+        // Definir data de hoje como padrão
+        document.getElementById('dataFim').valueAsDate = new Date();
+        
+        // Data inicial: 1 ano atrás
+        const dataInicial = new Date();
+        dataInicial.setFullYear(dataInicial.getFullYear() - 1);
+        document.getElementById('dataInicio').valueAsDate = dataInicial;
+    </script>
+</body>
+</html>
