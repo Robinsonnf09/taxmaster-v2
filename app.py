@@ -1295,6 +1295,7 @@ def api_teste_calculadora():
 
 
 
+
 @app.route('/calculadora')
 def calculadora_page():
     """Página da calculadora"""
@@ -1428,6 +1429,7 @@ if __name__ == '__main__':
     print("="*60 + "\n")
     
     app.run(debug=True, host='0.0.0.0', port=8080)
+
 
 
 
