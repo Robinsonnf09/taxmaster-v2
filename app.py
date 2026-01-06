@@ -1154,7 +1154,6 @@ from flask import jsonify
 import sys
 sys.path.append('src')
 
-@app.route('/api/calcular-valores', methods=['POST'])
 def api_calcular_valores():
     """
     API para calcular valores de precatórios
