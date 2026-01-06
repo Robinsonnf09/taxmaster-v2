@@ -1,0 +1,23 @@
+﻿
+# ADICIONAR ESTA ROTA NO APP.PY:
+
+@app.route('/recursos')
+def recursos_sistema():
+    """Página de recursos do sistema"""
+    import sys
+    sys.path.append("src")
+    
+    from cobertura_nacional import obter_estatisticas_cobertura
+    from automacao_inteligente import automacao
+    from painel_intuitivo import painel
+    from enriquecimento_leads import enriquecimento
+    from sistema_seguranca import seguranca
+    
+    return render_template('recursos.html',
+        cobertura=obter_estatisticas_cobertura(),
+        automacao=automacao.obter_estatisticas(),
+        painel=painel.obter_metricas_principais(),
+        leads=enriquecimento.obter_estatisticas_leads(),
+        seguranca=seguranca.obter_estatisticas_seguranca()
+    )
+

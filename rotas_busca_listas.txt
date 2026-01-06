@@ -1,0 +1,67 @@
+﻿
+# ============================================================================
+# ROTAS PARA BUSCA EM LISTAS DE PRECATÓRIOS PENDENTES
+# ============================================================================
+
+@app.route('/buscar-listas-precatorios')
+def buscar_listas_precatorios():
+    """Página de busca em listas de precatórios pendentes"""
+    return render_template('buscar_listas_precatorios.html')
+
+@app.route('/buscar-listas-precatorios/executar', methods=['POST'])
+def executar_busca_listas():
+    """Executa busca nas listas de precatórios"""
+    db = SessionLocal()
+    
+    try:
+        # Parâmetros do formulário
+        tribunal = request.form.get('tribunal')
+        ano = request.form.get('ano', type=int)
+        natureza = request.form.get('natureza')
+        valor_min = request.form.get('valor_min', type=float)
+        valor_max = request.form.get('valor_max', type=float)
+        apenas_prioritarios = request.form.get('apenas_prioritarios') == 'on'
+        
+        # Simular busca (em produção, aqui seria o scraper real)
+        import time
+        import random
+        
+        # Aguardar alguns segundos (simulando busca)
+        time.sleep(2)
+        
+        # Gerar resultados simulados
+        resultados = []
+        num_resultados = random.randint(5, 15)
+        
+        for i in range(num_resultados):
+            valor = random.uniform(
+                valor_min if valor_min else 100000,
+                valor_max if valor_max else 5000000
+            )
+            
+            resultado = {
+                'numero_processo': f"000{i+1:04d}-{random.randint(10,99)}.{ano}.8.26.0053",
+                'credor': f"Credor Exemplo {i+1}",
+                'valor': valor,
+                'natureza': natureza if natureza else random.choice(['ALIMENTAR', 'COMUM', 'TRIBUTARIO']),
+                'ano': ano,
+                'tribunal': tribunal,
+                'prioritario': apenas_prioritarios or random.choice([True, False])
+            }
+            resultados.append(resultado)
+        
+        # Renderizar página de resultados
+        return render_template('resultados_busca_listas.html',
+            resultados=resultados,
+            tribunal=tribunal,
+            ano=ano,
+            total=len(resultados),
+            valor_total=sum(r['valor'] for r in resultados)
+        )
+        
+    except Exception as e:
+        flash(f'Erro ao executar busca: {str(e)}', 'danger')
+        return redirect(url_for('buscar_listas_precatorios'))
+    finally:
+        db.close()
+

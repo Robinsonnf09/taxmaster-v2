@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TAX MASTER - Módulo II</title>
+    <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body>
+    <div id="module2-page">
+        <div class="container">
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">Módulo II - Transação Tributária Avançada</h2>
+                    <p class="card-subtitle">Análise avançada com múltiplos cenários, capacidade de pagamento e comparativos entre modalidades.</p>
+                </div>
+                <div class="card-body">
+                    <div class="tab-container">
+                        <ul class="tab-nav">
+                            <li class="tab-nav-item active" data-tab="simulacao-avancada">Simulação Avançada</li>
+                            <li class="tab-nav-item" data-tab="capacidade-pagamento">Capacidade de Pagamento</li>
+                            <li class="tab-nav-item" data-tab="comparativo">Comparativo</li>
+                            <li class="tab-nav-item" data-tab="resultados-avancados">Resultados</li>
+                        </ul>
+                        
+                        <div id="tab-simulacao-avancada" class="tab-content active">
+                            <form id="simulacao-avancada-form" class="simulation-form">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <h3 class="mb-3">Dados do Débito</h3>
+                                        <div class="form-group">
+                                            <label for="valor-debito-avancado">Valor do Débito (R$)</label>
+                                            <input type="number" id="valor-debito-avancado" name="valorDebito" min="1000" step="100" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="data-vencimento-avancado">Data de Vencimento Original</label>
+                                            <input type="date" id="data-vencimento-avancado" name="dataVencimento" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="tipo-debito-avancado">Tipo de Débito</label>
+                                            <select id="tipo-debito-avancado" name="tipoDebito" required>
+                                                <option value="">Selecione o tipo</option>
+                                                <option value="previdenciario">Previdenciário</option>
+                                                <option value="nao-previdenciario">Não Previdenciário</option>
+                                                <option value="multa">Multa Isolada</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="classificacao-risco">Classificação de Risco</label>
+                                            <select id="classificacao-risco" name="classificacaoRisco" required>
+                                                <option value="">Selecione a classificação</option>
+                                                <option value="A">A - Baixo Risco</option>
+                                                <option value="B">B - Médio-Baixo Risco</option>
+                                                <option value="C">C - Médio Risco</option>
+                                                <option value="D">D - Médio-Alto Risco</option>
+                                                <option value="E">E - Alto Risco</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <h3 class="mb-3">Opções de Transação</h3>
+                                        <div class="form-group">
+                                            <label for="modalidade-transacao-avancado">Modalidade de Transação</label>
+                                            <select id="modalidade-transacao-avancado" name="modalidadeTransacao" required>
+                                                <option value="">Selecione a modalidade</option>
+                                                <option value="excepcional">Transação Excepcional</option>
+                                                <option value="extraordinaria">Transação Extraordinária</option>
+                                                <option value="regular">Transação Regular</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="prazo-pagamento-avancado">Prazo para Pagamento (meses)</label>
+                                            <input type="number" id="prazo-pagamento-avancado" name="prazoPagamento" min="1" max="145" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="entrada-avancado">Valor da Entrada (%)</label>
+                                            <input type="number" id="entrada-avancado" name="entrada" min="0" max="30" value="0">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="desconto-adicional">Desconto Adicional Solicitado (%)</label>
+                                            <input type="number" id="desconto-adicional" name="descontoAdicional" min="0" max="15" value="0">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group text-center mt-4">
+                                    <button type="submit" class="btn btn-primary btn-lg" id="btn-simular-avancado">Simular Cenários</button>
+                                    <button type="reset" class="btn btn-secondary btn-lg ml-2">Limpar</button>
+                                </div>
+                            </form>
+                        </div>
+                        
+                        <div id="tab-capacidade-pagamento" class="tab-content">
+                            <form id="capacidade-pagamento-form" class="simulation-form">
+                                <h3 class="mb-3">Análise de Capacidade de Pagamento</h3>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="receita-mensal">Receita Mensal Média (R$)</label>
+                                            <input type="number" id="receita-mensal" name="receitaMensal" min="0" step="100" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="despesas-fixas">Despesas Fixas Mensais (R$)</label>
+                                            <input type="number" id="despesas-fixas" name="despesasFixas" min="0" step="100" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="outros-financiamentos">Outros Financiamentos/Parcelamentos (R$)</label>
+                                            <input type="number" id="outros-financiamentos" name="outrosFinanciamentos" min="0" step="100" required>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="patrimonio-liquido">Patrimônio Líquido (R$)</label>
+                                            <input type="number" id="patrimonio-liquido" name="patrimonioLiquido" min="0" step="1000" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="liquidez-corrente">Índice de Liquidez Corrente</label>
+                                            <input type="number" id="liquidez-corrente" name="liquidezCorrente" min="0" step="0.01" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="endividamento">Grau de Endividamento (%)</label>
+                                            <input type="number" id="endividamento" name="endividamento" min="0" max="100" step="0.1" required>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group text-center mt-4">
+                                    <button type="submit" class="btn btn-primary btn-lg" id="btn-analisar-capacidade">Analisar Capacidade</button>
+                                    <button type="reset" class="btn btn-secondary btn-lg ml-2">Limpar</button>
+                                </div>
+                            </form>
+                            
+                            <div id="resultado-capacidade" style="display: none;">
+                                <div class="card mt-4">
+                                    <div class="card-header">
+                                        <h3 class="card-title">Resultado da Análise de Capacidade</h3>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="text-center mb-4">
+                                                    <h2 class="result-highlight" id="capacidade-pagamento-valor">R$ 0,00</h2>
+                                                    <p>Capacidade de Pagamento Mensal</p>
+                                                </div>
+                                                <div class="progress mb-3">
+                                                    <div id="capacidade-barra" class="progress-bar" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">0%</div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <table class="table">
+                                                    <tbody>
+                                                        <tr>
+                                                            <th>Comprometimento da Receita:</th>
+                                                            <td id="comprometimento-receita">0%</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th>Prazo Máximo Recomendado:</th>
+                                                            <td id="prazo-maximo">0 meses</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th>Valor Máximo de Entrada:</th>
+                                                            <td id="entrada-maxima">R$ 0,00</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th>Classificação de Capacidade:</th>
+                                                            <td id="classificacao-capacidade">-</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div id="tab-comparativo" class="tab-content">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h3 class="card-title">Comparativo entre Modalidades</h3>
+                                </div>
+                                <div class="card-body">
+                                    <div class="table-responsive">
+                                        <table class="table" id="tabela-comparativo">
+                                            <thead>
+                                                <tr>
+                                                    <th>Modalidade</th>
+                                                    <th>Valor Total</th>
+                                                    <th>Desconto</th>
+                                                    <th>Economia</th>
+                                                    <th>Parcela</th>
+                                                    <th>Prazo</th>
+                                                    <th>Ações</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="tabela-comparativo-body">
+                                                <!-- Preenchido via JavaScript -->
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    
+                                    <div class="chart-container mt-4">
+                                        <canvas id="grafico-comparativo"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div id="tab-resultados-avancados" class="tab-content">
+                            <div id="resultados-simulacao-avancada" class="simulation-results">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="card">
+                                            <div class="card-header">
+                                                <h3 class="card-title">Resumo da Simulação Avançada</h3>
+                                            </div>
+                                            <div class="card-body">
+                                                <table class="table">
+                                                    <tbody>
+                                                        <tr>
+                                                            <th>Valor Original do Débito:</th>
+                                                            <td id="resultado-avancado-valor-original">R$ 0,00</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th>Valor Atualizado (com juros e multa):</th>
+                                                            <td id="resultado-avancado-valor-atualizado">R$ 0,00</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th>Valor após Descontos:</th>
+                                                            <td id="resultado-avancado-valor-descontos">R$ 0,00</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th>Valor da Entrada:</th>
+                                                            <td id="resultado-avancado-valor-entrada">R$ 0,00</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th>Valor da Parcela Mensal:</th>
+                                                            <td id="resultado-avancado-valor-parcela">R$ 0,00</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th>Número de Parcelas:</th>
+                                                            <td id="resultado-avancado-num-parcelas">0</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th>Desconto Adicional Aplicado:</th>
+                                                            <td id="resultado-avancado-desconto-adicional">0%</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="card">
+                                            <div class="card-header">
+                                                <h3 class="card-title">Análise de Viabilidade</h3>
+                                            </div>
+                                            <div class="card-body">
+                                                <div class="text-center mb-4">
+                                                    <h2 class="result-highlight" id="resultado-avancado-economia-total">R$ 0,00</h2>
+                                                    <p>Economia Total</p>
+                                                </div>
+                                                <table class="table">
+                                                    <tbody>
+                                                        <tr>
+                                                            <th>Percentual de Economia:</th>
+                                                            <td id="resultado-avancado-percentual-economia">0%</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th>Comprometimento da Capacidade:</th>
+                                                            <td id="resultado-avancado-comprometimento">0%</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th>Viabilidade Financeira:</th>
+                                                            <td id="resultado-avancado-viabilidade">-</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th>Risco da Operação:</th>
+                                                            <td id="resultado-avancado-risco">-</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row mt-4">
+                                    <div class="col-12 text-center">
+                                        <button id="btn-salvar-simulacao-avancada" class="btn btn-success btn-lg">
+                                            <i class="fas fa-save"></i> Salvar Simulação
+                                        </button>
+                                        <button id="btn-exportar-simulacao-avancada" class="btn btn-primary btn-lg ml-2">
+                                            <i class="fas fa-file-export"></i> Exportar Relatório
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

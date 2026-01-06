@@ -1,0 +1,242 @@
+﻿{% extends "base.html" %}
+
+{% block title %}Buscar nas Listas de Precatórios Pendentes - Tax Master{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-12">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/">Dashboard</a></li>
+                <li class="breadcrumb-item"><a href="/processos">Processos</a></li>
+                <li class="breadcrumb-item active">Buscar Listas de Precatórios</li>
+            </ol>
+        </nav>
+        
+        <h1 class="display-4">
+            <i class="fas fa-search-plus text-info"></i>
+            Buscar nas Listas de Precatórios Pendentes
+        </h1>
+        <p class="lead text-muted">Busca automática em listas oficiais de precatórios pendentes de pagamento</p>
+    </div>
+</div>
+
+<!-- Card de Informações -->
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="alert alert-info" role="alert">
+            <h5 class="alert-heading">
+                <i class="fas fa-info-circle me-2"></i>
+                Como funciona a busca nas listas de precatórios?
+            </h5>
+            <hr>
+            <p class="mb-0">
+                Esta funcionalidade realiza buscas automatizadas nas listas oficiais de precatórios pendentes 
+                publicadas pelos tribunais. O sistema identifica precatórios que ainda não foram pagos, 
+                extrai informações detalhadas e permite análise de oportunidades de investimento.
+            </p>
+        </div>
+    </div>
+</div>
+
+<!-- Formulário de Busca -->
+<div class="card shadow-sm mb-4">
+    <div class="card-header bg-info text-white">
+        <h5 class="mb-0">
+            <i class="fas fa-sliders-h me-2"></i>
+            Configurar Busca
+        </h5>
+    </div>
+    <div class="card-body">
+        <form method="POST" action="/buscar-listas-precatorios/executar" id="formBuscaListas">
+            
+            <div class="row g-3">
+                
+                <!-- Tribunal -->
+                <div class="col-md-4">
+                    <label class="form-label">
+                        <i class="fas fa-landmark me-1"></i>
+                        <strong>Tribunal</strong>
+                        <span class="text-danger">*</span>
+                    </label>
+                    <select class="form-select" name="tribunal" required>
+                        <option value="">Selecione o Tribunal</option>
+                        <option value="TJSP">TJSP - Tribunal de Justiça de São Paulo</option>
+                        <option value="TJRJ">TJRJ - Tribunal de Justiça do Rio de Janeiro</option>
+                        <option value="TJMG">TJMG - Tribunal de Justiça de Minas Gerais</option>
+                        <option value="TJRS">TJRS - Tribunal de Justiça do Rio Grande do Sul</option>
+                        <option value="TJPR">TJPR - Tribunal de Justiça do Paraná</option>
+                        <option value="TRF3">TRF3 - Tribunal Regional Federal da 3ª Região</option>
+                    </select>
+                </div>
+                
+                <!-- Ano -->
+                <div class="col-md-4">
+                    <label class="form-label">
+                        <i class="fas fa-calendar me-1"></i>
+                        <strong>Ano da Lista</strong>
+                        <span class="text-danger">*</span>
+                    </label>
+                    <select class="form-select" name="ano" required>
+                        <option value="">Selecione o Ano</option>
+                        <option value="2026">2026</option>
+                        <option value="2025">2025</option>
+                        <option value="2024">2024</option>
+                        <option value="2023">2023</option>
+                        <option value="2022">2022</option>
+                    </select>
+                </div>
+                
+                <!-- Natureza -->
+                <div class="col-md-4">
+                    <label class="form-label">
+                        <i class="fas fa-tag me-1"></i>
+                        <strong>Natureza</strong>
+                    </label>
+                    <select class="form-select" name="natureza">
+                        <option value="">Todas as Naturezas</option>
+                        <option value="ALIMENTAR">Alimentar</option>
+                        <option value="COMUM">Comum</option>
+                        <option value="TRIBUTARIO">Tributário</option>
+                    </select>
+                </div>
+                
+                <!-- Valor Mínimo -->
+                <div class="col-md-6">
+                    <label class="form-label">
+                        <i class="fas fa-dollar-sign me-1"></i>
+                        <strong>Valor Mínimo</strong>
+                    </label>
+                    <div class="input-group">
+                        <span class="input-group-text">R$</span>
+                        <input type="number" class="form-control" name="valor_min" 
+                               placeholder="Ex: 100000" step="1000">
+                    </div>
+                </div>
+                
+                <!-- Valor Máximo -->
+                <div class="col-md-6">
+                    <label class="form-label">
+                        <i class="fas fa-dollar-sign me-1"></i>
+                        <strong>Valor Máximo</strong>
+                    </label>
+                    <div class="input-group">
+                        <span class="input-group-text">R$</span>
+                        <input type="number" class="form-control" name="valor_max" 
+                               placeholder="Ex: 5000000" step="1000">
+                    </div>
+                </div>
+                
+                <!-- Apenas Prioritários -->
+                <div class="col-md-12">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" name="apenas_prioritarios" id="apenasPrioritarios">
+                        <label class="form-check-label" for="apenasPrioritarios">
+                            <strong>Buscar apenas precatórios prioritários</strong>
+                            <small class="text-muted d-block">
+                                (Idosos, portadores de doença grave ou pessoas com deficiência)
+                            </small>
+                        </label>
+                    </div>
+                </div>
+                
+            </div>
+            
+            <hr class="my-4">
+            
+            <!-- Botões -->
+            <div class="d-flex justify-content-between">
+                <a href="/processos" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left me-2"></i>
+                    Voltar
+                </a>
+                <button type="submit" class="btn btn-info btn-lg">
+                    <i class="fas fa-search me-2"></i>
+                    Iniciar Busca nas Listas
+                </button>
+            </div>
+            
+        </form>
+    </div>
+</div>
+
+<!-- Recursos da Busca -->
+<div class="row">
+    <div class="col-md-4">
+        <div class="card shadow-sm h-100">
+            <div class="card-body text-center">
+                <i class="fas fa-robot fa-3x text-info mb-3"></i>
+                <h5>Busca Automatizada</h5>
+                <p class="text-muted">
+                    Sistema automatizado que acessa as listas oficiais dos tribunais 
+                    e extrai informações de precatórios pendentes.
+                </p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4">
+        <div class="card shadow-sm h-100">
+            <div class="card-body text-center">
+                <i class="fas fa-filter fa-3x text-success mb-3"></i>
+                <h5>Filtros Inteligentes</h5>
+                <p class="text-muted">
+                    Filtre por tribunal, ano, natureza, valor e prioridade para 
+                    encontrar exatamente as oportunidades que você procura.
+                </p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4">
+        <div class="card shadow-sm h-100">
+            <div class="card-body text-center">
+                <i class="fas fa-database fa-3x text-warning mb-3"></i>
+                <h5>Dados Estruturados</h5>
+                <p class="text-muted">
+                    Todas as informações são extraídas, validadas e estruturadas 
+                    automaticamente para facilitar sua análise.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Informações Adicionais -->
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="card shadow-sm border-0">
+            <div class="card-body">
+                <h5 class="mb-3">
+                    <i class="fas fa-lightbulb text-warning me-2"></i>
+                    O que você pode fazer com os resultados:
+                </h5>
+                
+                <ul class="list-unstyled">
+                    <li class="mb-2">
+                        <i class="fas fa-check text-success me-2"></i>
+                        <strong>Identificar oportunidades antes do mercado</strong> - Acesse informações assim que são publicadas
+                    </li>
+                    <li class="mb-2">
+                        <i class="fas fa-check text-success me-2"></i>
+                        <strong>Analisar viabilidade de investimento</strong> - Dados completos sobre valor, natureza e prioridade
+                    </li>
+                    <li class="mb-2">
+                        <i class="fas fa-check text-success me-2"></i>
+                        <strong>Contatar credores diretamente</strong> - Informações de contato quando disponíveis
+                    </li>
+                    <li class="mb-2">
+                        <i class="fas fa-check text-success me-2"></i>
+                        <strong>Monitorar ativos específicos</strong> - Acompanhe precatórios de seu interesse
+                    </li>
+                    <li class="mb-2">
+                        <i class="fas fa-check text-success me-2"></i>
+                        <strong>Exportar dados para análise</strong> - Relatórios completos em diversos formatos
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

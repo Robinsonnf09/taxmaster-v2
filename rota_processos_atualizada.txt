@@ -1,0 +1,722 @@
+# Criar sistema completo de filtros avançados
+
+Write-Host "`nCriando sistema de filtros avancados..." -ForegroundColor Cyan
+Write-Host "="*60 -ForegroundColor Green
+
+# 1. Atualizar página de processos com filtros avançados
+@'
+{% extends "base.html" %}
+
+{% block title %}Processos - Tax Master{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-12">
+        <h1 class="display-4">
+            <i class="fas fa-folder-open text-primary"></i>
+            Processos e Precatórios
+        </h1>
+        <p class="lead text-muted">Gestão completa com filtros avançados</p>
+    </div>
+</div>
+
+<!-- Botão Cadastrar -->
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <div></div>
+    <a href="/processo/cadastrar" class="btn btn-success btn-lg">
+        <i class="fas fa-plus-circle me-2"></i>
+        Cadastrar Novo Processo
+    </a>
+</div>
+
+<!-- Filtros Avançados -->
+<div class="card shadow-sm mb-4">
+    <div class="card-header bg-primary text-white">
+        <h5 class="mb-0">
+            <i class="fas fa-filter me-2"></i>
+            Filtros Avançados
+            <button class="btn btn-sm btn-light float-end" type="button" data-bs-toggle="collapse" data-bs-target="#filtrosCollapse">
+                <i class="fas fa-chevron-down"></i>
+            </button>
+        </h5>
+    </div>
+    <div class="collapse show" id="filtrosCollapse">
+        <div class="card-body">
+            <form method="GET" action="/processos" id="formFiltros">
+                <div class="row g-3">
+                    
+                    <!-- Busca Rápida -->
+                    <div class="col-md-12">
+                        <label class="form-label">
+                            <i class="fas fa-search me-1"></i>
+                            <strong>Busca Rápida</strong>
+                        </label>
+                        <input type="text" class="form-control form-control-lg" 
+                               name="busca" 
+                               placeholder="Número do processo, credor, advogado..."
+                               value="{{ request.args.get('busca', '') }}">
+                    </div>
+                    
+                    <!-- Tribunal -->
+                    <div class="col-md-3">
+                        <label class="form-label">
+                            <i class="fas fa-landmark me-1"></i>
+                            <strong>Tribunal</strong>
+                        </label>
+                        <select class="form-select" name="tribunal" id="filtroTribunal">
+                            <option value="">Todos os Tribunais</option>
+                            {% for trib in tribunais %}
+                            <option value="{{ trib.name }}" 
+                                    {% if request.args.get('tribunal') == trib.name %}selected{% endif %}>
+                                {{ trib.value }}
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    
+                    <!-- Esfera -->
+                    <div class="col-md-3">
+                        <label class="form-label">
+                            <i class="fas fa-globe me-1"></i>
+                            <strong>Esfera</strong>
+                        </label>
+                        <select class="form-select" name="esfera" id="filtroEsfera">
+                            <option value="">Todas as Esferas</option>
+                            <option value="ESTADUAL" {% if request.args.get('esfera') == 'ESTADUAL' %}selected{% endif %}>
+                                Estadual
+                            </option>
+                            <option value="MUNICIPAL" {% if request.args.get('esfera') == 'MUNICIPAL' %}selected{% endif %}>
+                                Municipal
+                            </option>
+                            <option value="FEDERAL" {% if request.args.get('esfera') == 'FEDERAL' %}selected{% endif %}>
+                                Federal
+                            </option>
+                        </select>
+                    </div>
+                    
+                    <!-- Natureza -->
+                    <div class="col-md-3">
+                        <label class="form-label">
+                            <i class="fas fa-tag me-1"></i>
+                            <strong>Natureza</strong>
+                        </label>
+                        <select class="form-select" name="natureza" id="filtroNatureza">
+                            <option value="">Todas as Naturezas</option>
+                            {% for nat in naturezas %}
+                            <option value="{{ nat.name }}" 
+                                    {% if request.args.get('natureza') == nat.name %}selected{% endif %}>
+                                {{ nat.value }}
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    
+                    <!-- Status/Fase -->
+                    <div class="col-md-3">
+                        <label class="form-label">
+                            <i class="fas fa-tasks me-1"></i>
+                            <strong>Status/Fase</strong>
+                        </label>
+                        <select class="form-select" name="status" id="filtroStatus">
+                            <option value="">Todos os Status</option>
+                            {% for st in status_list %}
+                            <option value="{{ st.name }}" 
+                                    {% if request.args.get('status') == st.name %}selected{% endif %}>
+                                {{ st.value }}
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    
+                    <!-- Ano do Precatório -->
+                    <div class="col-md-2">
+                        <label class="form-label">
+                            <i class="fas fa-calendar me-1"></i>
+                            <strong>Ano do Precatório</strong>
+                        </label>
+                        <select class="form-select" name="ano_precatorio" id="filtroAno">
+                            <option value="">Todos os Anos</option>
+                            {% for ano in range(2024, 2017, -1) %}
+                            <option value="{{ ano }}" 
+                                    {% if request.args.get('ano_precatorio') == ano|string %}selected{% endif %}>
+                                {{ ano }}
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    
+                    <!-- Valor Mínimo -->
+                    <div class="col-md-2">
+                        <label class="form-label">
+                            <i class="fas fa-dollar-sign me-1"></i>
+                            <strong>Valor Mínimo</strong>
+                        </label>
+                        <input type="number" class="form-control" 
+                               name="valor_min" 
+                               placeholder="Ex: 100000"
+                               step="1000"
+                               value="{{ request.args.get('valor_min', '') }}">
+                    </div>
+                    
+                    <!-- Valor Máximo -->
+                    <div class="col-md-2">
+                        <label class="form-label">
+                            <i class="fas fa-dollar-sign me-1"></i>
+                            <strong>Valor Máximo</strong>
+                        </label>
+                        <input type="number" class="form-control" 
+                               name="valor_max" 
+                               placeholder="Ex: 5000000"
+                               step="1000"
+                               value="{{ request.args.get('valor_max', '') }}">
+                    </div>
+                    
+                    <!-- Tem Ofício -->
+                    <div class="col-md-2">
+                        <label class="form-label">
+                            <i class="fas fa-file-pdf me-1"></i>
+                            <strong>Ofício Expedido</strong>
+                        </label>
+                        <select class="form-select" name="tem_oficio">
+                            <option value="">Todos</option>
+                            <option value="sim" {% if request.args.get('tem_oficio') == 'sim' %}selected{% endif %}>
+                                Sim
+                            </option>
+                            <option value="nao" {% if request.args.get('tem_oficio') == 'nao' %}selected{% endif %}>
+                                Não
+                            </option>
+                        </select>
+                    </div>
+                    
+                    <!-- Prioridade -->
+                    <div class="col-md-2">
+                        <label class="form-label">
+                            <i class="fas fa-exclamation-circle me-1"></i>
+                            <strong>Prioridade</strong>
+                        </label>
+                        <select class="form-select" name="prioritario">
+                            <option value="">Todos</option>
+                            <option value="sim" {% if request.args.get('prioritario') == 'sim' %}selected{% endif %}>
+                                Prioritários
+                            </option>
+                            <option value="nao" {% if request.args.get('prioritario') == 'nao' %}selected{% endif %}>
+                                Comuns
+                            </option>
+                        </select>
+                    </div>
+                    
+                    <!-- Pendência de Pagamento -->
+                    <div class="col-md-2">
+                        <label class="form-label">
+                            <i class="fas fa-clock me-1"></i>
+                            <strong>Pendência</strong>
+                        </label>
+                        <select class="form-select" name="pendencia">
+                            <option value="">Todos</option>
+                            <option value="sim" {% if request.args.get('pendencia') == 'sim' %}selected{% endif %}>
+                                Com Pendência
+                            </option>
+                            <option value="nao" {% if request.args.get('pendencia') == 'nao' %}selected{% endif %}>
+                                Sem Pendência
+                            </option>
+                        </select>
+                    </div>
+                    
+                </div>
+                
+                <!-- Botões de Ação -->
+                <div class="row mt-4">
+                    <div class="col-12">
+                        <hr>
+                        <div class="d-flex justify-content-between">
+                            <a href="/processos" class="btn btn-secondary">
+                                <i class="fas fa-eraser me-2"></i>
+                                Limpar Filtros
+                            </a>
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                <i class="fas fa-search me-2"></i>
+                                Buscar Processos
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Estatísticas dos Resultados -->
+<div class="row mb-3">
+    <div class="col-md-3">
+        <div class="card border-primary">
+            <div class="card-body text-center">
+                <h6 class="text-muted mb-1">Total Encontrado</h6>
+                <h3 class="mb-0 text-primary">{{ total }}</h3>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card border-success">
+            <div class="card-body text-center">
+                <h6 class="text-muted mb-1">Valor Total</h6>
+                <h3 class="mb-0 text-success">
+                    R$ {{ "{:,.0f}".format(valor_total).replace(',', '.') }}
+                </h3>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card border-info">
+            <div class="card-body text-center">
+                <h6 class="text-muted mb-1">Com Ofício</h6>
+                <h3 class="mb-0 text-info">{{ com_oficio }}</h3>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card border-warning">
+            <div class="card-body text-center">
+                <h6 class="text-muted mb-1">Prioritários</h6>
+                <h3 class="mb-0 text-warning">{{ prioritarios }}</h3>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Resultados -->
+<div class="card shadow-sm">
+    <div class="card-header bg-light">
+        <div class="d-flex justify-content-between align-items-center">
+            <h5 class="mb-0">
+                <i class="fas fa-list me-2"></i>
+                Resultados: {{ total }} processo(s)
+            </h5>
+            <div>
+                <select class="form-select form-select-sm" id="ordenacao" onchange="ordenarResultados()">
+                    <option value="data_cadastro_desc" {% if request.args.get('ordenar') == 'data_cadastro' and request.args.get('ordem') == 'desc' %}selected{% endif %}>
+                        Mais Recentes
+                    </option>
+                    <option value="data_cadastro_asc" {% if request.args.get('ordenar') == 'data_cadastro' and request.args.get('ordem') == 'asc' %}selected{% endif %}>
+                        Mais Antigos
+                    </option>
+                    <option value="valor_desc" {% if request.args.get('ordenar') == 'valor' and request.args.get('ordem') == 'desc' %}selected{% endif %}>
+                        Maior Valor
+                    </option>
+                    <option value="valor_asc" {% if request.args.get('ordenar') == 'valor' and request.args.get('ordem') == 'asc' %}selected{% endif %}>
+                        Menor Valor
+                    </option>
+                    <option value="credor_asc" {% if request.args.get('ordenar') == 'credor' and request.args.get('ordem') == 'asc' %}selected{% endif %}>
+                        Credor (A-Z)
+                    </option>
+                </select>
+            </div>
+        </div>
+    </div>
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover table-striped mb-0">
+                <thead class="table-dark">
+                    <tr>
+                        <th width="15%">Processo</th>
+                        <th width="10%">Tribunal</th>
+                        <th width="8%">Esfera</th>
+                        <th width="20%">Credor</th>
+                        <th width="12%">Valor Atualizado</th>
+                        <th width="8%">Natureza</th>
+                        <th width="10%">Status</th>
+                        <th width="8%">Ano</th>
+                        <th width="9%">Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% if processos %}
+                        {% for processo in processos %}
+                        <tr onclick="window.location='/processo/{{ processo.id }}'" style="cursor: pointer;">
+                            <td>
+                                <strong>{{ processo.numero_processo }}</strong>
+                                {% if processo.processo_principal %}
+                                <br>
+                                <small class="text-muted">
+                                    <i class="fas fa-link me-1"></i>
+                                    {{ processo.processo_principal[:20] }}...
+                                </small>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <span class="badge bg-info">{{ processo.tribunal.value }}</span>
+                            </td>
+                            <td>
+                                <span class="badge bg-{{ 'primary' if processo.esfera.name == 'FEDERAL' else 'secondary' if processo.esfera.name == 'ESTADUAL' else 'dark' }}">
+                                    {{ processo.esfera.value }}
+                                </span>
+                            </td>
+                            <td>
+                                {{ processo.credor_nome[:30] }}
+                                {% if processo.credor_idoso or processo.credor_doenca_grave or processo.credor_deficiente %}
+                                <br>
+                                <small>
+                                    {% if processo.credor_idoso %}
+                                    <span class="badge bg-warning text-dark">
+                                        <i class="fas fa-user-clock"></i> Idoso
+                                    </span>
+                                    {% endif %}
+                                    {% if processo.credor_doenca_grave %}
+                                    <span class="badge bg-danger">
+                                        <i class="fas fa-heartbeat"></i> Doença
+                                    </span>
+                                    {% endif %}
+                                    {% if processo.credor_deficiente %}
+                                    <span class="badge bg-info">
+                                        <i class="fas fa-wheelchair"></i> PCD
+                                    </span>
+                                    {% endif %}
+                                </small>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <strong class="text-success">
+                                    R$ {{ "{:,.2f}".format(processo.valor_atualizado).replace(',', 'X').replace('.', ',').replace('X', '.') }}
+                                </strong>
+                            </td>
+                            <td>
+                                <span class="badge bg-{{ 'danger' if processo.natureza.name == 'ALIMENTAR' else 'success' if processo.natureza.name == 'TRIBUTARIO' else 'secondary' }}">
+                                    {{ processo.natureza.value }}
+                                </span>
+                            </td>
+                            <td>
+                                <span class="badge bg-{{ 'success' if processo.status.name == 'CONCLUIDO' else 'info' if processo.status.name == 'VALIDADO' else 'warning' }}">
+                                    {{ processo.status.value }}
+                                </span>
+                                {% if processo.tem_oficio %}
+                                <br>
+                                <small>
+                                    <span class="badge bg-success">
+                                        <i class="fas fa-file-pdf"></i> Ofício
+                                    </span>
+                                </small>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if processo.ano_precatorio %}
+                                <strong>{{ processo.ano_precatorio }}</strong>
+                                {% else %}
+                                <span class="text-muted">-</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <a href="/processo/{{ processo.id }}" class="btn btn-sm btn-primary" onclick="event.stopPropagation()">
+                                    <i class="fas fa-eye"></i>
+                                </a>
+                                <a href="/processo/{{ processo.id }}/editar" class="btn btn-sm btn-warning" onclick="event.stopPropagation()">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    {% else %}
+                        <tr>
+                            <td colspan="9" class="text-center py-5">
+                                <i class="fas fa-search fa-3x text-muted mb-3"></i>
+                                <h5 class="text-muted">Nenhum processo encontrado</h5>
+                                <p class="text-muted">Tente ajustar os filtros de busca</p>
+                            </td>
+                        </tr>
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
+    <!-- Paginação -->
+    {% if total_paginas > 1 %}
+    <div class="card-footer">
+        <nav>
+            <ul class="pagination justify-content-center mb-0">
+                {% if pagina > 1 %}
+                <li class="page-item">
+                    <a class="page-link" href="?pagina={{ pagina - 1 }}&{{ request.query_string.decode() }}">
+                        Anterior
+                    </a>
+                </li>
+                {% endif %}
+                
+                {% for p in range(1, total_paginas + 1) %}
+                    {% if p == pagina %}
+                    <li class="page-item active">
+                        <span class="page-link">{{ p }}</span>
+                    </li>
+                    {% elif p <= 3 or p > total_paginas - 3 or (p >= pagina - 1 and p <= pagina + 1) %}
+                    <li class="page-item">
+                        <a class="page-link" href="?pagina={{ p }}&{{ request.query_string.decode() }}">
+                            {{ p }}
+                        </a>
+                    </li>
+                    {% elif p == 4 or p == total_paginas - 3 %}
+                    <li class="page-item disabled">
+                        <span class="page-link">...</span>
+                    </li>
+                    {% endif %}
+                {% endfor %}
+                
+                {% if pagina < total_paginas %}
+                <li class="page-item">
+                    <a class="page-link" href="?pagina={{ pagina + 1 }}&{{ request.query_string.decode() }}">
+                        Próxima
+                    </a>
+                </li>
+                {% endif %}
+            </ul>
+        </nav>
+    </div>
+    {% endif %}
+</div>
+
+<!-- Atalhos de Filtros Rápidos -->
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="card shadow-sm">
+            <div class="card-header bg-secondary text-white">
+                <h6 class="mb-0">
+                    <i class="fas fa-bolt me-2"></i>
+                    Filtros Rápidos
+                </h6>
+            </div>
+            <div class="card-body">
+                <div class="d-flex flex-wrap gap-2">
+                    <a href="/processos?natureza=ALIMENTAR" class="btn btn-outline-danger">
+                        <i class="fas fa-utensils me-1"></i>
+                        Alimentares
+                    </a>
+                    <a href="/processos?natureza=TRIBUTARIO" class="btn btn-outline-success">
+                        <i class="fas fa-coins me-1"></i>
+                        Tributários
+                    </a>
+                    <a href="/processos?tem_oficio=sim" class="btn btn-outline-info">
+                        <i class="fas fa-file-pdf me-1"></i>
+                        Com Ofício
+                    </a>
+                    <a href="/processos?prioritario=sim" class="btn btn-outline-warning">
+                        <i class="fas fa-star me-1"></i>
+                        Prioritários
+                    </a>
+                    <a href="/processos?esfera=FEDERAL" class="btn btn-outline-primary">
+                        <i class="fas fa-flag me-1"></i>
+                        Federais
+                    </a>
+                    <a href="/processos?esfera=ESTADUAL" class="btn btn-outline-secondary">
+                        <i class="fas fa-map-marker-alt me-1"></i>
+                        Estaduais
+                    </a>
+                    <a href="/processos?esfera=MUNICIPAL" class="btn btn-outline-dark">
+                        <i class="fas fa-city me-1"></i>
+                        Municipais
+                    </a>
+                    <a href="/processos?valor_min=1000000" class="btn btn-outline-success">
+                        <i class="fas fa-dollar-sign me-1"></i>
+                        Acima de R$ 1 Mi
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function ordenarResultados() {
+    const select = document.getElementById('ordenacao');
+    const valor = select.value;
+    const [campo, ordem] = valor.split('_');
+    
+    const url = new URL(window.location);
+    url.searchParams.set('ordenar', campo);
+    url.searchParams.set('ordem', ordem === 'desc' ? 'desc' : 'asc');
+    
+    window.location = url.toString();
+}
+
+// Auto-submit ao mudar filtros principais
+document.querySelectorAll('#filtroTribunal, #filtroEsfera, #filtroNatureza, #filtroStatus, #filtroAno').forEach(select => {
+    select.addEventListener('change', function() {
+        // Opcional: descomentar para auto-submit
+        // document.getElementById('formFiltros').submit();
+    });
+});
+</script>
+{% endblock %}
+'@ | Out-File -FilePath "templates/processos.html" -Encoding UTF8 -Force
+
+Write-Host "[1/2] Template de processos com filtros criado" -ForegroundColor Green
+
+# 2. Atualizar rota no app.py para suportar todos os filtros
+@'
+
+# ATUALIZAR A ROTA /processos NO APP.PY COM ESTE CÓDIGO:
+
+@app.route('/processos')
+def listar_processos():
+    """Lista de processos com filtros avançados"""
+    db = SessionLocal()
+    
+    try:
+        # Parâmetros de filtro
+        tribunal = request.args.get('tribunal')
+        esfera = request.args.get('esfera')
+        natureza = request.args.get('natureza')
+        status = request.args.get('status')
+        ano_precatorio = request.args.get('ano_precatorio', type=int)
+        valor_min = request.args.get('valor_min', type=float)
+        valor_max = request.args.get('valor_max', type=float)
+        tem_oficio = request.args.get('tem_oficio')
+        prioritario = request.args.get('prioritario')
+        pendencia = request.args.get('pendencia')
+        busca = request.args.get('busca')
+        pagina = request.args.get('pagina', 1, type=int)
+        
+        # Query base
+        query = db.query(Processo)
+        
+        # Aplicar filtros
+        if tribunal:
+            query = query.filter(Processo.tribunal == TribunalEnum[tribunal])
+        
+        if esfera:
+            from models_atualizado import EsferaEnum
+            query = query.filter(Processo.esfera == EsferaEnum[esfera])
+        
+        if natureza:
+            query = query.filter(Processo.natureza == NaturezaEnum[natureza])
+        
+        if status:
+            query = query.filter(Processo.status == StatusProcessoEnum[status])
+        
+        if ano_precatorio:
+            query = query.filter(Processo.ano_precatorio == ano_precatorio)
+        
+        if valor_min:
+            query = query.filter(Processo.valor_atualizado >= valor_min)
+        
+        if valor_max:
+            query = query.filter(Processo.valor_atualizado <= valor_max)
+        
+        if tem_oficio == 'sim':
+            query = query.filter(Processo.tem_oficio == True)
+        elif tem_oficio == 'nao':
+            query = query.filter(Processo.tem_oficio == False)
+        
+        if prioritario == 'sim':
+            query = query.filter(
+                or_(
+                    Processo.credor_idoso == True,
+                    Processo.credor_doenca_grave == True,
+                    Processo.credor_deficiente == True
+                )
+            )
+        elif prioritario == 'nao':
+            query = query.filter(
+                and_(
+                    Processo.credor_idoso == False,
+                    Processo.credor_doenca_grave == False,
+                    Processo.credor_deficiente == False
+                )
+            )
+        
+        if pendencia == 'sim':
+            query = query.filter(Processo.possui_pendencia_pagamento == True)
+        elif pendencia == 'nao':
+            query = query.filter(Processo.possui_pendencia_pagamento == False)
+        
+        if busca:
+            query = query.filter(
+                or_(
+                    Processo.numero_processo.contains(busca),
+                    Processo.processo_principal.contains(busca),
+                    Processo.credor_nome.contains(busca),
+                    Processo.advogado_nome.contains(busca),
+                    Processo.numero_oficio.contains(busca)
+                )
+            )
+        
+        # Ordenação
+        ordenar_por = request.args.get('ordenar', 'data_cadastro')
+        ordem = request.args.get('ordem', 'desc')
+        
+        if ordenar_por == 'valor':
+            query = query.order_by(Processo.valor_atualizado.desc() if ordem == 'desc' else Processo.valor_atualizado.asc())
+        elif ordenar_por == 'credor':
+            query = query.order_by(Processo.credor_nome.asc() if ordem == 'asc' else Processo.credor_nome.desc())
+        else:
+            query = query.order_by(Processo.data_cadastro.desc() if ordem == 'desc' else Processo.data_cadastro.asc())
+        
+        # Estatísticas dos resultados filtrados
+        total = query.count()
+        valor_total = db.query(func.sum(Processo.valor_atualizado)).filter(
+            Processo.id.in_([p.id for p in query.all()])
+        ).scalar() or 0
+        com_oficio = query.filter(Processo.tem_oficio == True).count()
+        prioritarios = query.filter(
+            or_(
+                Processo.credor_idoso == True,
+                Processo.credor_doenca_grave == True,
+                Processo.credor_deficiente == True
+            )
+        ).count()
+        
+        # Paginação
+        processos = query.offset((pagina - 1) * PROCESSOS_POR_PAGINA).limit(PROCESSOS_POR_PAGINA).all()
+        
+        total_paginas = (total + PROCESSOS_POR_PAGINA - 1) // PROCESSOS_POR_PAGINA
+        
+        return render_template('processos.html',
+            processos=processos,
+            pagina=pagina,
+            total_paginas=total_paginas,
+            total=total,
+            valor_total=valor_total,
+            com_oficio=com_oficio,
+            prioritarios=prioritarios,
+            tribunais=TribunalEnum,
+            naturezas=NaturezaEnum,
+            status_list=StatusProcessoEnum
+        )
+        
+    finally:
+        db.close()
+
+'@ | Out-File -FilePath "rota_processos_atualizada.txt" -Encoding UTF8
+
+Write-Host "[2/2] Rota atualizada criada" -ForegroundColor Green
+
+Write-Host "`n" + "="*60 -ForegroundColor Green
+Write-Host "SISTEMA DE FILTROS AVANCADOS CRIADO!" -ForegroundColor Green
+Write-Host "="*60 -ForegroundColor Green
+
+Write-Host "`nFILTROS DISPONIVEIS:" -ForegroundColor Yellow
+Write-Host "1. Busca Rapida - Numero, credor, advogado" -ForegroundColor White
+Write-Host "2. Tribunal - Todos os tribunais" -ForegroundColor White
+Write-Host "3. Esfera - Estadual, Municipal, Federal" -ForegroundColor White
+Write-Host "4. Natureza - Alimentar, Tributario, Comum, Trabalhista" -ForegroundColor White
+Write-Host "5. Status/Fase - Todos os status" -ForegroundColor White
+Write-Host "6. Ano do Precatorio - 2018 a 2024" -ForegroundColor White
+Write-Host "7. Valor Minimo e Maximo" -ForegroundColor White
+Write-Host "8. Tem Oficio - Sim/Nao" -ForegroundColor White
+Write-Host "9. Prioridade - Prioritarios/Comuns" -ForegroundColor White
+Write-Host "10. Pendencia de Pagamento - Sim/Nao" -ForegroundColor White
+
+Write-Host "`nRECURSOS EXTRAS:" -ForegroundColor Cyan
+Write-Host "- Filtros rapidos (botoes de atalho)" -ForegroundColor Green
+Write-Host "- Ordenacao por data, valor, credor" -ForegroundColor Green
+Write-Host "- Paginacao automatica" -ForegroundColor Green
+Write-Host "- Estatisticas dos resultados filtrados" -ForegroundColor Green
+Write-Host "- Interface profissional e responsiva" -ForegroundColor Green
+
+Write-Host "`nPROXIMOS PASSOS:" -ForegroundColor Yellow
+Write-Host "1. Copie o codigo do arquivo: rota_processos_atualizada.txt" -ForegroundColor White
+Write-Host "2. Substitua a rota /processos no app.py" -ForegroundColor White
+Write-Host "3. Reinicie o servidor: python app.py" -ForegroundColor White
+Write-Host "4. Acesse: http://localhost:8080/processos" -ForegroundColor White
+
+Write-Host "`n" + "="*60 -ForegroundColor Green

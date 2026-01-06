@@ -1,0 +1,475 @@
+﻿{% extends "base.html" %}
+
+{% block title %}Atualizar Valores - Tax Master{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-12">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/">Dashboard</a></li>
+                <li class="breadcrumb-item"><a href="/processos">Processos</a></li>
+                <li class="breadcrumb-item"><a href="/processo/{{ processo.id }}">{{ processo.numero_processo }}</a></li>
+                <li class="breadcrumb-item active">Atualizar Valores</li>
+            </ol>
+        </nav>
+        
+        <h1 class="display-5">
+            <i class="fas fa-calculator text-success"></i>
+            Atualização de Valores e Cálculo de Juros
+        </h1>
+        <p class="lead text-muted">Processo: {{ processo.numero_processo }}</p>
+    </div>
+</div>
+
+<style>
+    .calculator-card {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border-radius: 15px;
+        padding: 30px;
+        margin-bottom: 30px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    }
+    
+    .calculator-card h3 {
+        margin-bottom: 20px;
+        font-weight: bold;
+    }
+    
+    .calc-input-group {
+        background: rgba(255,255,255,0.1);
+        padding: 15px;
+        border-radius: 10px;
+        margin-bottom: 15px;
+    }
+    
+    .calc-input-group label {
+        font-weight: 600;
+        margin-bottom: 5px;
+        display: block;
+    }
+    
+    .calc-input-group input,
+    .calc-input-group select {
+        width: 100%;
+        padding: 10px;
+        border: 2px solid rgba(255,255,255,0.3);
+        border-radius: 8px;
+        background: rgba(255,255,255,0.9);
+        color: #333;
+        font-size: 1em;
+    }
+    
+    .calc-button {
+        background: #27ae60;
+        color: white;
+        border: none;
+        padding: 15px 40px;
+        border-radius: 10px;
+        font-size: 1.1em;
+        font-weight: bold;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        width: 100%;
+        margin-top: 20px;
+    }
+    
+    .calc-button:hover {
+        background: #229954;
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(39, 174, 96, 0.4);
+    }
+    
+    .result-card {
+        background: white;
+        border-radius: 15px;
+        padding: 25px;
+        margin-bottom: 20px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+    
+    .result-item {
+        display: flex;
+        justify-content: space-between;
+        padding: 15px;
+        border-bottom: 1px solid #ecf0f1;
+        font-size: 1.1em;
+    }
+    
+    .result-item:last-child {
+        border-bottom: none;
+        background: #f8f9fa;
+        font-weight: bold;
+        font-size: 1.3em;
+        color: #27ae60;
+    }
+    
+    .result-label {
+        color: #7f8c8d;
+    }
+    
+    .result-value {
+        font-weight: bold;
+        color: #2c3e50;
+    }
+    
+    .history-table {
+        background: white;
+        border-radius: 15px;
+        overflow: hidden;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+    
+    .history-table thead {
+        background: #34495e;
+        color: white;
+    }
+    
+    .history-table th {
+        padding: 15px;
+        font-weight: 600;
+    }
+    
+    .history-table td {
+        padding: 12px 15px;
+        border-bottom: 1px solid #ecf0f1;
+    }
+    
+    .detail-table {
+        font-size: 0.9em;
+    }
+    
+    .detail-table th {
+        background: #f8f9fa;
+        padding: 10px;
+    }
+</style>
+
+<!-- Calculadora -->
+<div class="calculator-card">
+    <h3>💰 Calculadora de Valores</h3>
+    
+    <form id="formCalculadora">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="calc-input-group">
+                    <label>Valor Principal (R$)</label>
+                    <input type="number" id="valorPrincipal" step="0.01" required
+                           value="{{ processo.valor_atualizado or 0 }}">
+                </div>
+            </div>
+            
+            <div class="col-md-6">
+                <div class="calc-input-group">
+                    <label>Data Base</label>
+                    <input type="date" id="dataBase" required
+                           value="{{ processo.data_base_calculo or '' }}">
+                </div>
+            </div>
+            
+            <div class="col-md-6">
+                <div class="calc-input-group">
+                    <label>Data Final</label>
+                    <input type="date" id="dataFinal" required
+                           value="{{ hoje }}">
+                </div>
+            </div>
+            
+            <div class="col-md-6">
+                <div class="calc-input-group">
+                    <label>Taxa de Juros Mensal (%)</label>
+                    <input type="number" id="taxaJuros" step="0.01" required
+                           value="{{ processo.taxa_juros_mensal or 0.5 }}">
+                </div>
+            </div>
+            
+            <div class="col-md-6">
+                <div class="calc-input-group">
+                    <label>Índice de Correção</label>
+                    <select id="indiceCorrecao">
+                        <option value="IPCA" {% if processo.indice_correcao == 'IPCA' %}selected{% endif %}>IPCA</option>
+                        <option value="INPC" {% if processo.indice_correcao == 'INPC' %}selected{% endif %}>INPC</option>
+                        <option value="TR" {% if processo.indice_correcao == 'TR' %}selected{% endif %}>TR</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="col-md-6">
+                <div class="calc-input-group">
+                    <label>Tipo de Juros</label>
+                    <select id="tipoJuros">
+                        <option value="SIMPLES">Juros Simples</option>
+                        <option value="COMPOSTOS">Juros Compostos</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        
+        <button type="button" class="calc-button" onclick="calcularValores()">
+            🧮 CALCULAR VALORES
+        </button>
+    </form>
+</div>
+
+<!-- Resultados -->
+<div id="resultados" style="display:none;">
+    <div class="result-card">
+        <h4 class="mb-4">📊 Resultado do Cálculo</h4>
+        
+        <div class="result-item">
+            <span class="result-label">Valor Principal:</span>
+            <span class="result-value" id="resPrincipal">R$ 0,00</span>
+        </div>
+        
+        <div class="result-item">
+            <span class="result-label">Juros (<span id="resMeses">0</span> meses):</span>
+            <span class="result-value" id="resJuros">R$ 0,00</span>
+        </div>
+        
+        <div class="result-item">
+            <span class="result-label">Correção Monetária (<span id="resIndice">IPCA</span>):</span>
+            <span class="result-value" id="resCorrecao">R$ 0,00</span>
+        </div>
+        
+        <div class="result-item">
+            <span class="result-label">VALOR TOTAL ATUALIZADO:</span>
+            <span class="result-value" id="resTotal">R$ 0,00</span>
+        </div>
+    </div>
+    
+    <div class="text-center mb-4">
+        <button class="btn btn-success btn-lg" onclick="salvarAtualizacao()">
+            <i class="fas fa-save me-2"></i>
+            Salvar Atualização
+        </button>
+        <button class="btn btn-info btn-lg ms-2" onclick="verDetalhamento()">
+            <i class="fas fa-list me-2"></i>
+            Ver Detalhamento Mensal
+        </button>
+    </div>
+</div>
+
+<!-- Detalhamento Mensal -->
+<div id="detalhamento" style="display:none;">
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-info text-white">
+            <h5 class="mb-0">
+                <i class="fas fa-calendar-alt me-2"></i>
+                Detalhamento Mês a Mês
+            </h5>
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover mb-0 detail-table">
+                    <thead>
+                        <tr>
+                            <th>Mês/Ano</th>
+                            <th>Valor Inicial</th>
+                            <th>Juros</th>
+                            <th>Correção</th>
+                            <th>Valor Final</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabelaDetalhamento">
+                        <!-- Preenchido via JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Histórico de Atualizações -->
+<div class="card shadow-sm">
+    <div class="card-header bg-secondary text-white">
+        <h5 class="mb-0">
+            <i class="fas fa-history me-2"></i>
+            Histórico de Atualizações
+        </h5>
+    </div>
+    <div class="card-body p-0">
+        {% if historico %}
+        <div class="table-responsive">
+            <table class="table table-hover mb-0 history-table">
+                <thead>
+                    <tr>
+                        <th>Data</th>
+                        <th>Principal</th>
+                        <th>Juros</th>
+                        <th>Correção</th>
+                        <th>Total</th>
+                        <th>Período</th>
+                        <th>Índice</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for h in historico %}
+                    <tr>
+                        <td>{{ h.data_atualizacao.strftime('%d/%m/%Y %H:%M') }}</td>
+                        <td>R$ {{ "{:,.2f}".format(h.valor_principal) }}</td>
+                        <td>R$ {{ "{:,.2f}".format(h.valor_juros) }}</td>
+                        <td>R$ {{ "{:,.2f}".format(h.valor_correcao) }}</td>
+                        <td><strong>R$ {{ "{:,.2f}".format(h.valor_total) }}</strong></td>
+                        <td>{{ h.periodo_inicio.strftime('%d/%m/%Y') if h.periodo_inicio else '-' }} a {{ h.periodo_fim.strftime('%d/%m/%Y') if h.periodo_fim else '-' }}</td>
+                        <td><span class="badge bg-info">{{ h.indice_correcao }}</span></td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="text-center py-5">
+            <i class="fas fa-inbox fa-3x text-muted mb-3"></i>
+            <h5 class="text-muted">Nenhuma atualização registrada</h5>
+            <p class="text-muted">Calcule e salve a primeira atualização acima</p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<script>
+let ultimoCalculo = null;
+
+function calcularValores() {
+    const valorPrincipal = parseFloat(document.getElementById('valorPrincipal').value);
+    const dataBase = document.getElementById('dataBase').value;
+    const dataFinal = document.getElementById('dataFinal').value;
+    const taxaJuros = parseFloat(document.getElementById('taxaJuros').value);
+    const indiceCorrecao = document.getElementById('indiceCorrecao').value;
+    const tipoJuros = document.getElementById('tipoJuros').value;
+    
+    // Validações
+    if (!valorPrincipal || !dataBase || !dataFinal) {
+        alert('Preencha todos os campos obrigatórios!');
+        return;
+    }
+    
+    if (new Date(dataBase) >= new Date(dataFinal)) {
+        alert('Data final deve ser maior que data base!');
+        return;
+    }
+    
+    // Chamar API
+    fetch('/api/calcular-valores', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            processo_id: {{ processo.id }},
+            valor_principal: valorPrincipal,
+            data_base: dataBase,
+            data_final: dataFinal,
+            taxa_juros: taxaJuros,
+            indice_correcao: indiceCorrecao,
+            tipo_juros: tipoJuros
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        ultimoCalculo = data;
+        exibirResultados(data);
+    })
+    .catch(error => {
+        console.error('Erro:', error);
+        alert('Erro ao calcular valores!');
+    });
+}
+
+function exibirResultados(data) {
+    document.getElementById('resPrincipal').textContent = 
+        'R$ ' + data.valor_principal.toLocaleString('pt-BR', {minimumFractionDigits: 2});
+    document.getElementById('resJuros').textContent = 
+        'R$ ' + data.valor_juros.toLocaleString('pt-BR', {minimumFractionDigits: 2});
+    document.getElementById('resCorrecao').textContent = 
+        'R$ ' + data.valor_correcao.toLocaleString('pt-BR', {minimumFractionDigits: 2});
+    document.getElementById('resTotal').textContent = 
+        'R$ ' + data.valor_total.toLocaleString('pt-BR', {minimumFractionDigits: 2});
+    document.getElementById('resMeses').textContent = data.meses_calculados;
+    document.getElementById('resIndice').textContent = data.indice_correcao;
+    
+    document.getElementById('resultados').style.display = 'block';
+    document.getElementById('resultados').scrollIntoView({ behavior: 'smooth' });
+}
+
+function salvarAtualizacao() {
+    if (!ultimoCalculo) {
+        alert('Calcule os valores primeiro!');
+        return;
+    }
+    
+    if (!confirm('Deseja salvar esta atualização de valores?')) {
+        return;
+    }
+    
+    fetch('/processo/{{ processo.id }}/salvar-atualizacao-valores', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(ultimoCalculo)
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            alert('Atualização salva com sucesso!');
+            window.location.reload();
+        } else {
+            alert('Erro ao salvar: ' + data.error);
+        }
+    })
+    .catch(error => {
+        console.error('Erro:', error);
+        alert('Erro ao salvar atualização!');
+    });
+}
+
+function verDetalhamento() {
+    if (!ultimoCalculo) {
+        alert('Calcule os valores primeiro!');
+        return;
+    }
+    
+    // Chamar API para detalhamento
+    fetch('/api/detalhamento-mensal', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            valor_principal: ultimoCalculo.valor_principal,
+            data_base: document.getElementById('dataBase').value,
+            data_final: document.getElementById('dataFinal').value,
+            taxa_juros: ultimoCalculo.taxa_juros_mensal,
+            indice_correcao: ultimoCalculo.indice_correcao
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        exibirDetalhamento(data);
+    })
+    .catch(error => {
+        console.error('Erro:', error);
+        alert('Erro ao gerar detalhamento!');
+    });
+}
+
+function exibirDetalhamento(detalhes) {
+    const tbody = document.getElementById('tabelaDetalhamento');
+    tbody.innerHTML = detalhes.map(d => `
+        <tr>
+            <td>${d.mes}</td>
+            <td>R$ ${d.valor_inicial.toLocaleString('pt-BR', {minimumFractionDigits: 2})}</td>
+            <td>R$ ${d.juros.toLocaleString('pt-BR', {minimumFractionDigits: 2})}</td>
+            <td>R$ ${d.correcao.toLocaleString('pt-BR', {minimumFractionDigits: 2})}</td>
+            <td><strong>R$ ${d.valor_final.toLocaleString('pt-BR', {minimumFractionDigits: 2})}</strong></td>
+        </tr>
+    `).join('');
+    
+    document.getElementById('detalhamento').style.display = 'block';
+    document.getElementById('detalhamento').scrollIntoView({ behavior: 'smooth' });
+}
+</script>
+
+{% endblock %}

@@ -1,0 +1,36 @@
+﻿
+# Rota para dashboard moderno
+@app.route('/dashboard-moderno')
+def dashboard_moderno():
+    """Dashboard moderno baseado no modelo poker-tool"""
+    return render_template('dashboard_moderno.html')
+
+# API para dados do dashboard
+@app.route('/api/processos')
+def api_processos():
+    """API para retornar dados dos processos"""
+    db = SessionLocal()
+    try:
+        processos = db.query(Processo).all()
+        
+        dados = []
+        for p in processos:
+            dados.append({
+                'id': p.id,
+                'numero': p.numero_processo,
+                'tribunal': p.tribunal.value if p.tribunal else '',
+                'credor': p.credor_nome,
+                'valor': float(p.valor_atualizado) if p.valor_atualizado else 0,
+                'natureza': p.natureza.value if p.natureza else '',
+                'status': p.status.value if p.status else '',
+                'situacao': 'Pago' if p.status and p.status.name == 'PAGO' else 
+                           'Pronto Não Pago' if not p.possui_pendencia_pagamento else 
+                           'Com Pendência',
+                'temOficio': p.tem_oficio,
+                'prioritario': p.credor_idoso or p.credor_doenca_grave or p.credor_deficiente
+            })
+        
+        return jsonify(dados)
+    finally:
+        db.close()
+

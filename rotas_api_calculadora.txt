@@ -1,0 +1,139 @@
+﻿
+# ============================================================================
+# APIs PARA CALCULADORA DE PRECATÓRIOS
+# ============================================================================
+
+from flask import jsonify
+import sys
+sys.path.append('src')
+
+@app.route('/api/calcular-valores', methods=['POST'])
+def api_calcular_valores():
+    """
+    API para calcular valores de precatórios
+    
+    Request JSON:
+        - valor_principal: float
+        - data_base: string (YYYY-MM-DD)
+        - data_final: string (YYYY-MM-DD)
+        - taxa_juros: float (%)
+        - indice_correcao: string (IPCA, INPC, TR, SELIC)
+        - tipo_juros: string (SIMPLES ou COMPOSTOS)
+    
+    Response JSON:
+        - valor_principal: float
+        - valor_juros: float
+        - valor_correcao: float
+        - valor_total: float
+        - meses_calculados: int
+        - taxa_juros_mensal: float
+        - indice_correcao: string
+        - tipo_juros: string
+        - data_base: string
+        - data_final: string
+    """
+    try:
+        data = request.get_json()
+        
+        # Importar calculadora
+        from calculadora_precatorios import CalculadoraPrecatorioCompleta
+        
+        # Criar e configurar calculadora
+        calc = CalculadoraPrecatorioCompleta()
+        calc.configurar(
+            valor_principal=data['valor_principal'],
+            data_base=data['data_base'],
+            data_final=data.get('data_final'),
+            taxa_juros_mensal=data.get('taxa_juros', 0.5),
+            indice_correcao=data.get('indice_correcao', 'IPCA'),
+            tipo_juros=data.get('tipo_juros', 'SIMPLES')
+        )
+        
+        # Calcular
+        resultado = calc.calcular_tudo()
+        
+        return jsonify(resultado)
+        
+    except Exception as e:
+        return jsonify({
+            'error': str(e),
+            'message': 'Erro ao calcular valores'
+        }), 500
+
+@app.route('/api/detalhamento-mensal', methods=['POST'])
+def api_detalhamento_mensal():
+    """
+    API para gerar detalhamento mensal
+    
+    Request JSON:
+        - valor_principal: float
+        - data_base: string (YYYY-MM-DD)
+        - data_final: string (YYYY-MM-DD)
+        - taxa_juros: float (%)
+        - indice_correcao: string (IPCA, INPC, TR, SELIC)
+    
+    Response JSON:
+        Array de objetos com:
+        - mes: string (MM/YYYY)
+        - valor_inicial: float
+        - juros: float
+        - correcao: float
+        - valor_final: float
+    """
+    try:
+        data = request.get_json()
+        
+        # Importar calculadora
+        from calculadora_precatorios import CalculadoraPrecatorioCompleta
+        
+        # Criar e configurar calculadora
+        calc = CalculadoraPrecatorioCompleta()
+        calc.configurar(
+            valor_principal=data['valor_principal'],
+            data_base=data['data_base'],
+            data_final=data.get('data_final'),
+            taxa_juros_mensal=data.get('taxa_juros', 0.5),
+            indice_correcao=data.get('indice_correcao', 'IPCA')
+        )
+        
+        # Gerar detalhamento
+        detalhes = calc.gerar_detalhamento_mensal()
+        
+        return jsonify(detalhes)
+        
+    except Exception as e:
+        return jsonify({
+            'error': str(e),
+            'message': 'Erro ao gerar detalhamento'
+        }), 500
+
+@app.route('/api/teste-calculadora', methods=['GET'])
+def api_teste_calculadora():
+    """API para testar a calculadora"""
+    try:
+        from calculadora_precatorios import CalculadoraPrecatorioCompleta
+        
+        calc = CalculadoraPrecatorioCompleta()
+        calc.configurar(
+            valor_principal=100000.00,
+            data_base='2020-01-01',
+            data_final='2026-01-06',
+            taxa_juros_mensal=0.5,
+            indice_correcao='IPCA',
+            tipo_juros='SIMPLES'
+        )
+        
+        resultado = calc.calcular_tudo()
+        
+        return jsonify({
+            'status': 'OK',
+            'message': 'Calculadora funcionando corretamente',
+            'exemplo': resultado
+        })
+        
+    except Exception as e:
+        return jsonify({
+            'status': 'ERRO',
+            'message': str(e)
+        }), 500
+

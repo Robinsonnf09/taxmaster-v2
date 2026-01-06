@@ -1,0 +1,67 @@
+﻿
+# Adicione estas rotas no arquivo app.py, antes do if __name__ == '__main__':
+
+@app.route('/processo/cadastrar', methods=['GET', 'POST'])
+def cadastrar_processo():
+    """Cadastrar novo processo"""
+    if request.method == 'GET':
+        return render_template('processo_cadastrar.html')
+    
+    db = SessionLocal()
+    
+    try:
+        # Coletar dados do formulário
+        novo_processo = Processo(
+            numero_processo=request.form.get('numero_processo'),
+            processo_principal=request.form.get('processo_principal'),  # NOVO CAMPO
+            tribunal=TribunalEnum[request.form.get('tribunal')],
+            natureza=NaturezaEnum[request.form.get('natureza')] if request.form.get('natureza') else None,
+            status=StatusProcessoEnum[request.form.get('status', 'PENDENTE')],
+            
+            # Credor
+            credor_nome=request.form.get('credor_nome'),
+            credor_cpf_cnpj=request.form.get('credor_cpf_cnpj'),
+            credor_email=request.form.get('credor_email'),
+            credor_telefone=request.form.get('credor_telefone'),
+            credor_endereco=request.form.get('credor_endereco'),
+            credor_idoso=bool(request.form.get('credor_idoso')),
+            credor_doenca_grave=bool(request.form.get('credor_doenca_grave')),
+            credor_deficiente=bool(request.form.get('credor_deficiente')),
+            
+            # Advogado
+            advogado_nome=request.form.get('advogado_nome'),
+            advogado_oab=request.form.get('advogado_oab'),
+            advogado_email=request.form.get('advogado_email'),
+            advogado_telefone=request.form.get('advogado_telefone'),
+            
+            # Valores
+            valor_principal=float(request.form.get('valor_principal')),
+            valor_juros=float(request.form.get('valor_juros', 0)),
+            valor_atualizado=float(request.form.get('valor_atualizado')),
+            data_base_calculo=datetime.strptime(request.form.get('data_base_calculo'), '%Y-%m-%d').date() if request.form.get('data_base_calculo') else None,
+            
+            # Datas
+            data_ajuizamento=datetime.strptime(request.form.get('data_ajuizamento'), '%Y-%m-%d').date() if request.form.get('data_ajuizamento') else None,
+            data_transito_julgado=datetime.strptime(request.form.get('data_transito_julgado'), '%Y-%m-%d').date() if request.form.get('data_transito_julgado') else None,
+            data_expedicao_oficio=datetime.strptime(request.form.get('data_expedicao_oficio'), '%Y-%m-%d').date() if request.form.get('data_expedicao_oficio') else None,
+            
+            # Informações adicionais
+            classe=request.form.get('classe'),
+            assunto=request.form.get('assunto'),
+            area=request.form.get('area'),
+            observacoes=request.form.get('observacoes'),
+            tags=request.form.get('tags')
+        )
+        
+        db.add(novo_processo)
+        db.commit()
+        
+        return redirect(url_for('detalhe_processo', processo_id=novo_processo.id))
+        
+    except Exception as e:
+        db.rollback()
+        return f"Erro ao cadastrar processo: {str(e)}", 500
+        
+    finally:
+        db.close()
+

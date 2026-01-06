@@ -1,0 +1,17 @@
+@echo off
+REM ============================================
+REM Script de inicialização TAX MASTER - Windows
+REM ============================================
+
+echo Iniciando TAX MASTER com Python 3.12...
+
+REM Ativa o servidor FastAPI com Uvicorn
+REM - Usa Python 3.12
+REM - Define host 0.0.0.0 (acesso local e externo)
+REM - Porta 8001
+REM - 4 workers para produção
+py -3.12 -m uvicorn app.main:app --host 0.0.0.0 --port 8001 --workers 4
+
+REM ============================================
+REM Pressione CTRL+C para parar o servidor
+REM ============================================

@@ -1,0 +1,118 @@
+﻿# Adicionar no início do arquivo dashboard/app_filtros.py, após os imports
+import sys
+sys.path.append("robots")
+try:
+    from buscador_oficio import buscar_oficio_requisitorio
+    ROBO_DISPONIVEL = True
+except:
+    ROBO_DISPONIVEL = False
+    
+# Substituir a seção de busca de ofício por:
+if buscar_oficio:
+    processo = db.query(Processo).filter(
+        Processo.numero_processo == processo_selecionado
+    ).first()
+    
+    if processo:
+        st.success(f"✅ Processo encontrado: {processo.numero_processo}")
+        
+        # Exibir detalhes do processo
+        with st.expander("📊 Detalhes do Processo", expanded=True):
+            col1, col2, col3 = st.columns(3)
+            
+            with col1:
+                st.write("**Tribunal:**", processo.tribunal)
+                st.write("**Tipo:**", processo.tipo or "N/A")
+                st.write("**Credor:**", processo.credor_nome or "N/A")
+                st.write("**CPF/CNPJ:**", processo.credor_cpf_cnpj or "N/A")
+            
+            with col2:
+                valor_principal_fmt = f"R$ {processo.valor_principal:,.2f}".replace(",", "X").replace(".", ",").replace("X", ".") if processo.valor_principal else "N/A"
+                valor_atualizado_fmt = f"R$ {processo.valor_atualizado:,.2f}".replace(",", "X").replace(".", ",").replace("X", ".") if processo.valor_atualizado else "N/A"
+                st.write("**Valor Principal:**", valor_principal_fmt)
+                st.write("**Valor Atualizado:**", valor_atualizado_fmt)
+                st.write("**Fase:**", processo.fase or "N/A")
+                st.write("**Prioridade:**", processo.prioridade or "N/A")
+            
+            with col3:
+                st.write("**Score:**", f"{processo.score_oportunidade:.1f}/10" if processo.score_oportunidade else "N/A")
+                st.write("**Natureza:**", processo.natureza or "N/A")
+                st.write("**Data Expedição:**", processo.data_expedicao.strftime("%d/%m/%Y") if processo.data_expedicao else "N/A")
+        
+        if ROBO_DISPONIVEL:
+            # BUSCA REAL DO OFÍCIO
+            st.info("🤖 Iniciando busca REAL do ofício requisitório no portal do tribunal...")
+            
+            progress_bar = st.progress(0)
+            status_text = st.empty()
+            
+            status_text.text(f"Acessando portal {processo.tribunal}...")
+            progress_bar.progress(20)
+            
+            # Executar busca real
+            import threading
+            resultado_busca = {"caminho": None, "erro": None}
+            
+            def executar_busca():
+                try:
+                    resultado_busca["caminho"] = buscar_oficio_requisitorio(
+                        processo.numero_processo,
+                        processo.tribunal
+                    )
+                except Exception as e:
+                    resultado_busca["erro"] = str(e)
+            
+            thread = threading.Thread(target=executar_busca)
+            thread.start()
+            
+            # Atualizar progresso enquanto busca
+            while thread.is_alive():
+                for i in range(20, 90, 10):
+                    if not thread.is_alive():
+                        break
+                    status_text.text(f"Buscando ofício no processo {processo.numero_processo}...")
+                    progress_bar.progress(i)
+                    time.sleep(0.5)
+            
+            thread.join()
+            
+            status_text.text("Finalizando...")
+            progress_bar.progress(100)
+            
+            time.sleep(0.5)
+            status_text.empty()
+            progress_bar.empty()
+            
+            if resultado_busca["erro"]:
+                st.error(f"❌ Erro ao buscar ofício: {resultado_busca['erro']}")
+            elif resultado_busca["caminho"]:
+                st.success("✅ Ofício requisitório baixado com sucesso!")
+                
+                # Ler arquivo e oferecer download
+                with open(resultado_busca["caminho"], "rb") as f:
+                    pdf_data = f.read()
+                
+                col1, col2 = st.columns(2)
+                
+                with col1:
+                    st.download_button(
+                        label="📥 Baixar Ofício Requisitório (PDF)",
+                        data=pdf_data,
+                        file_name=f"oficio_{processo.numero_processo.replace('/', '_').replace('.', '_')}.pdf",
+                        mime="application/pdf",
+                        use_container_width=True
+                    )
+                
+                with col2:
+                    st.button("📧 Enviar por Email", use_container_width=True)
+                
+                st.info(f"📁 Arquivo salvo em: {resultado_busca['caminho']}")
+            else:
+                st.warning("⚠️ Ofício não encontrado no portal do tribunal. Possíveis causas:")
+                st.write("- Processo ainda não possui ofício expedido")
+                st.write("- Ofício não está disponível online")
+                st.write("- Estrutura do portal foi alterada")
+        else:
+            st.error("❌ Robô de busca não disponível. Instale as dependências: pip install playwright")
+    else:
+        st.error("❌ Processo não encontrado")

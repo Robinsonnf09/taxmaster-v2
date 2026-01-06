@@ -1,0 +1,322 @@
+﻿{% extends "base.html" %}
+
+{% block title %}Atualizar Ofício Requisitório - Tax Master{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-12">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/">Dashboard</a></li>
+                <li class="breadcrumb-item"><a href="/processos">Processos</a></li>
+                <li class="breadcrumb-item"><a href="/processo/{{ processo.id }}">{{ processo.numero_processo }}</a></li>
+                <li class="breadcrumb-item active">Atualizar Ofício</li>
+            </ol>
+        </nav>
+        
+        <h1 class="display-5">
+            <i class="fas fa-sync-alt text-info"></i>
+            Atualizar Ofício Requisitório
+        </h1>
+        <p class="lead text-muted">Processo: {{ processo.numero_processo }}</p>
+    </div>
+</div>
+
+<!-- Informações Atuais do Ofício -->
+<div class="row mb-4">
+    <div class="col-md-6">
+        <div class="card shadow-sm">
+            <div class="card-header bg-info text-white">
+                <h5 class="mb-0">
+                    <i class="fas fa-info-circle me-2"></i>
+                    Status Atual do Ofício
+                </h5>
+            </div>
+            <div class="card-body">
+                <table class="table table-borderless mb-0">
+                    <tr>
+                        <th width="40%">Status Atual:</th>
+                        <td>
+                            <span class="badge bg-primary fs-6">
+                                {{ processo.status_oficio or "Não Expedido" }}
+                            </span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Número do Ofício:</th>
+                        <td>{{ processo.numero_oficio or "-" }}</td>
+                    </tr>
+                    <tr>
+                        <th>Data de Expedição:</th>
+                        <td>{{ processo.data_expedicao_oficio.strftime('%d/%m/%Y') if processo.data_expedicao_oficio else "-" }}</td>
+                    </tr>
+                    <tr>
+                        <th>Última Atualização:</th>
+                        <td>
+                            {% if processo.data_ultima_atualizacao_oficio %}
+                                {{ processo.data_ultima_atualizacao_oficio.strftime('%d/%m/%Y %H:%M') }}
+                            {% else %}
+                                Nunca atualizado
+                            {% endif %}
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-6">
+        <div class="card shadow-sm">
+            <div class="card-header bg-success text-white">
+                <h5 class="mb-0">
+                    <i class="fas fa-chart-line me-2"></i>
+                    Estatísticas
+                </h5>
+            </div>
+            <div class="card-body">
+                <table class="table table-borderless mb-0">
+                    <tr>
+                        <th width="50%">Total de Atualizações:</th>
+                        <td><strong>{{ total_atualizacoes }}</strong></td>
+                    </tr>
+                    <tr>
+                        <th>Última Atualização por:</th>
+                        <td>{{ ultima_atualizacao.usuario if ultima_atualizacao else "-" }}</td>
+                    </tr>
+                    <tr>
+                        <th>Origem:</th>
+                        <td>{{ ultima_atualizacao.origem if ultima_atualizacao else "-" }}</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Formulário de Nova Atualização -->
+<div class="card shadow-sm mb-4">
+    <div class="card-header bg-primary text-white">
+        <h5 class="mb-0">
+            <i class="fas fa-plus-circle me-2"></i>
+            Registrar Nova Atualização
+        </h5>
+    </div>
+    <div class="card-body">
+        <form method="POST" action="/processo/{{ processo.id }}/atualizar-oficio">
+            
+            <div class="row g-3">
+                
+                <!-- Novo Status -->
+                <div class="col-md-6">
+                    <label class="form-label">
+                        <strong>Novo Status do Ofício</strong>
+                        <span class="text-danger">*</span>
+                    </label>
+                    <select class="form-select form-select-lg" name="status_novo" required>
+                        <option value="">Selecione o novo status...</option>
+                        <option value="NAO_EXPEDIDO">Não Expedido</option>
+                        <option value="EM_ELABORACAO">Em Elaboração</option>
+                        <option value="AGUARDANDO_ASSINATURA">Aguardando Assinatura</option>
+                        <option value="ASSINADO">Assinado</option>
+                        <option value="EXPEDIDO">Expedido</option>
+                        <option value="ENVIADO_TRIBUNAL">Enviado ao Tribunal</option>
+                        <option value="RECEBIDO_TRIBUNAL">Recebido pelo Tribunal</option>
+                        <option value="EM_CONFERENCIA">Em Conferência</option>
+                        <option value="RETIFICADO">Retificado</option>
+                        <option value="REGISTRADO">Registrado como Precatório</option>
+                        <option value="INSCRITO_ORCAMENTO">Inscrito no Orçamento</option>
+                        <option value="EM_LISTA_PAGAMENTO">Em Lista de Pagamento</option>
+                        <option value="PAGO">Pago</option>
+                    </select>
+                </div>
+                
+                <!-- Data da Atualização -->
+                <div class="col-md-6">
+                    <label class="form-label">
+                        <strong>Data da Atualização</strong>
+                        <span class="text-danger">*</span>
+                    </label>
+                    <input type="date" class="form-control form-control-lg" 
+                           name="data_atualizacao" 
+                           value="{{ hoje }}"
+                           required>
+                </div>
+                
+                <!-- Número do Ofício -->
+                <div class="col-md-6">
+                    <label class="form-label">
+                        <strong>Número do Ofício</strong>
+                    </label>
+                    <input type="text" class="form-control" 
+                           name="numero_oficio" 
+                           placeholder="Ex: OF-2024/123456"
+                           value="{{ processo.numero_oficio or '' }}">
+                </div>
+                
+                <!-- Número do Precatório -->
+                <div class="col-md-6">
+                    <label class="form-label">
+                        <strong>Número do Precatório</strong>
+                    </label>
+                    <input type="text" class="form-control" 
+                           name="numero_precatorio" 
+                           placeholder="Ex: PREC-2024/789">
+                </div>
+                
+                <!-- Valor Atualizado -->
+                <div class="col-md-6">
+                    <label class="form-label">
+                        <strong>Valor Atualizado (se houver alteração)</strong>
+                    </label>
+                    <div class="input-group">
+                        <span class="input-group-text">R$</span>
+                        <input type="number" class="form-control" 
+                               name="valor_atualizado" 
+                               step="0.01"
+                               placeholder="Deixe em branco se não houver alteração">
+                    </div>
+                </div>
+                
+                <!-- Origem -->
+                <div class="col-md-6">
+                    <label class="form-label">
+                        <strong>Origem da Informação</strong>
+                        <span class="text-danger">*</span>
+                    </label>
+                    <select class="form-select" name="origem" required>
+                        <option value="MANUAL">Manual (Cadastro direto)</option>
+                        <option value="PORTAL_TRIBUNAL">Portal do Tribunal</option>
+                        <option value="DIARIO_OFICIAL">Diário Oficial</option>
+                        <option value="CONTATO_TRIBUNAL">Contato com Tribunal</option>
+                        <option value="ADVOGADO">Informação do Advogado</option>
+                        <option value="CREDOR">Informação do Credor</option>
+                        <option value="AUTOMATICA">Busca Automática</option>
+                    </select>
+                </div>
+                
+                <!-- Descrição -->
+                <div class="col-md-12">
+                    <label class="form-label">
+                        <strong>Descrição da Atualização</strong>
+                        <span class="text-danger">*</span>
+                    </label>
+                    <textarea class="form-control" name="descricao" rows="3" 
+                              placeholder="Descreva o que foi atualizado e como obteve a informação..."
+                              required></textarea>
+                </div>
+                
+                <!-- Observações -->
+                <div class="col-md-12">
+                    <label class="form-label">
+                        <strong>Observações Adicionais</strong>
+                    </label>
+                    <textarea class="form-control" name="observacoes" rows="2" 
+                              placeholder="Informações complementares (opcional)"></textarea>
+                </div>
+                
+            </div>
+            
+            <hr class="my-4">
+            
+            <!-- Botões -->
+            <div class="d-flex justify-content-between">
+                <a href="/processo/{{ processo.id }}" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left me-2"></i>
+                    Cancelar
+                </a>
+                <button type="submit" class="btn btn-primary btn-lg">
+                    <i class="fas fa-save me-2"></i>
+                    Registrar Atualização
+                </button>
+            </div>
+            
+        </form>
+    </div>
+</div>
+
+<!-- Histórico de Atualizações -->
+<div class="card shadow-sm">
+    <div class="card-header bg-secondary text-white">
+        <h5 class="mb-0">
+            <i class="fas fa-history me-2"></i>
+            Histórico de Atualizações ({{ total_atualizacoes }})
+        </h5>
+    </div>
+    <div class="card-body p-0">
+        {% if atualizacoes %}
+        <div class="table-responsive">
+            <table class="table table-hover mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th width="15%">Data</th>
+                        <th width="15%">Status</th>
+                        <th width="30%">Descrição</th>
+                        <th width="15%">Origem</th>
+                        <th width="15%">Usuário</th>
+                        <th width="10%">Validado</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for atualizacao in atualizacoes %}
+                    <tr>
+                        <td>
+                            <small>{{ atualizacao.data_atualizacao.strftime('%d/%m/%Y %H:%M') }}</small>
+                        </td>
+                        <td>
+                            {% if atualizacao.status_anterior %}
+                            <small class="text-muted">
+                                {{ atualizacao.status_anterior }}
+                            </small>
+                            <br>
+                            <i class="fas fa-arrow-down text-primary"></i>
+                            <br>
+                            {% endif %}
+                            <span class="badge bg-success">
+                                {{ atualizacao.status_novo }}
+                            </span>
+                        </td>
+                        <td>
+                            <small>{{ atualizacao.descricao[:100] }}...</small>
+                            {% if atualizacao.numero_oficio %}
+                            <br>
+                            <span class="badge bg-info">
+                                <i class="fas fa-file-alt me-1"></i>
+                                {{ atualizacao.numero_oficio }}
+                            </span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <span class="badge bg-secondary">
+                                {{ atualizacao.origem }}
+                            </span>
+                        </td>
+                        <td>
+                            <small>{{ atualizacao.usuario or "Sistema" }}</small>
+                        </td>
+                        <td>
+                            {% if atualizacao.validado %}
+                            <span class="badge bg-success">
+                                <i class="fas fa-check-circle"></i>
+                            </span>
+                            {% else %}
+                            <span class="badge bg-warning text-dark">
+                                <i class="fas fa-clock"></i>
+                            </span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="text-center py-5">
+            <i class="fas fa-inbox fa-3x text-muted mb-3"></i>
+            <h5 class="text-muted">Nenhuma atualização registrada</h5>
+            <p class="text-muted">Registre a primeira atualização do ofício acima</p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+{% endblock %}

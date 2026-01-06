@@ -1,0 +1,167 @@
+﻿{% extends "base.html" %}
+
+{% block title %}Cadastrar Processo - Tax Master{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-12">
+        <h1 class="display-5">
+            <i class="fas fa-plus-circle text-primary"></i>
+            Cadastrar Novo Processo
+        </h1>
+    </div>
+</div>
+
+<div class="card shadow-sm">
+    <div class="card-header bg-primary text-white">
+        <h5 class="mb-0">
+            <i class="fas fa-file-alt me-2"></i>
+            Dados do Processo
+        </h5>
+    </div>
+    <div class="card-body">
+        <form method="POST" action="/processo/cadastrar">
+            
+            <!-- Identificação -->
+            <div class="row mb-4">
+                <div class="col-12">
+                    <h5 class="border-bottom pb-2 mb-3">
+                        <i class="fas fa-hashtag text-primary me-2"></i>
+                        Identificação do Processo
+                    </h5>
+                </div>
+                
+                <div class="col-md-6">
+                    <label class="form-label">
+                        <strong>Número do Processo de Execução</strong>
+                        <span class="text-danger">*</span>
+                    </label>
+                    <input type="text" class="form-control form-control-lg" 
+                           name="numero_processo" required
+                           placeholder="0034565-98.2018.8.26.0053">
+                </div>
+                
+                <div class="col-md-6">
+                    <label class="form-label">
+                        <strong>Número do Processo Principal/Conhecimento</strong>
+                    </label>
+                    <input type="text" class="form-control form-control-lg" 
+                           name="processo_principal"
+                           placeholder="0048680-71.2011.8.26.0053">
+                    <small class="form-text text-muted">
+                        Processo original que gerou o precatório (opcional)
+                    </small>
+                </div>
+                
+                <div class="col-md-4 mt-3">
+                    <label class="form-label"><strong>Tribunal</strong> <span class="text-danger">*</span></label>
+                    <select class="form-select" name="tribunal" required>
+                        <option value="">Selecione...</option>
+                        <option value="TJSP">TJSP</option>
+                        <option value="TJRJ">TJRJ</option>
+                        <option value="TJMG">TJMG</option>
+                    </select>
+                </div>
+                
+                <div class="col-md-4 mt-3">
+                    <label class="form-label"><strong>Natureza</strong> <span class="text-danger">*</span></label>
+                    <select class="form-select" name="natureza" required>
+                        <option value="">Selecione...</option>
+                        <option value="ALIMENTAR">Alimentar</option>
+                        <option value="COMUM">Comum</option>
+                        <option value="TRIBUTARIO">Tributário</option>
+                    </select>
+                </div>
+                
+                <div class="col-md-4 mt-3">
+                    <label class="form-label"><strong>Status</strong></label>
+                    <select class="form-select" name="status">
+                        <option value="PENDENTE" selected>Pendente</option>
+                        <option value="EM_ANALISE">Em Análise</option>
+                    </select>
+                </div>
+            </div>
+            
+            <!-- Credor -->
+            <div class="row mb-4">
+                <div class="col-12">
+                    <h5 class="border-bottom pb-2 mb-3">
+                        <i class="fas fa-user text-success me-2"></i>
+                        Dados do Credor
+                    </h5>
+                </div>
+                
+                <div class="col-md-6">
+                    <label class="form-label"><strong>Nome do Credor</strong> <span class="text-danger">*</span></label>
+                    <input type="text" class="form-control" name="credor_nome" required>
+                </div>
+                
+                <div class="col-md-3">
+                    <label class="form-label"><strong>CPF/CNPJ</strong></label>
+                    <input type="text" class="form-control" name="credor_cpf_cnpj">
+                </div>
+                
+                <div class="col-md-3">
+                    <label class="form-label"><strong>Telefone</strong></label>
+                    <input type="text" class="form-control" name="credor_telefone">
+                </div>
+            </div>
+            
+            <!-- Valores -->
+            <div class="row mb-4">
+                <div class="col-12">
+                    <h5 class="border-bottom pb-2 mb-3">
+                        <i class="fas fa-dollar-sign text-success me-2"></i>
+                        Valores
+                    </h5>
+                </div>
+                
+                <div class="col-md-4">
+                    <label class="form-label"><strong>Valor Principal</strong> <span class="text-danger">*</span></label>
+                    <div class="input-group">
+                        <span class="input-group-text">R$</span>
+                        <input type="number" class="form-control" name="valor_principal" 
+                               step="0.01" required>
+                    </div>
+                </div>
+                
+                <div class="col-md-4">
+                    <label class="form-label"><strong>Juros</strong></label>
+                    <div class="input-group">
+                        <span class="input-group-text">R$</span>
+                        <input type="number" class="form-control" name="valor_juros" 
+                               step="0.01" value="0">
+                    </div>
+                </div>
+                
+                <div class="col-md-4">
+                    <label class="form-label"><strong>Valor Atualizado</strong> <span class="text-danger">*</span></label>
+                    <div class="input-group">
+                        <span class="input-group-text">R$</span>
+                        <input type="number" class="form-control" name="valor_atualizado" 
+                               step="0.01" required>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Botões -->
+            <div class="row">
+                <div class="col-12">
+                    <hr>
+                    <div class="d-flex justify-content-between">
+                        <a href="/processos" class="btn btn-secondary">
+                            <i class="fas fa-times me-2"></i>
+                            Cancelar
+                        </a>
+                        <button type="submit" class="btn btn-primary btn-lg">
+                            <i class="fas fa-save me-2"></i>
+                            Cadastrar Processo
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+        </form>
+    </div>
+</div>
+{% endblock %}

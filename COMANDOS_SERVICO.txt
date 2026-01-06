@@ -1,0 +1,32 @@
+﻿# COMANDOS TAX MASTER - REFERÊNCIA RÁPIDA
+
+## COMANDOS BÁSICOS
+nssm start TaxMaster          # Iniciar
+nssm stop TaxMaster           # Parar
+nssm restart TaxMaster        # Reiniciar
+nssm status TaxMaster         # Ver status
+nssm edit TaxMaster           # Editar (GUI)
+
+## LOGS
+Get-Content logs\service_output.log -Tail 50      # Últimas 50 linhas
+Get-Content logs\service_error.log -Tail 50       # Últimas 50 linhas de erro
+Get-Content logs\service_output.log -Wait         # Monitorar em tempo real
+
+## WINDOWS
+services.msc                  # Gerenciador de Serviços
+Get-Service TaxMaster         # Ver status (PowerShell)
+Start-Service TaxMaster       # Iniciar (PowerShell)
+Stop-Service TaxMaster        # Parar (PowerShell)
+
+## MONITORAMENTO
+netstat -ano | findstr :8080                      # Verificar porta
+Test-NetConnection localhost -Port 8080           # Testar porta
+Invoke-WebRequest http://localhost:8080           # Testar servidor
+
+## REMOVER (CUIDADO!)
+nssm remove TaxMaster confirm
+
+## SCRIPTS
+.\TaxMaster_Menu.bat          # Menu interativo
+.\status_server.bat           # Status completo
+.\uninstall_service.bat       # Desinstalar

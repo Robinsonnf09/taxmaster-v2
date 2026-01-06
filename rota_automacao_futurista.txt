@@ -1,0 +1,6 @@
+﻿
+@app.route('/automacao-futurista')
+def automacao_futurista():
+    """Interface futurista de automação"""
+    return render_template('automacao_futurista.html')
+

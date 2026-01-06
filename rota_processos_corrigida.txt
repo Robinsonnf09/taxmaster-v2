@@ -1,0 +1,138 @@
+﻿# SUBSTITUA A ROTA /processos NO APP.PY POR ESTE CÓDIGO:
+
+@app.route('/processos')
+def listar_processos():
+    """Lista de processos com filtros avançados"""
+    db = SessionLocal()
+    
+    try:
+        # Parâmetros de filtro
+        tribunal = request.args.get('tribunal')
+        esfera = request.args.get('esfera')
+        natureza = request.args.get('natureza')
+        status = request.args.get('status')
+        ano_precatorio = request.args.get('ano_precatorio', type=int)
+        valor_min = request.args.get('valor_min', type=float)
+        valor_max = request.args.get('valor_max', type=float)
+        tem_oficio = request.args.get('tem_oficio')
+        prioritario = request.args.get('prioritario')
+        pendencia = request.args.get('pendencia')
+        busca = request.args.get('busca')
+        pagina = request.args.get('pagina', 1, type=int)
+        
+        # Query base
+        query = db.query(Processo)
+        
+        # Aplicar filtros
+        if tribunal:
+            query = query.filter(Processo.tribunal == TribunalEnum[tribunal])
+        
+        if esfera:
+            from models_atualizado import EsferaEnum
+            query = query.filter(Processo.esfera == EsferaEnum[esfera])
+        
+        if natureza:
+            query = query.filter(Processo.natureza == NaturezaEnum[natureza])
+        
+        if status:
+            query = query.filter(Processo.status == StatusProcessoEnum[status])
+        
+        if ano_precatorio:
+            query = query.filter(Processo.ano_precatorio == ano_precatorio)
+        
+        if valor_min:
+            query = query.filter(Processo.valor_atualizado >= valor_min)
+        
+        if valor_max:
+            query = query.filter(Processo.valor_atualizado <= valor_max)
+        
+        if tem_oficio == 'sim':
+            query = query.filter(Processo.tem_oficio == True)
+        elif tem_oficio == 'nao':
+            query = query.filter(Processo.tem_oficio == False)
+        
+        if prioritario == 'sim':
+            query = query.filter(
+                or_(
+                    Processo.credor_idoso == True,
+                    Processo.credor_doenca_grave == True,
+                    Processo.credor_deficiente == True
+                )
+            )
+        elif prioritario == 'nao':
+            query = query.filter(
+                and_(
+                    Processo.credor_idoso == False,
+                    Processo.credor_doenca_grave == False,
+                    Processo.credor_deficiente == False
+                )
+            )
+        
+        if pendencia == 'sim':
+            query = query.filter(Processo.possui_pendencia_pagamento == True)
+        elif pendencia == 'nao':
+            query = query.filter(Processo.possui_pendencia_pagamento == False)
+        
+        if busca:
+            query = query.filter(
+                or_(
+                    Processo.numero_processo.contains(busca),
+                    Processo.processo_principal.contains(busca),
+                    Processo.credor_nome.contains(busca),
+                    Processo.advogado_nome.contains(busca),
+                    Processo.numero_oficio.contains(busca)
+                )
+            )
+        
+        # Ordenação
+        ordenar_por = request.args.get('ordenar', 'data_cadastro')
+        ordem = request.args.get('ordem', 'desc')
+        
+        if ordenar_por == 'valor':
+            query = query.order_by(Processo.valor_atualizado.desc() if ordem == 'desc' else Processo.valor_atualizado.asc())
+        elif ordenar_por == 'credor':
+            query = query.order_by(Processo.credor_nome.asc() if ordem == 'asc' else Processo.credor_nome.desc())
+        else:
+            query = query.order_by(Processo.data_cadastro.desc() if ordem == 'desc' else Processo.data_cadastro.asc())
+        
+        # Calcular estatísticas dos resultados ANTES da paginação
+        total = query.count()
+        
+        # Calcular valor total
+        valor_total = db.query(func.sum(Processo.valor_atualizado)).filter(
+            Processo.id.in_([p.id for p in query.all()])
+        ).scalar() or 0
+        
+        # Contar com ofício
+        com_oficio = query.filter(Processo.tem_oficio == True).count()
+        
+        # Contar prioritários
+        prioritarios = query.filter(
+            or_(
+                Processo.credor_idoso == True,
+                Processo.credor_doenca_grave == True,
+                Processo.credor_deficiente == True
+            )
+        ).count()
+        
+        # Paginação
+        processos = query.offset((pagina - 1) * PROCESSOS_POR_PAGINA).limit(PROCESSOS_POR_PAGINA).all()
+        
+        total_paginas = (total + PROCESSOS_POR_PAGINA - 1) // PROCESSOS_POR_PAGINA
+        
+        return render_template('processos.html',
+            processos=processos,
+            pagina=pagina,
+            total_paginas=total_paginas,
+            total=total,
+            valor_total=valor_total,
+            com_oficio=com_oficio,
+            prioritarios=prioritarios,
+            tribunais=TribunalEnum,
+            naturezas=NaturezaEnum,
+            status_list=StatusProcessoEnum
+        )
+        
+    finally:
+        db.close()
+

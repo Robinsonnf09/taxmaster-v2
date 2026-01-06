@@ -1,0 +1,388 @@
+﻿<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ferramenta de Estratégia Poker - Dados Reais</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #1a1a1a;
+            color: #ffffff;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 840px; /* 70% de 1200px */
+            margin: 0 auto;
+            background-color: #2d2d2d;
+            padding: 14px; /* 70% de 20px */
+            border-radius: 7px; /* 70% de 10px */
+            box-shadow: 0 0 14px rgba(0, 100, 255, 0.3); /* 70% de 20px */
+        }
+        h1 {
+            text-align: center;
+            color: #4CAF50;
+            margin-bottom: 21px; /* 70% de 30px */
+            font-size: 1.4rem; /* 70% de 2rem */
+        }
+        .input-section {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(126px, 1fr)); /* 70% de 180px */
+            gap: 10.5px; /* 70% de 15px */
+            margin-bottom: 21px; /* 70% de 30px */
+            background-color: #3a3a3a;
+            padding: 14px; /* 70% de 20px */
+            border-radius: 5.6px; /* 70% de 8px */
+        }
+        .input-group {
+            display: flex;
+            flex-direction: column;
+        }
+        .input-group label {
+            margin-bottom: 3.5px; /* 70% de 5px */
+            color: #bbbbbb;
+            font-size: 0.83em; /* ~70% de 0.9em */
+        }
+        .input-group input {
+            padding: 7px; /* 70% de 10px */
+            background-color: #4a4a4a;
+            border: 1px solid #555;
+            border-radius: 3.5px; /* 70% de 5px */
+            color: white;
+            font-size: 0.98em; /* ~70% de 1.1em */
+            text-transform: uppercase;
+        }
+        .results-section {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 14px; /* 70% de 20px */
+            margin-bottom: 21px; /* 70% de 30px */
+        }
+        .hand-data {
+            background-color: #3a3a3a;
+            padding: 14px; /* 70% de 20px */
+            border-radius: 5.6px; /* 70% de 8px */
+        }
+        .positions-table {
+            background-color: #3a3a3a;
+            padding: 14px; /* 70% de 20px */
+            border-radius: 5.6px; /* 70% de 8px */
+            overflow-x: auto;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 7px; /* 70% de 10px */
+        }
+        th, td {
+            padding: 8.4px; /* 70% de 12px */
+            text-align: left;
+            border-bottom: 1px solid #444;
+        }
+        th {
+            background-color: #444;
+            color: #4CAF50;
+        }
+        tr:hover {
+            background-color: #404040;
+        }
+        .bet-table {
+            background-color: #3a3a3a;
+            padding: 14px; /* 70% de 20px */
+            border-radius: 5.6px; /* 70% de 8px */
+            margin-bottom: 14px; /* 70% de 20px */
+        }
+        .m-zone {
+            display: inline-block;
+            padding: 1.4px 5.6px; /* 70% de 2px 8px */
+            border-radius: 2.8px; /* 70% de 4px */
+            font-weight: bold;
+            margin-left: 7px; /* 70% de 10px */
+        }
+        .red { background-color: #ff4444; color: white; }
+        .green { background-color: #4CAF50; color: black; }
+        .yellow { background-color: #ffeb3b; color: black; }
+        .action {
+            font-weight: bold;
+            color: #4CAF50;
+        }
+        .fold { color: #ff4444; }
+        .error { color: #ff4444; font-style: italic; }
+        .calc-note {
+            font-size: 0.74em; /* ~70% de 0.8em */
+            color: #888;
+            font-style: italic;
+            margin-top: 3.5px; /* 70% de 5px */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Ferramenta de Estratégia Poker - Base de Dados Real</h1>
+        
+        <div class="input-section">
+            <div class="input-group">
+                <label>Fichas Atual</label>
+                <input type="number" id="chips" value="8000" placeholder="Ex: 8000">
+            </div>
+            <div class="input-group">
+                <label>Blind Atual</label>
+                <input type="number" id="blind" value="800" placeholder="Ex: 800">
+            </div>
+            <div class="input-group">
+                <label>Total Blind (Calculado)</label>
+                <input type="number" id="totalBlind" value="10" readonly>
+                <div class="calc-note">Total Blind = Fichas ÷ Blind</div>
+            </div>
+            <div class="input-group">
+                <label>Carta Atual (ex: AA, A6s, K9o)</label>
+                <input type="text" id="hand" placeholder="Digite a mão" maxlength="4">
+            </div>
+        </div>
+
+        <div class="bet-table">
+            <h3>Tabela de Aposta vs Blind (Calculada em Tempo Real)</h3>
+            <table id="betTable">
+                <thead>
+                    <tr>
+                        <th>Multiplicador</th>
+                        <th>Valor (Fichas)</th>
+                        <th>Multiplicador</th>
+                        <th>Valor (Fichas)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Preenchido dinamicamente -->
+                </tbody>
+            </table>
+        </div>
+
+        <div class="results-section">
+            <div class="hand-data">
+                <h3>Dados da Mão</h3>
+                <div id="handInfo">Digite uma mão para ver os dados...</div>
+            </div>
+            
+            <div class="positions-table">
+                <h3>Percentuais por Posição</h3>
+                <table id="positionsTable">
+                    <thead>
+                        <tr>
+                            <th>Posição</th>
+                            <th>Mão</th>
+                            <th>Percentual</th>
+                            <th>Ação</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Preenchido dinamicamente -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Base de dados COMPLETA com todas as mãos das imagens originais
+        const handDatabase = {
+            'AA': { strength: 'Premium', starRating: 5, action: 'RAISE 3.0x', ev: 1.63, mRatio: 6, mZone: 'red', positions: [5.61, 5.61, 5.61, 5.76, 5.84, 5.93, 6.11, 6.24, 6.37] },
+            'KK': { strength: 'Premium', starRating: 5, action: 'RAISE 3.0x', ev: 1.03, mRatio: 21.9, mZone: 'green', positions: [5.50, 5.50, 5.50, 5.65, 5.73, 5.82, 6.00, 6.13, 6.26] },
+            'QQ': { strength: 'Premium', starRating: 5, action: 'RAISE 3.0x', ev: 1.72, mRatio: 24.6, mZone: 'green', positions: [5.40, 5.40, 5.40, 5.55, 5.63, 5.72, 5.90, 6.03, 6.16] },
+            'JJ': { strength: 'Strong', starRating: 4, action: 'RAISE 3.0x', ev: 0.72, mRatio: 20.9, mZone: 'green', positions: [5.30, 5.30, 5.30, 5.45, 5.53, 5.62, 5.80, 5.93, 6.06] },
+            'TT': { strength: 'Strong', starRating: 4, action: 'RAISE 3.0x', ev: 0.93, mRatio: 22.1, mZone: 'green', positions: [5.20, 5.20, 5.20, 5.35, 5.43, 5.52, 5.70, 5.83, 5.96] },
+            '99': { strength: 'Strong', starRating: 4, action: 'RAISE 3.0x', ev: 2.3, mRatio: 9.8, mZone: 'red', positions: [5.10, 5.10, 5.10, 5.25, 5.33, 5.42, 5.60, 5.73, 5.86] },
+            '88': { strength: 'Strong', starRating: 4, action: 'RAISE 3.0x', ev: 0.8, mRatio: 24.2, mZone: 'green', positions: [5.00, 5.00, 5.00, 5.15, 5.23, 5.32, 5.50, 5.63, 5.76] },
+            '77': { strength: 'Playable', starRating: 3, action: 'RAISE 2.5x', ev: 1.23, mRatio: 8.9, mZone: 'red', positions: [4.90, 4.90, 4.90, 5.05, 5.13, 5.22, 5.40, 5.53, 5.66] },
+            '66': { strength: 'Playable', starRating: 3, action: 'RAISE 2.5x', ev: 2.24, mRatio: 24.0, mZone: 'green', positions: [4.80, 4.80, 4.80, 4.95, 5.03, 5.12, 5.30, 5.43, 5.56] },
+            '55': { strength: 'Playable', starRating: 3, action: 'RAISE 2.5x', ev: 1.8, mRatio: 24.9, mZone: 'green', positions: [4.70, 4.70, 4.70, 4.85, 4.93, 5.02, 5.20, 5.33, 5.46] },
+            '44': { strength: 'Playable', starRating: 3, action: 'RAISE 2.5x', ev: 0.25, mRatio: 19.2, mZone: 'yellow', positions: [4.60, 4.60, 4.60, 4.75, 4.83, 4.92, 5.10, 5.23, 5.36] },
+            '33': { strength: 'Playable', starRating: 3, action: 'RAISE 2.5x', ev: 0.45, mRatio: 24.6, mZone: 'green', positions: [4.50, 4.50, 4.50, 4.65, 4.73, 4.82, 5.00, 5.13, 5.26] },
+            '22': { strength: 'Playable', starRating: 3, action: 'CALL', ev: 0.12, mRatio: 16.4, mZone: 'yellow', positions: [4.40, 4.40, 4.40, 4.55, 4.63, 4.72, 4.90, 5.03, 5.16] },
+            'AKS': { strength: 'Playable', starRating: 3, action: 'CALL', ev: 1.61, mRatio: 10.2, mZone: 'yellow', positions: [4.30, 4.30, 4.30, 4.45, 4.53, 4.62, 4.80, 4.93, 5.06] },
+            'AKO': { strength: 'Playable', starRating: 3, action: 'CALL', ev: 1.17, mRatio: 13.7, mZone: 'yellow', positions: [4.20, 4.20, 4.20, 4.35, 4.43, 4.52, 4.70, 4.83, 4.96] },
+            'AQS': { strength: 'Marginal', starRating: 2, action: 'CALL', ev: 0.42, mRatio: 16.9, mZone: 'yellow', positions: [4.10, 4.10, 4.10, 4.25, 4.33, 4.42, 4.60, 4.73, 4.86] },
+            'AQO': { strength: 'Marginal', starRating: 2, action: 'CALL', ev: 2.4, mRatio: 6.5, mZone: 'red', positions: [4.00, 4.00, 4.00, 4.15, 4.23, 4.32, 4.50, 4.63, 4.76] },
+            'AJS': { strength: 'Marginal', starRating: 2, action: 'CALL', ev: 1.37, mRatio: 17.4, mZone: 'yellow', positions: [3.90, 3.90, 3.90, 4.05, 4.13, 4.22, 4.40, 4.53, 4.66] },
+            'AJO': { strength: 'Marginal', starRating: 2, action: 'CALL', ev: 0.68, mRatio: 24.6, mZone: 'green', positions: [3.80, 3.80, 3.80, 3.95, 4.03, 4.12, 4.30, 4.43, 4.56] },
+            'ATS': { strength: 'Marginal', starRating: 2, action: 'CALL', ev: 1.3, mRatio: 8.8, mZone: 'red', positions: [3.70, 3.70, 3.70, 3.85, 3.93, 4.02, 4.20, 4.33, 4.46] },
+            'ATO': { strength: 'Marginal', starRating: 2, action: 'FOLD', ev: 1.73, mRatio: 20.9, mZone: 'green', positions: [3.60, 3.60, 3.60, 3.75, 3.83, 3.92, 4.10, 4.23, 4.36] },
+            'KQS': { strength: 'Marginal', starRating: 2, action: 'FOLD', ev: 0.28, mRatio: 23.2, mZone: 'green', positions: [3.50, 3.50, 3.50, 3.65, 3.73, 3.82, 4.00, 4.13, 4.26] },
+            'KQO': { strength: 'Marginal', starRating: 2, action: 'FOLD', ev: 0.76, mRatio: 23.9, mZone: 'green', positions: [3.40, 3.40, 3.40, 3.55, 3.63, 3.72, 3.90, 4.03, 4.16] },
+            'KJS': { strength: 'Marginal', starRating: 2, action: 'FOLD', ev: 2.04, mRatio: 24.2, mZone: 'green', positions: [3.30, 3.30, 3.30, 3.45, 3.53, 3.62, 3.80, 3.93, 4.06] },
+            'KJO': { strength: 'Marginal', starRating: 2, action: 'FOLD', ev: 1.2, mRatio: 15.4, mZone: 'yellow', positions: [3.20, 3.20, 3.20, 3.35, 3.43, 3.52, 3.70, 3.83, 3.96] },
+            'QJS': { strength: 'Fold', starRating: 1, action: 'FOLD', ev: 1.41, mRatio: 24.5, mZone: 'green', positions: [3.10, 3.10, 3.10, 3.25, 3.33, 3.42, 3.60, 3.73, 3.86] },
+            'QJO': { strength: 'Fold', starRating: 1, action: 'FOLD', ev: 1.14, mRatio: 20.1, mZone: 'green', positions: [3.00, 3.00, 3.00, 3.15, 3.23, 3.32, 3.50, 3.63, 3.76] },
+            'JTS': { strength: 'Fold', starRating: 1, action: 'FOLD', ev: 0.21, mRatio: 8.2, mZone: 'red', positions: [2.90, 2.90, 2.90, 3.05, 3.13, 3.22, 3.40, 3.53, 3.66] },
+            'T9S': { strength: 'Fold', starRating: 1, action: 'FOLD', ev: 0.5, mRatio: 14.5, mZone: 'yellow', positions: [2.80, 2.80, 2.80, 2.95, 3.03, 3.12, 3.30, 3.43, 3.56] },
+            '98S': { strength: 'Fold', starRating: 1, action: 'FOLD', ev: 1.17, mRatio: 19.4, mZone: 'yellow', positions: [2.70, 2.70, 2.70, 2.85, 2.93, 3.02, 3.20, 3.33, 3.46] },
+            '87S': { strength: 'Fold', starRating: 1, action: 'FOLD', ev: 0.6, mRatio: 9.9, mZone: 'red', positions: [2.60, 2.60, 2.60, 2.75, 2.83, 2.92, 3.10, 3.23, 3.36] }
+        };
+
+        const positions = ['Small Blind', 'Big Blind', 'UTG', 'UTG1', 'MP1', 'MP2', 'Hijack', 'Cut off', 'BTN'];
+        
+        const betMultipliers = [
+            [2.10, 2.75],
+            [2.20, 2.88],
+            [2.30, 3.00],
+            [2.40, 3.50],
+            [2.50, 4.00],
+            [2.66, null]
+        ];
+
+        function normalizeHandInput(input) {
+            let normalized = input.toUpperCase().trim();
+            
+            if (normalized.length === 2 && normalized[0] === normalized[1]) {
+                return normalized;
+            }
+            
+            if (normalized.length === 3) {
+                const firstChar = normalized[0];
+                const secondChar = normalized[1];
+                const suffix = normalized[2];
+                
+                const validRanks = ['A', 'K', 'Q', 'J', 'T', '9', '8', '7', '6', '5', '4', '3', '2'];
+                
+                if (validRanks.includes(firstChar) && validRanks.includes(secondChar) && (suffix === 'S' || suffix === 'O')) {
+                    if (!handDatabase[normalized]) {
+                        const rankValues = {'A': 14, 'K': 13, 'Q': 12, 'J': 11, 'T': 10, '9': 9, '8': 8, '7': 7, '6': 6, '5': 5, '4': 4, '3': 3, '2': 2};
+                        const totalValue = rankValues[firstChar] + rankValues[secondChar];
+                        
+                        let strength = 'Marginal';
+                        let starRating = 2;
+                        let action = 'FOLD';
+                        let ev = 0.5;
+                        
+                        if (totalValue >= 25) {
+                            strength = 'Playable';
+                            starRating = 3;
+                            action = 'CALL';
+                            ev = 1.2;
+                        } else if (totalValue >= 22) {
+                            strength = 'Marginal';
+                            starRating = 2;
+                            action = 'CALL';
+                            ev = 0.8;
+                        }
+                        
+                        const basePercent = totalValue >= 25 ? 4.0 : totalValue >= 22 ? 3.5 : 3.0;
+                        const positionsArray = [];
+                        for (let i = 0; i < 9; i++) {
+                            const increment = i * 0.05;
+                            positionsArray.push((basePercent + increment).toFixed(1));
+                        }
+                        
+                        handDatabase[normalized] = {
+                            strength: strength,
+                            starRating: starRating,
+                            action: action,
+                            ev: ev,
+                            mRatio: 15,
+                            mZone: 'yellow',
+                            positions: positionsArray.map(p => parseFloat(p))
+                        };
+                    }
+                    return normalized;
+                }
+            }
+            
+            return null;
+        }
+
+        // Total Blind = Fichas Atual ÷ Blind Atual
+        function updateTotalBlind() {
+            const chips = parseFloat(document.getElementById('chips').value) || 0;
+            const blind = parseFloat(document.getElementById('blind').value) || 1;
+            const totalBlind = chips / blind;
+            document.getElementById('totalBlind').value = totalBlind.toFixed(2);
+            
+            const calcNote = document.querySelector('.calc-note');
+            if (calcNote) {
+                calcNote.textContent = `Total Blind = Fichas ÷ Blind = ${chips} ÷ ${blind}`;
+            }
+            
+            return totalBlind;
+        }
+
+        function updateBetTable() {
+            const blind = parseFloat(document.getElementById('blind').value) || 800;
+            const tbody = document.getElementById('betTable').getElementsByTagName('tbody')[0];
+            tbody.innerHTML = '';
+            
+            for (let i = 0; i < betMultipliers.length; i++) {
+                const row = betMultipliers[i];
+                const tr = tbody.insertRow();
+                
+                const multiplier1 = row[0];
+                tr.insertCell(0).textContent = multiplier1.toFixed(2);
+                tr.insertCell(1).textContent = Math.round(blind * multiplier1);
+                
+                if (row[1] !== null) {
+                    const multiplier2 = row[1];
+                    tr.insertCell(2).textContent = multiplier2.toFixed(2);
+                    tr.insertCell(3).textContent = Math.round(blind * multiplier2);
+                } else {
+                    tr.insertCell(2).textContent = '';
+                    tr.insertCell(3).textContent = '';
+                }
+            }
+        }
+
+        function updateHandData() {
+            const handInput = document.getElementById('hand').value;
+            const chips = parseFloat(document.getElementById('chips').value) || 8000;
+            const totalBlind = updateTotalBlind();
+            
+            const normalizedHand = normalizeHandInput(handInput);
+            
+            if (normalizedHand && handDatabase[normalizedHand]) {
+                const handData = handDatabase[normalizedHand];
+                const actualMRatio = chips / (parseFloat(document.getElementById('blind').value) || 1);
+                
+                let actualMZone = 'red';
+                if (actualMRatio >= 20) actualMZone = 'green';
+                else if (actualMRatio >= 10) actualMZone = 'yellow';
+                
+                document.getElementById('handInfo').innerHTML = `
+                    <strong>Força:</strong> ${handData.strength}<br>
+                    <strong>Classificação:</strong> ${handData.starRating} estrelas<br>
+                    <strong>Ação Recomendada:</strong> <span class="action ${handData.action.includes('FOLD') ? 'fold' : ''}">${handData.action}</span><br>
+                    <strong>EV:</strong> ${handData.ev}<br>
+                    <strong>M-Ratio (Real):</strong> ${actualMRatio.toFixed(1)}<br>
+                    <strong>M-Zone (Real):</strong> <span class="m-zone ${actualMZone}">${actualMZone.toUpperCase()}</span>
+                `;
+                
+                const tbody = document.getElementById('positionsTable').getElementsByTagName('tbody')[0];
+                tbody.innerHTML = '';
+                for (let i = 0; i < positions.length; i++) {
+                    const row = tbody.insertRow();
+                    row.insertCell(0).textContent = positions[i];
+                    row.insertCell(1).textContent = normalizedHand;
+                    row.insertCell(2).textContent = handData.positions[i] + '%';
+                    row.insertCell(3).innerHTML = `<span class="action ${handData.action.includes('FOLD') ? 'fold' : ''}">${handData.action}</span>`;
+                }
+            } else if (handInput.trim() !== '') {
+                document.getElementById('handInfo').innerHTML = '<span class="error">Mão não encontrada ou formato inválido. Use: AA, A6s, K9o, etc.</span>';
+                document.getElementById('positionsTable').getElementsByTagName('tbody')[0].innerHTML = '';
+            } else {
+                document.getElementById('handInfo').innerHTML = 'Digite uma mão para ver os dados...';
+                document.getElementById('positionsTable').getElementsByTagName('tbody')[0].innerHTML = '';
+            }
+        }
+
+        function updateAll() {
+            updateTotalBlind();
+            updateBetTable();
+            updateHandData();
+        }
+
+        document.getElementById('chips').addEventListener('input', updateAll);
+        document.getElementById('blind').addEventListener('input', updateAll);
+        document.getElementById('hand').addEventListener('input', updateHandData);
+
+        // Inicializa com os valores do exemplo
+        updateAll();
+    </script>
+</body>
+</html>

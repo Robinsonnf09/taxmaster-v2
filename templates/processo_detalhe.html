@@ -1,0 +1,128 @@
+﻿{% extends "base.html" %}
+
+{% block title %}{{ processo.numero_processo }} - Tax Master{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-12">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/">Dashboard</a></li>
+                <li class="breadcrumb-item"><a href="/processos">Processos</a></li>
+                <li class="breadcrumb-item active">{{ processo.numero_processo }}</li>
+            </ol>
+        </nav>
+        
+        <h1 class="display-5">
+            <i class="fas fa-file-alt text-primary"></i>
+            {{ processo.numero_processo }}
+        </h1>
+        
+        <div class="d-flex gap-2 mt-3">
+            <span class="badge bg-{{ 'success' if processo.status.name == 'CONCLUIDO' else 'warning' }} fs-6">
+                {{ processo.status.value }}
+            </span>
+            
+            {% if processo.tem_oficio %}
+            <span class="badge bg-success fs-6">
+                <i class="fas fa-check-circle me-1"></i>
+                Com Ofício
+            </span>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- Informações Principais -->
+<div class="row mb-4">
+    <!-- Dados do Processo -->
+    <div class="col-md-6">
+        <div class="card shadow-sm h-100">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0">
+                    <i class="fas fa-info-circle me-2"></i>
+                    Dados do Processo
+                </h5>
+            </div>
+            <div class="card-body">
+                <table class="table table-borderless">
+                    <tr>
+                        <th width="40%">Número:</th>
+                        <td>{{ processo.numero_processo }}</td>
+                    </tr>
+                    {% if processo.processo_principal %}
+                    <tr>
+                        <th>Processo Principal:</th>
+                        <td>{{ processo.processo_principal }}</td>
+                    </tr>
+                    {% endif %}
+                    <tr>
+                        <th>Tribunal:</th>
+                        <td><span class="badge bg-info">{{ processo.tribunal.value }}</span></td>
+                    </tr>
+                    {% if processo.natureza %}
+                    <tr>
+                        <th>Natureza:</th>
+                        <td><span class="badge bg-secondary">{{ processo.natureza.value }}</span></td>
+                    </tr>
+                    {% endif %}
+                </table>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Valores -->
+    <div class="col-md-6">
+        <div class="card shadow-sm h-100">
+            <div class="card-header bg-success text-white">
+                <h5 class="mb-0">
+                    <i class="fas fa-dollar-sign me-2"></i>
+                    Valores
+                </h5>
+            </div>
+            <div class="card-body">
+                <table class="table table-borderless">
+                    <tr>
+                        <th width="40%">Valor Principal:</th>
+                        <td><strong>R$ {{ "{:,.2f}".format(processo.valor_principal).replace(',', 'X').replace('.', ',').replace('X', '.') }}</strong></td>
+                    </tr>
+                    <tr>
+                        <th>Juros:</th>
+                        <td>R$ {{ "{:,.2f}".format(processo.valor_juros).replace(',', 'X').replace('.', ',').replace('X', '.') }}</td>
+                    </tr>
+                    <tr>
+                        <th>Valor Atualizado:</th>
+                        <td>
+                            <h4 class="text-success mb-0">
+                                R$ {{ "{:,.2f}".format(processo.valor_atualizado).replace(',', 'X').replace('.', ',').replace('X', '.') }}
+                            </h4>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Credor -->
+<div class="card shadow-sm">
+    <div class="card-header bg-info text-white">
+        <h5 class="mb-0">
+            <i class="fas fa-user me-2"></i>
+            Credor
+        </h5>
+    </div>
+    <div class="card-body">
+        <h6>{{ processo.credor_nome }}</h6>
+        {% if processo.credor_cpf_cnpj %}
+        <p class="mb-1"><strong>CPF/CNPJ:</strong> {{ processo.credor_cpf_cnpj }}</p>
+        {% endif %}
+        {% if processo.credor_email %}
+        <p class="mb-1">
+            <strong>Email:</strong> 
+            <a href="mailto:{{ processo.credor_email }}">{{ processo.credor_email }}</a>
+        </p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

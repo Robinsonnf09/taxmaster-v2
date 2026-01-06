@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TAX MASTER - Dashboard</title>
+    <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body>
+    <div id="dashboard-page">
+        <div class="container">
+            <h1 id="welcome-message" class="welcome-message">Bem-vindo ao TAX MASTER!</h1>
+            
+            <div class="dashboard-stats">
+                <div class="stat-card">
+                    <div class="stat-value" id="total-simulations">0</div>
+                    <div class="stat-label">Simulações Realizadas</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="total-savings">R$ 0,00</div>
+                    <div class="stat-label">Economia Total</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="best-saving">R$ 0,00</div>
+                    <div class="stat-label">Melhor Economia</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="last-simulation">Nunca</div>
+                    <div class="stat-label">Última Simulação</div>
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="card dashboard-card module-card" data-module="module1">
+                        <div class="card-header">
+                            <h3 class="card-title">Módulo I</h3>
+                            <p class="card-subtitle">Transação Tributária Básica</p>
+                        </div>
+                        <div class="card-body dashboard-card-body">
+                            <div class="dashboard-card-icon">
+                                <i class="fas fa-file-invoice-dollar"></i>
+                            </div>
+                            <p>Simulação de transação tributária com cálculos básicos e tabela de amortização.</p>
+                        </div>
+                        <div class="card-footer">
+                            <button class="btn btn-primary btn-block">Acessar</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card dashboard-card module-card" data-module="module2">
+                        <div class="card-header">
+                            <h3 class="card-title">Módulo II</h3>
+                            <p class="card-subtitle">Transação Tributária Avançada</p>
+                        </div>
+                        <div class="card-body dashboard-card-body">
+                            <div class="dashboard-card-icon">
+                                <i class="fas fa-chart-line"></i>
+                            </div>
+                            <p>Análise avançada com múltiplos cenários, capacidade de pagamento e comparativos.</p>
+                        </div>
+                        <div class="card-footer">
+                            <button class="btn btn-primary btn-block">Acessar</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card dashboard-card module-card" data-module="module3">
+                        <div class="card-header">
+                            <h3 class="card-title">Módulo III</h3>
+                            <p class="card-subtitle">Parcelamento e Redução</p>
+                        </div>
+                        <div class="card-body dashboard-card-body">
+                            <div class="dashboard-card-icon">
+                                <i class="fas fa-money-bill-wave"></i>
+                            </div>
+                            <p>Simulação de parcelamento com análise de fluxo de caixa e impacto financeiro.</p>
+                        </div>
+                        <div class="card-footer">
+                            <button class="btn btn-primary btn-block">Acessar</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card dashboard-card module-card" data-module="module4">
+                        <div class="card-header">
+                            <h3 class="card-title">Módulo IV</h3>
+                            <p class="card-subtitle">Planejamento Estratégico</p>
+                        </div>
+                        <div class="card-body dashboard-card-body">
+                            <div class="dashboard-card-icon">
+                                <i class="fas fa-chess"></i>
+                            </div>
+                            <p>Projeções de longo prazo e análise de sensibilidade para diferentes cenários.</p>
+                        </div>
+                        <div class="card-footer">
+                            <button class="btn btn-primary btn-block">Acessar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card recent-simulations">
+                <div class="card-header">
+                    <h3 class="card-title">Simulações Recentes</h3>
+                </div>
+                <div class="card-body">
+                    <div id="simulation-history">
+                        <p class="text-center">Nenhuma simulação encontrada. Comece agora mesmo!</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal de Exportação -->
+    <div id="export-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Exportar Simulação</h3>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p>Escolha o formato para exportar sua simulação:</p>
+                <div class="row mt-3">
+                    <div class="col-6">
+                        <button class="btn btn-primary btn-block export-btn" data-format="pdf">
+                            <i class="fas fa-file-pdf"></i> PDF
+                        </button>
+                    </div>
+                    <div class="col-6">
+                        <button class="btn btn-success btn-block export-btn" data-format="excel">
+                            <i class="fas fa-file-excel"></i> Excel
+                        </button>
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-6">
+                        <button class="btn btn-info btn-block export-btn" data-format="csv">
+                            <i class="fas fa-file-csv"></i> CSV
+                        </button>
+                    </div>
+                    <div class="col-6">
+                        <button class="btn btn-secondary btn-block export-btn" data-format="html">
+                            <i class="fas fa-file-code"></i> HTML
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-danger modal-close">Cancelar</button>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

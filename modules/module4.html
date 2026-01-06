@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TAX MASTER - Módulo IV</title>
+    <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body>
+    <div id="module4-page">
+        <div class="container">
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">Módulo IV - Planejamento Tributário Estratégico</h2>
+                    <p class="card-subtitle">Projeções financeiras de longo prazo, análise de sensibilidade para diferentes cenários econômicos e recomendações estratégicas personalizadas.</p>
+                </div>
+                <div class="card-body">
+                    <div class="tab-container">
+                        <ul class="tab-nav">
+                            <li class="tab-nav-item active" data-tab="simulacao-estrategica">Simulação Estratégica</li>
+                            <li class="tab-nav-item" data-tab="cenarios-economicos">Cenários Econômicos</li>
+                            <li class="tab-nav-item" data-tab="analise-sensibilidade">Análise de Sensibilidade</li>
+                            <li class="tab-nav-item" data-tab="resultados-estrategicos">Resultados</li>
+                        </ul>
+                        
+                        <div id="tab-simulacao-estrategica" class="tab-content active">
+                            <form id="simulacao-estrategica-form" class="simulation-form">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <h3 class="mb-3">Perfil Tributário</h3>
+                                        <div class="form-group">
+                                            <label for="regime-tributario">Regime Tributário Atual</label>
+                                            <select id="regime-tributario" name="regimeTributario" required>
+                                                <option value="">Selecione o regime</option>
+                                                <option value="simples">Simples Nacional</option>
+                                                <option value="presumido">Lucro Presumido</option>
+                                                <option value="real">Lucro Real</option>
+                                                <option value="mei">MEI</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="faturamento-anual-estrategico">Faturamento Anual (R$)</label>
+                                            <input type="number" id="faturamento-anual-estrategico" name="faturamentoAnual" min="0" step="1000" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="setor-atividade">Setor de Atividade</label>
+                                            <select id="setor-atividade" name="setorAtividade" required>
+                                                <option value="">Selecione o setor</option>
+                                                <option value="comercio">Comércio</option>
+                                                <option value="industria">Indústria</option>
+                                                <option value="servicos">Serviços</option>
+                                                <option value="agronegocio">Agronegócio</option>
+                                                <option value="construcao">Construção Civil</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="margem-lucro">Margem de Lucro Média (%)</label>
+                                            <input type="number" id="margem-lucro" name="margemLucro" min="0" max="100" step="0.1" required>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <h3 class="mb-3">Projeção Estratégica</h3>
+                                        <div class="form-group">
+                                            <label for="horizonte-projecao">Horizonte de Projeção (anos)</label>
+                                            <select id="horizonte-projecao" name="horizonteProjecao" required>
+                                                <option value="1">1 ano</option>
+                                                <option value="3">3 anos</option>
+                                                <option value="5" selected>5 anos</option>
+                                                <option value="10">10 anos</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="crescimento-projetado">Crescimento Anual Projetado (%)</label>
+                                            <input type="number" id="crescimento-projetado" name="crescimentoProjetado" min="-20" max="50" step="0.5" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="investimentos-previstos">Investimentos Previstos (R$)</label>
+                                            <input type="number" id="investimentos-previstos" name="investimentosPrevistos" min="0" step="1000">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="distribuicao-lucros">Distribuição de Lucros Prevista (%)</label>
+                                            <input type="number" id="distribuicao-lucros" name="distribuicaoLucros" min="0" max="100" step="1">
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="row mt-4">
+                                    <div class="col-md-12">
+                                        <h3 class="mb-3">Opções Estratégicas</h3>
+                                        <div class="form-group">
+                                            <label>Regimes Tributários a Comparar</label>
+                                            <div class="checkbox-group">
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" type="checkbox" id="comparar-simples" name="compararRegimes[]" value="simples" checked>
+                                                    <label class="form-check-label" for="comparar-simples">Simples Nacional</label>
+                                                </div>
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" type="checkbox" id="comparar-presumido" name="compararRegimes[]" value="presumido" checked>
+                                                    <label class="form-check-label" for="comparar-presumido">Lucro Presumido</label>
+                                                </div>
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" type="checkbox" id="comparar-real" name="compararRegimes[]" value="real" checked>
+                                                    <label class="form-check-label" for="comparar-real">Lucro Real</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="form-group">
+                                            <label>Estratégias Avançadas</label>
+                                            <div class="checkbox-group">
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" id="estrategia-holding" name="estrategiasAvancadas[]" value="holding">
+                                                    <label class="form-check-label" for="estrategia-holding">Estruturação via Holding</label>
+                                                </div>
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" id="estrategia-filiais" name="estrategiasAvancadas[]" value="filiais">
+                                                    <label class="form-check-label" for="estrategia-filiais">Segregação de Atividades em Filiais</label>
+                                                </div>
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" id="estrategia-incentivos" name="estrategiasAvancadas[]" value="incentivos">
+                                                    <label class="form-check-label" for="estrategia-incentivos">Utilização de Incentivos Fiscais</label>
+                                                </div>
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" id="estrategia-internacional" name="estrategiasAvancadas[]" value="internacional">
+                                                    <label class="form-check-label" for="estrategia-internacional">Planejamento Tributário Internacional</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-group text-center mt-4">
+                                    <button type="submit" class="btn btn-primary btn-lg" id="btn-simular-estrategico">Simular Cenários Estratégicos</button>
+                                    <button type="reset" class="btn btn-secondary btn-lg ml-2">Limpar</button>
+                                </div>
+                            </form>
+                        </div>
+                        
+                        <div id="tab-cenarios-economicos" class="tab-content">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h3 class="card-title">Configuração de Cenários Econômicos</h3>
+                                </div>
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <div class="card">
+                                                <div class="card-header bg-success text-white">
+                                                    <h4 class="card-title mb-0">Cenário Otimista</h4>
+                                                </div>
+                                                <div class="card-body">
+                                                    <div class="form-group">
+                                                        <label for="otimista-crescimento-pib">Crescimento do PIB (% a.a.)</label>
+                                                        <input type="number" id="otimista-crescimento-pib" class="form-control" min="0" max="10" step="0.1" value="3.5">
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="otimista-inflacao">Inflação (% a.a.)</label>
+                                                        <input type="number" id="otimista-inflacao" class="form-control" min="0" max="15" step="0.1" value="3.0">
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="otimista-cambio">Taxa de Câmbio (R$/US$)</label>
+                                                        <input type="number" id="otimista-cambio" class="form-control" min="1" max="10" step="0.05" value="4.50">
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="otimista-selic">Taxa SELIC (% a.a.)</label>
+                                                        <input type="number" id="otimista-selic" class="form-control" min="0" max="20" step="0.25" value="7.5">
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="otimista-crescimento-setor">Crescimento do Setor (% a.a.)</label>
+                                                        <input type="number" id="otimista-crescimento-setor" class="form-control" min="0" max="20" step="0.5" value="5.0">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="card">
+                                                <div class="card-header bg-primary text-white">
+                                                    <h4 class="card-title mb-0">Cenário Base</h4>
+                                                </div>
+                                                <div class="card-body">
+                                                    <div class="form-group">
+                                                        <label for="base-crescimento-pib">Crescimento do PIB (% a.a.)</label>
+                                                        <input type="number" id="base-crescimento-pib" class="form-control" min="-2" max="8" step="0.1" value="2.0">
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="base-inflacao">Inflação (% a.a.)</label>
+                                                        <input type="number" id="base-inflacao" class="form-control" min="0" max="15" step="0.1" value="4.0">
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="base-cambio">Taxa de Câmbio (R$/US$)</label>
+                                                        <input type="number" id="base-cambio" class="form-control" min="1" max="10" step="0.05" value="5.00">
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="base-selic">Taxa SELIC (% a.a.)</label>
+                                                        <input type="number" id="base-selic" class="form-control" min="0" max="20" step="0.25" value="9.0">
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="base-crescimento-setor">Crescimento do Setor (% a.a.)</label>
+                                                        <input type="number" id="base-crescimento-setor" class="form-control" min="-5" max="15" step="0.5" value="3.0">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="card">
+                                                <div class="card-header bg-danger text-white">
+                                                    <h4 class="card-title mb-0">Cenário Pessimista</h4>
+                                                </div>
+                                                <div class="card-body">
+                                                    <div class="form-group">
+                                                        <label for="pessimista-crescimento-pib">Crescimento do PIB (% a.a.)</label>
+                                                        <input type="number" id="pessimista-crescimento-pib" class="form-control" min="-5" max="3" step="0.1" value="0.5">
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="pessimista-inflacao">Inflação (% a.a.)</label>
+                                                        <input type="number" id="pessimista-inflacao" class="form-control" min="0" max="20" step="0.1" value="6.0">
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="pessimista-cambio">Taxa de Câmbio (R$/US$)</label>
+                                                        <input type="number" id="pessimista-cambio" class="form-control" min="1" max="15" step="0.05" value="5.80">
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="pessimista-selic">Taxa SELIC (% a.a.)</label>
+                                                        <input type="number" id="pessimista-selic" class="form-control" min="0" max="25" step="0.25" value="12.0">
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="pessimista-crescimento-setor">Crescimento do Setor (% a.a.)</label>
+                                                        <input type="number" id="pessimista-crescimento-setor" class="form-control" min="-10" max="5" step="0.5" value="0.0">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="text-center mt-4">
+                                        <button id="btn-aplicar-cenarios" class="btn btn-primary">Aplicar Cenários</button>
+                                        <button id="btn-restaurar-cenarios" class="btn btn-secondary ml-2">Restaurar Padrões</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div id="tab-analise-sensibilidade" class="tab-content">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h3 class="card-title">Análise de Sensibilidade</h3>
+                                </div>
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="variavel-sensibilidade">Variável para Análise</label>
+                                                <select id="variavel-sensibilidade" class="form-control">
+                                                    <option value="faturamento">Faturamento</option>
+                                                    <option value="margem">Margem de Lucro</option>
+                                                    <option value="crescimento">Taxa de Crescimento</option>
+                                                    <option value="inflacao">Inflação</option>
+                                                    <option value="cambio">Taxa de Câmbio</option>
+                                                    <option value="juros">Taxa de Juros</option>
+                                                </select>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="variacao-minima">Variação Mínima (%)</label>
+                                                <input type="number" id="variacao-minima" class="form-control" min="-50" max="0" step="5" value="-30">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="variacao-maxima">Variação Máxima (%)</label>
+                                                <input type="number" id="variacao-maxima" class="form-control" min="0" max="100" step="5" value="30">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="passos-variacao">Número de Passos</label>
+                                                <input type="number" id="passos-variacao" class="form-control" min="3" max="20" step="1" value="7">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="metrica-impacto">Métrica de Impacto</label>
+                                                <select id="metrica-impacto" class="form-control">
+                                                    <option value="carga-tributaria">Carga Tributária Total</option>
+                                                    <option value="lucro-liquido">Lucro Líquido</option>
+                                                    <option value="fluxo-caixa">Fluxo de Caixa</option>
+                                                    <option value="roi">ROI</option>
+                                                    <option value="payback">Payback</option>
+                                                </select>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="regime-sensibilidade">Regime Tributário</label>
+                                                <select id="regime-sensibilidade" class="form-control">
+                                                    <option value="todos">Todos os Regimes</option>
+                                                    <option value="simples">Simples Nacional</option>
+                                                    <option value="presumido">Lucro Presumido</option>
+                                                    <option value="real">Lucro Real</option>
+                                                </select>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="periodo-sensibilidade">Período de Análise</label>
+                                                <select id="periodo-sensibilidade" class="form-control">
+                                                    <option value="1">Ano 1</option>
+                                                    <option value="3">Ano 3</option>
+                                                    <option value="5" selected>Ano 5</option>
+                                                    <option value="acumulado">Acumulado</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="text-center mt-3">
+                                        <button id="btn-calcular-sensibilidade" class="btn btn-primary">Calcular Sensibilidade</button>
+                                    </div>
+                                    
+                                    <div class="chart-container mt-4">
+                                        <canvas id="grafico-sensibilidade"></canvas>
+                                    </div>
+                                    
+                                    <div class="table-responsive mt-4">
+                                        <table class="table table-striped" id="tabela-sensibilidade">
+                                            <thead>
+                                                <tr>
+                                                    <th>Variação</th>
+                                                    <th>Valor Base</th>
+                                                    <th>Impacto</th>
+                                                    <th>Variação (%)</th>
+                                                    <th>Elasticidade</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="tabela-sensibilidade-body">
+                                                <!-- Preenchido via JavaScript -->
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div id="tab-resultados-estrategicos" class="tab-content">
+                            <div id="resultados-simulacao-estrategica" class="simulation-results">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="card">
+                                            <div class="card-header">
+                                                <h3 class="card-title">Comparativo entre Regimes Tributários</h3>
+                                            </div>
+                                            <div class="card-body">
+                                                <div class="table-responsive">
+                                                    <table class="table table-hover" id="tabela-comparativo-regimes">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>Regime Tributário</th>
+                                                                <th>Carga Tributária Total</th>
+                                                                <th>Alíquota Efetiva</th>
+                                                                <th>Lucro Líquido</th>
+                                                                <th>Economia Tributária</th>
+                                                                <th>Complexidade</th>
+                                                                <th>Recomendação</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody id="tabela-comparativo-regimes-body">
+                                                            <!-- Preenchido via JavaScript -->
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                                
+                                                <div class="chart-container mt-4">
+                                                    <canvas id="grafico-comparativo-regimes"></canvas>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="row mt-4">
+                                    <div class="col-md-6">
+                                        <div class="card">
+                                            <div class="card-header">
+                                                <h3 class="card-title">Projeção de Resultados</h3>
+                                            </div>
+                                            <div class="card-body">
+                                                <div class="form-group">
+                                                    <label for="regime-projecao">Regime Tributário</label>
+                                                    <select id="regime-projecao" class="form-control">
+                                                        <option value="recomendado">Regime Recomendado</option>
+                                                        <option value="simples">Simples Nacional</option>
+                                                        <option value="presumido">Lucro Presumido</option>
+                                                        <option value="real">Lucro Real</option>
+                                                    </select>
+                                                </div>
+                                                
+                                                <div class="chart-container mt-3">
+                                                    <canvas id="grafico-projecao-resultados"></canvas>
+                                                </div>
+                                                
+                                                <div class="table-responsive mt-4">
+                                                    <table class="table table-striped" id="tabela-projecao">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>Ano</th>
+                                                                <th>Faturamento</th>
+                                                                <th>Lucro Bruto</th>
+                                                                <th>Tributos</th>
+                                                                <th>Lucro Líquido</th>
+                                                                <th>Alíquota Efetiva</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody id="tabela-projecao-body">
+                                                            <!-- Preenchido via JavaScript -->
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="card">
+                                            <div class="card-header">
+                                                <h3 class="card-title">Análise de Cenários</h3>
+                                            </div>
+                                            <div class="card-body">
+                                                <div class="form-group">
+                                                    <label for="metrica-cenarios">Métrica de Análise</label>
+                                                    <select id="metrica-cenarios" class="form-control">
+                                                        <option value="carga-tributaria">Carga Tributária</option>
+                                                        <option value="lucro-liquido">Lucro Líquido</option>
+                                                        <option value="roi">ROI</option>
+                                                    </select>
+                                                </div>
+                                                
+                                                <div class="chart-container mt-3">
+                                                    <canvas id="grafico-analise-cenarios"></canvas>
+                                                </div>
+                                                
+                                                <div class="table-responsive mt-4">
+                                                    <table class="table" id="tabela-cenarios">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>Cenário</th>
+                                                                <th>Valor Acumulado</th>
+                                                                <th>Variação Base</th>
+                                                                <th>Probabilidade</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr class="table-success">
+                                                                <td>Otimista</td>
+                                                                <td id="cenario-otimista-valor">R$ 0,00</td>
+                                                                <td id="cenario-otimista-variacao">0%</td>
+                                                                <td id="cenario-otimista-probabilidade">25%</td>
+                                                            </tr>
+                                                            <tr class="table-primary">
+                                                                <td>Base</td>
+                                                                <td id="cenario-base-valor">R$ 0,00</td>
+                                                                <td id="cenario-base-variacao">-</td>
+                                                                <td id="cenario-base-probabilidade">50%</td>
+                                                            </tr>
+                                                            <tr class="table-danger">
+                                                                <td>Pessimista</td>
+                                                                <td id="cenario-pessimista-valor">R$ 0,00</td>
+                                                                <td id="cenario-pessimista-variacao">0%</td>
+                                                                <td id="cenario-pessimista-probabilidade">25%</td>
+                                                            </tr>
+                                                            <tr class="table-info font-weight-bold">
+                                                                <td>Valor Esperado</td>
+                                                                <td id="cenario-esperado-valor">R$ 0,00</td>
+                                                                <td id="cenario-esperado-variacao">0%</td>
+                                                                <td>100%</td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="card mt-4">
+                                    <div class="card-header">
+                                        <h3 class="card-title">Recomendações Estratégicas</h3>
+                                    </div>
+                                    <div class="card-body">
+                                        <div id="recomendacoes-estrategicas">
+                                            <!-- Preenchido via JavaScript -->
+                                            <p class="text-center text-muted">Execute a simulação para gerar recomendações estratégicas personalizadas.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="text-center mt-4">
+                                    <button id="btn-exportar-pdf-estrategico" class="btn btn-primary">Exportar PDF</button>
+                                    <button id="btn-exportar-excel-estrategico" class="btn btn-success ml-2">Exportar Excel</button>
+                                    <button id="btn-salvar-simulacao-estrategica" class="btn btn-info ml-2">Salvar Simulação</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="../js/app.js"></script>
+    <script src="../js/simulators/strategic-planning.js"></script>
+</body>
+</html>

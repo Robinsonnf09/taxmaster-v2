@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TAX MASTER - Módulo III</title>
+    <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body>
+    <div id="module3-page">
+        <div class="container">
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">Módulo III - Parcelamento e Redução de Débitos</h2>
+                    <p class="card-subtitle">Simulador avançado de parcelamento com análise de fluxo de caixa, comparativo entre modalidades e classificação de risco.</p>
+                </div>
+                <div class="card-body">
+                    <div class="tab-container">
+                        <ul class="tab-nav">
+                            <li class="tab-nav-item active" data-tab="simulacao-parcelamento">Simulação de Parcelamento</li>
+                            <li class="tab-nav-item" data-tab="fluxo-caixa">Fluxo de Caixa</li>
+                            <li class="tab-nav-item" data-tab="comparativo-modalidades">Comparativo</li>
+                            <li class="tab-nav-item" data-tab="resultados-parcelamento">Resultados</li>
+                        </ul>
+                        
+                        <div id="tab-simulacao-parcelamento" class="tab-content active">
+                            <form id="simulacao-parcelamento-form" class="simulation-form">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <h3 class="mb-3">Dados do Débito</h3>
+                                        <div class="form-group">
+                                            <label for="valor-debito-parcelamento">Valor Total do Débito (R$)</label>
+                                            <input type="number" id="valor-debito-parcelamento" name="valorDebito" min="1000" step="100" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="data-inscricao">Data de Inscrição em Dívida Ativa</label>
+                                            <input type="date" id="data-inscricao" name="dataInscricao" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="tipo-debito-parcelamento">Tipo de Débito</label>
+                                            <select id="tipo-debito-parcelamento" name="tipoDebito" required>
+                                                <option value="">Selecione o tipo</option>
+                                                <option value="previdenciario">Previdenciário</option>
+                                                <option value="nao-previdenciario">Não Previdenciário</option>
+                                                <option value="multa">Multa Isolada</option>
+                                                <option value="icms">ICMS</option>
+                                                <option value="iss">ISS</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="situacao-debito">Situação do Débito</label>
+                                            <select id="situacao-debito" name="situacaoDebito" required>
+                                                <option value="">Selecione a situação</option>
+                                                <option value="administrativo">Em fase administrativa</option>
+                                                <option value="inscrito">Inscrito em dívida ativa</option>
+                                                <option value="ajuizado">Ajuizado</option>
+                                                <option value="protesto">Em protesto</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <h3 class="mb-3">Opções de Parcelamento</h3>
+                                        <div class="form-group">
+                                            <label for="modalidade-parcelamento">Modalidade de Parcelamento</label>
+                                            <select id="modalidade-parcelamento" name="modalidadeParcelamento" required>
+                                                <option value="">Selecione a modalidade</option>
+                                                <option value="ordinario">Parcelamento Ordinário</option>
+                                                <option value="simplificado">Parcelamento Simplificado</option>
+                                                <option value="especial">Parcelamento Especial</option>
+                                                <option value="excepcional">Parcelamento Excepcional</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="prazo-parcelamento">Prazo para Pagamento (meses)</label>
+                                            <input type="number" id="prazo-parcelamento" name="prazoParcelamento" min="1" max="180" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="entrada-parcelamento">Valor da Entrada (%)</label>
+                                            <input type="number" id="entrada-parcelamento" name="entradaParcelamento" min="0" max="30" value="5">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="reducao-solicitada">Redução Adicional Solicitada (%)</label>
+                                            <input type="number" id="reducao-solicitada" name="reducaoSolicitada" min="0" max="20" value="0">
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="row mt-4">
+                                    <div class="col-md-12">
+                                        <h3 class="mb-3">Dados Financeiros do Contribuinte</h3>
+                                        <div class="form-check mb-3">
+                                            <input type="checkbox" class="form-check-input" id="usar-capacidade-pagamento" name="usarCapacidadePagamento">
+                                            <label class="form-check-label" for="usar-capacidade-pagamento">Incluir análise de capacidade de pagamento</label>
+                                        </div>
+                                        
+                                        <div id="capacidade-pagamento-fields" style="display: none;">
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <label for="receita-mensal-parcelamento">Receita Mensal Média (R$)</label>
+                                                        <input type="number" id="receita-mensal-parcelamento" name="receitaMensal" min="0" step="100">
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="despesas-fixas-parcelamento">Despesas Fixas Mensais (R$)</label>
+                                                        <input type="number" id="despesas-fixas-parcelamento" name="despesasFixas" min="0" step="100">
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="outros-parcelamentos">Outros Parcelamentos Mensais (R$)</label>
+                                                        <input type="number" id="outros-parcelamentos" name="outrosParcelamentos" min="0" step="100">
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <label for="patrimonio-liquido-parcelamento">Patrimônio Líquido (R$)</label>
+                                                        <input type="number" id="patrimonio-liquido-parcelamento" name="patrimonioLiquido" min="0" step="1000">
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="faturamento-anual">Faturamento Anual (R$)</label>
+                                                        <input type="number" id="faturamento-anual" name="faturamentoAnual" min="0" step="1000">
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="endividamento-parcelamento">Grau de Endividamento (%)</label>
+                                                        <input type="number" id="endividamento-parcelamento" name="endividamento" min="0" max="100" step="0.1">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-group text-center mt-4">
+                                    <button type="submit" class="btn btn-primary btn-lg" id="btn-simular-parcelamento">Simular Parcelamento</button>
+                                    <button type="reset" class="btn btn-secondary btn-lg ml-2">Limpar</button>
+                                </div>
+                            </form>
+                        </div>
+                        
+                        <div id="tab-fluxo-caixa" class="tab-content">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h3 class="card-title">Análise de Fluxo de Caixa</h3>
+                                </div>
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="periodo-projecao">Período de Projeção (meses)</label>
+                                                <select id="periodo-projecao" class="form-control">
+                                                    <option value="12">12 meses</option>
+                                                    <option value="24">24 meses</option>
+                                                    <option value="36">36 meses</option>
+                                                    <option value="48">48 meses</option>
+                                                    <option value="60">60 meses</option>
+                                                </select>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="taxa-crescimento">Taxa de Crescimento Anual (%)</label>
+                                                <input type="number" id="taxa-crescimento" class="form-control" min="-10" max="20" step="0.5" value="2">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="inflacao-projetada">Inflação Projetada (% a.a.)</label>
+                                                <input type="number" id="inflacao-projetada" class="form-control" min="0" max="15" step="0.1" value="3.5">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="taxa-juros-projetada">Taxa de Juros Projetada (% a.a.)</label>
+                                                <input type="number" id="taxa-juros-projetada" class="form-control" min="0" max="20" step="0.1" value="6.5">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="text-center mt-3">
+                                        <button id="btn-atualizar-fluxo" class="btn btn-primary">Atualizar Projeção</button>
+                                    </div>
+                                    
+                                    <div class="chart-container mt-4">
+                                        <canvas id="grafico-fluxo-caixa"></canvas>
+                                    </div>
+                                    
+                                    <div class="table-responsive mt-4">
+                                        <table class="table table-striped" id="tabela-fluxo-caixa">
+                                            <thead>
+                                                <tr>
+                                                    <th>Período</th>
+                                                    <th>Receitas</th>
+                                                    <th>Despesas</th>
+                                                    <th>Parcelamento</th>
+                                                    <th>Saldo</th>
+                                                    <th>Saldo Acumulado</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="tabela-fluxo-caixa-body">
+                                                <!-- Preenchido via JavaScript -->
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div id="tab-comparativo-modalidades" class="tab-content">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h3 class="card-title">Comparativo entre Modalidades de Parcelamento</h3>
+                                </div>
+                                <div class="card-body">
+                                    <div class="table-responsive">
+                                        <table class="table table-hover" id="tabela-comparativo-modalidades">
+                                            <thead>
+                                                <tr>
+                                                    <th>Modalidade</th>
+                                                    <th>Valor Total</th>
+                                                    <th>Redução</th>
+                                                    <th>Economia</th>
+                                                    <th>Parcela</th>
+                                                    <th>Prazo Máx.</th>
+                                                    <th>Entrada Mín.</th>
+                                                    <th>Elegível</th>
+                                                    <th>Ações</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="tabela-comparativo-modalidades-body">
+                                                <!-- Preenchido via JavaScript -->
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    
+                                    <div class="chart-container mt-4">
+                                        <canvas id="grafico-comparativo-modalidades"></canvas>
+                                    </div>
+                                    
+                                    <div class="row mt-4">
+                                        <div class="col-md-6">
+                                            <div class="card">
+                                                <div class="card-header">
+                                                    <h4 class="card-title">Economia por Modalidade</h4>
+                                                </div>
+                                                <div class="card-body">
+                                                    <canvas id="grafico-economia-modalidades"></canvas>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="card">
+                                                <div class="card-header">
+                                                    <h4 class="card-title">Impacto no Fluxo de Caixa</h4>
+                                                </div>
+                                                <div class="card-body">
+                                                    <canvas id="grafico-impacto-fluxo"></canvas>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div id="tab-resultados-parcelamento" class="tab-content">
+                            <div id="resultados-simulacao-parcelamento" class="simulation-results">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="card">
+                                            <div class="card-header">
+                                                <h3 class="card-title">Resumo do Parcelamento</h3>
+                                            </div>
+                                            <div class="card-body">
+                                                <table class="table">
+                                                    <tbody>
+                                                        <tr>
+                                                            <th>Valor Original do Débito:</th>
+                                                            <td id="resultado-parcelamento-valor-original">R$ 0,00</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th>Valor Atualizado:</th>
+                                                            <td id="resultado-parcelamento-valor-atualizado">R$ 0,00</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th>Modalidade de Parcelamento:</th>
+                                                            <td id="resultado-parcelamento-modalidade">-</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th>Valor da Entrada:</th>
+                                                            <td id="resultado-parcelamento-entrada">R$ 0,00</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th>Valor Parcelado:</th>
+                                                            <td id="resultado-parcelamento-valor-parcelado">R$ 0,00</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th>Número de Parcelas:</th>
+                                                            <td id="resultado-parcelamento-num-parcelas">0</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th>Valor da Parcela:</th>
+                                                            <td id="resultado-parcelamento-valor-parcela">R$ 0,00</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th>Redução Total:</th>
+                                                            <td id="resultado-parcelamento-reducao">R$ 0,00</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th>Percentual de Redução:</th>
+                                                            <td id="resultado-parcelamento-percentual-reducao">0%</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="card">
+                                            <div class="card-header">
+                                                <h3 class="card-title">Análise de Viabilidade</h3>
+                                            </div>
+                                            <div class="card-body">
+                                                <div class="text-center mb-4">
+                                                    <div id="indicador-viabilidade" class="gauge-container">
+                                                        <div class="gauge-value">0%</div>
+                                                    </div>
+                                                    <p>Índice de Viabilidade Financeira</p>
+                                                </div>
+                                                
+                                                <table class="table">
+                                                    <tbody>
+                                                        <tr>
+                                                            <th>Comprometimento da Receita:</th>
+                                                            <td id="resultado-comprometimento">0%</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th>Classificação de Risco:</th>
+                                                            <td id="resultado-classificacao-risco">-</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th>Probabilidade de Adimplência:</th>
+                                                            <td id="resultado-probabilidade-adimplencia">0%</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th>Recomendação:</th>
+                                                            <td id="resultado-recomendacao">-</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="card mt-4">
+                                    <div class="card-header">
+                                        <h3 class="card-title">Tabela de Amortização</h3>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="table-responsive">
+                                            <table class="table table-striped" id="tabela-amortizacao-parcelamento">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Parcela</th>
+                                                        <th>Vencimento</th>
+                                                        <th>Valor Parcela</th>
+                                                        <th>Juros</th>
+                                                        <th>Amortização</th>
+                                                        <th>Saldo Devedor</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="tabela-amortizacao-parcelamento-body">
+                                                    <!-- Preenchido via JavaScript -->
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="row mt-4">
+                                    <div class="col-md-6">
+                                        <div class="card">
+                                            <div class="card-header">
+                                                <h3 class="card-title">Composição do Parcelamento</h3>
+                                            </div>
+                                            <div class="card-body">
+                                                <canvas id="grafico-composicao-parcelamento"></canvas>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="card">
+                                            <div class="card-header">
+                                                <h3 class="card-title">Evolução do Saldo Devedor</h3>
+                                            </div>
+                                            <div class="card-body">
+                                                <canvas id="grafico-evolucao-saldo"></canvas>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="text-center mt-4">
+                                    <button id="btn-exportar-pdf-parcelamento" class="btn btn-primary">Exportar PDF</button>
+                                    <button id="btn-exportar-excel-parcelamento" class="btn btn-success ml-2">Exportar Excel</button>
+                                    <button id="btn-salvar-simulacao-parcelamento" class="btn btn-info ml-2">Salvar Simulação</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="../js/app.js"></script>
+    <script src="../js/simulators/installment.js"></script>
+</body>
+</html>

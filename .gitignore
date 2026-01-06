@@ -1,0 +1,36 @@
+﻿# Python
+venv/
+*.pyc
+__pycache__/
+*.pyo
+*.pyd
+.Python
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
+
+# Logs
+*.log
+
+# Environment
+.env
+.venv
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Backups
+*_backup*.py
+*_backup*.html
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Temporary
+test_*.py

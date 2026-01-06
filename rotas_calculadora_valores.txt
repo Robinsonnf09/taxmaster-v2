@@ -1,0 +1,178 @@
+﻿
+# ============================================================================
+# ROTAS PARA ATUALIZAÇÃO DE VALORES E CALCULADORA
+# ============================================================================
+
+@app.route('/processo/<int:processo_id>/atualizar-valores')
+def atualizar_valores_page(processo_id):
+    """Página de atualização de valores"""
+    db = SessionLocal()
+    
+    try:
+        processo = db.query(Processo).filter(Processo.id == processo_id).first()
+        
+        if not processo:
+            flash('Processo não encontrado', 'danger')
+            return redirect(url_for('listar_processos'))
+        
+        # Buscar histórico
+        from sqlalchemy import text
+        historico = db.execute(text("""
+            SELECT * FROM historico_valores 
+            WHERE processo_id = :processo_id 
+            ORDER BY data_atualizacao DESC
+        """), {"processo_id": processo_id}).fetchall()
+        
+        # Converter para lista de dicionários
+        historico_list = []
+        for row in historico:
+            historico_list.append({
+                'data_atualizacao': datetime.strptime(str(row[2]), '%Y-%m-%d %H:%M:%S.%f') if '.' in str(row[2]) else datetime.strptime(str(row[2]), '%Y-%m-%d %H:%M:%S'),
+                'valor_principal': row[3],
+                'valor_juros': row[4],
+                'valor_correcao': row[5],
+                'valor_total': row[6],
+                'taxa_juros': row[7],
+                'indice_correcao': row[8],
+                'periodo_inicio': datetime.strptime(str(row[9]), '%Y-%m-%d') if row[9] else None,
+                'periodo_fim': datetime.strptime(str(row[10]), '%Y-%m-%d') if row[10] else None
+            })
+        
+        from datetime import date
+        hoje = date.today().isoformat()
+        
+        return render_template('atualizar_valores.html',
+            processo=processo,
+            historico=historico_list,
+            hoje=hoje
+        )
+        
+    finally:
+        db.close()
+
+@app.route('/api/calcular-valores', methods=['POST'])
+def api_calcular_valores():
+    """API para calcular valores"""
+    try:
+        data = request.get_json()
+        
+        # Importar calculadora
+        import sys
+        sys.path.append('src')
+        from calculadora_juros import CalculadoraPrecatorio
+        
+        # Criar calculadora
+        calc = CalculadoraPrecatorio(
+            valor_principal=data['valor_principal'],
+            data_base=data['data_base'],
+            data_final=data['data_final'],
+            taxa_juros_mensal=data['taxa_juros'],
+            indice_correcao=data['indice_correcao']
+        )
+        
+        # Calcular
+        resultado = calc.calcular_tudo(tipo_juros=data.get('tipo_juros', 'SIMPLES'))
+        
+        return jsonify(resultado)
+        
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/api/detalhamento-mensal', methods=['POST'])
+def api_detalhamento_mensal():
+    """API para detalhamento mensal"""
+    try:
+        data = request.get_json()
+        
+        # Importar calculadora
+        import sys
+        sys.path.append('src')
+        from calculadora_juros import CalculadoraPrecatorio
+        
+        # Criar calculadora
+        calc = CalculadoraPrecatorio(
+            valor_principal=data['valor_principal'],
+            data_base=data['data_base'],
+            data_final=data['data_final'],
+            taxa_juros_mensal=data['taxa_juros'],
+            indice_correcao=data['indice_correcao']
+        )
+        
+        # Gerar detalhamento
+        detalhes = calc.gerar_detalhamento_mensal()
+        
+        return jsonify(detalhes)
+        
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/processo/<int:processo_id>/salvar-atualizacao-valores', methods=['POST'])
+def salvar_atualizacao_valores(processo_id):
+    """Salva atualização de valores"""
+    db = SessionLocal()
+    
+    try:
+        processo = db.query(Processo).filter(Processo.id == processo_id).first()
+        
+        if not processo:
+            return jsonify({'success': False, 'error': 'Processo não encontrado'}), 404
+        
+        data = request.get_json()
+        
+        # Salvar no histórico
+        from sqlalchemy import text
+        db.execute(text("""
+            INSERT INTO historico_valores 
+            (processo_id, data_atualizacao, valor_principal, valor_juros, 
+             valor_correcao, valor_total, taxa_juros, indice_correcao, 
+             periodo_inicio, periodo_fim, usuario)
+            VALUES 
+            (:processo_id, :data_atualizacao, :valor_principal, :valor_juros,
+             :valor_correcao, :valor_total, :taxa_juros, :indice_correcao,
+             :periodo_inicio, :periodo_fim, :usuario)
+        """), {
+            "processo_id": processo_id,
+            "data_atualizacao": datetime.now(),
+            "valor_principal": data['valor_principal'],
+            "valor_juros": data['valor_juros'],
+            "valor_correcao": data['valor_correcao'],
+            "valor_total": data['valor_total'],
+            "taxa_juros": data['taxa_juros_mensal'],
+            "indice_correcao": data['indice_correcao'],
+            "periodo_inicio": datetime.strptime(data['data_base'], '%d/%m/%Y').date(),
+            "periodo_fim": datetime.strptime(data['data_final'], '%d/%m/%Y').date(),
+            "usuario": "Sistema"
+        })
+        
+        # Atualizar processo
+        db.execute(text("""
+            UPDATE processos 
+            SET valor_principal = :valor_principal,
+                valor_juros = :valor_juros,
+                valor_correcao_monetaria = :valor_correcao,
+                valor_atualizado = :valor_total,
+                taxa_juros_mensal = :taxa_juros,
+                indice_correcao = :indice_correcao,
+                data_ultima_atualizacao_valor = :data_atualizacao
+            WHERE id = :id
+        """), {
+            "valor_principal": data['valor_principal'],
+            "valor_juros": data['valor_juros'],
+            "valor_correcao": data['valor_correcao'],
+            "valor_total": data['valor_total'],
+            "taxa_juros": data['taxa_juros_mensal'],
+            "indice_correcao": data['indice_correcao'],
+            "data_atualizacao": datetime.now(),
+            "id": processo_id
+        })
+        
+        db.commit()
+        
+        return jsonify({'success': True})
+        
+    except Exception as e:
+        db.rollback()
+        return jsonify({'success': False, 'error': str(e)}), 500
+    finally:
+        db.close()
+

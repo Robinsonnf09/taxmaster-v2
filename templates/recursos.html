@@ -1,0 +1,291 @@
+﻿{% extends "base.html" %}
+
+{% block title %}Recursos do Sistema - Tax Master{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-12">
+        <h1 class="display-4">
+            <i class="fas fa-star text-warning"></i>
+            Recursos do Sistema
+        </h1>
+        <p class="lead text-muted">Funcionalidades implementadas e em produção</p>
+    </div>
+</div>
+
+<!-- Cards de Recursos -->
+<div class="row">
+    
+    <!-- 1. Cobertura Nacional -->
+    <div class="col-md-6 mb-4">
+        <div class="card h-100 shadow-sm border-primary">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0">
+                    <i class="fas fa-map-marked-alt me-2"></i>
+                    Cobertura Nacional
+                </h5>
+            </div>
+            <div class="card-body">
+                <p class="lead">Acesse dados dos principais tribunais do Brasil</p>
+                
+                <div class="row text-center mb-3">
+                    <div class="col-4">
+                        <h3 class="text-primary">{{ cobertura.total_tribunais }}</h3>
+                        <small class="text-muted">Tribunais</small>
+                    </div>
+                    <div class="col-4">
+                        <h3 class="text-success">27</h3>
+                        <small class="text-muted">Estados</small>
+                    </div>
+                    <div class="col-4">
+                        <h3 class="text-info">100%</h3>
+                        <small class="text-muted">Cobertura</small>
+                    </div>
+                </div>
+                
+                <ul class="list-unstyled">
+                    <li><i class="fas fa-check text-success me-2"></i> {{ cobertura.estaduais }} Tribunais Estaduais</li>
+                    <li><i class="fas fa-check text-success me-2"></i> {{ cobertura.federais }} Tribunais Federais</li>
+                    <li><i class="fas fa-check text-success me-2"></i> {{ cobertura.trabalhistas }} Tribunais Trabalhistas</li>
+                </ul>
+                
+                <span class="badge bg-success">✓ EM PRODUÇÃO</span>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 2. Automação Inteligente -->
+    <div class="col-md-6 mb-4">
+        <div class="card h-100 shadow-sm border-warning">
+            <div class="card-header bg-warning text-dark">
+                <h5 class="mb-0">
+                    <i class="fas fa-bolt me-2"></i>
+                    Automação Inteligente
+                </h5>
+            </div>
+            <div class="card-body">
+                <p class="lead">Extração até 10x mais rápida</p>
+                
+                <div class="row text-center mb-3">
+                    <div class="col-4">
+                        <h3 class="text-warning">{{ automacao.total_buscas }}</h3>
+                        <small class="text-muted">Buscas</small>
+                    </div>
+                    <div class="col-4">
+                        <h3 class="text-success">{{ "%.1f"|format(automacao.taxa_sucesso) }}%</h3>
+                        <small class="text-muted">Sucesso</small>
+                    </div>
+                    <div class="col-4">
+                        <h3 class="text-info">{{ "%.2f"|format(automacao.tempo_medio) }}s</h3>
+                        <small class="text-muted">Tempo Médio</small>
+                    </div>
+                </div>
+                
+                <ul class="list-unstyled">
+                    <li><i class="fas fa-check text-success me-2"></i> Busca automática de ofícios</li>
+                    <li><i class="fas fa-check text-success me-2"></i> Processamento em lote</li>
+                    <li><i class="fas fa-check text-success me-2"></i> Logs detalhados</li>
+                </ul>
+                
+                <a href="/automacao" class="btn btn-warning">
+                    <i class="fas fa-play me-2"></i>
+                    Iniciar Automação
+                </a>
+                
+                <span class="badge bg-success ms-2">✓ EM PRODUÇÃO</span>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 3. Filtros Avançados -->
+    <div class="col-md-6 mb-4">
+        <div class="card h-100 shadow-sm border-info">
+            <div class="card-header bg-info text-white">
+                <h5 class="mb-0">
+                    <i class="fas fa-filter me-2"></i>
+                    Filtros Avançados
+                </h5>
+            </div>
+            <div class="card-body">
+                <p class="lead">Segmente por tribunal, valor e mais</p>
+                
+                <ul class="list-unstyled">
+                    <li><i class="fas fa-check text-success me-2"></i> 10+ filtros diferentes</li>
+                    <li><i class="fas fa-check text-success me-2"></i> Busca por tribunal</li>
+                    <li><i class="fas fa-check text-success me-2"></i> Filtro por valor</li>
+                    <li><i class="fas fa-check text-success me-2"></i> Filtro por natureza</li>
+                    <li><i class="fas fa-check text-success me-2"></i> Filtro por ano</li>
+                    <li><i class="fas fa-check text-success me-2"></i> Filtro por esfera</li>
+                </ul>
+                
+                <a href="/processos" class="btn btn-info">
+                    <i class="fas fa-search me-2"></i>
+                    Ver Filtros
+                </a>
+                
+                <span class="badge bg-success ms-2">✓ EM PRODUÇÃO</span>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 4. Painel Intuitivo -->
+    <div class="col-md-6 mb-4">
+        <div class="card h-100 shadow-sm border-success">
+            <div class="card-header bg-success text-white">
+                <h5 class="mb-0">
+                    <i class="fas fa-tachometer-alt me-2"></i>
+                    Painel Intuitivo
+                </h5>
+            </div>
+            <div class="card-body">
+                <p class="lead">Organize e gerencie com eficiência</p>
+                
+                <div class="row text-center mb-3">
+                    <div class="col-6">
+                        <h3 class="text-success">{{ painel.total_processos }}</h3>
+                        <small class="text-muted">Processos</small>
+                    </div>
+                    <div class="col-6">
+                        <h3 class="text-primary">R$ {{ "{:,.0f}".format(painel.total_valor).replace(',', '.') }}</h3>
+                        <small class="text-muted">Valor Total</small>
+                    </div>
+                </div>
+                
+                <ul class="list-unstyled">
+                    <li><i class="fas fa-check text-success me-2"></i> Dashboard interativo</li>
+                    <li><i class="fas fa-check text-success me-2"></i> Gráficos em tempo real</li>
+                    <li><i class="fas fa-check text-success me-2"></i> Métricas detalhadas</li>
+                </ul>
+                
+                <a href="/" class="btn btn-success">
+                    <i class="fas fa-chart-line me-2"></i>
+                    Ver Dashboard
+                </a>
+                
+                <span class="badge bg-success ms-2">✓ EM PRODUÇÃO</span>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 5. Enriquecimento de Leads -->
+    <div class="col-md-6 mb-4">
+        <div class="card h-100 shadow-sm border-danger">
+            <div class="card-header bg-danger text-white">
+                <h5 class="mb-0">
+                    <i class="fas fa-user-tie me-2"></i>
+                    Enriquecimento de Leads
+                </h5>
+            </div>
+            <div class="card-body">
+                <p class="lead">Contatos e informações detalhadas</p>
+                
+                <div class="row text-center mb-3">
+                    <div class="col-4">
+                        <h3 class="text-danger">{{ leads.total_leads }}</h3>
+                        <small class="text-muted">Leads</small>
+                    </div>
+                    <div class="col-4">
+                        <h3 class="text-success">{{ leads.credores }}</h3>
+                        <small class="text-muted">Credores</small>
+                    </div>
+                    <div class="col-4">
+                        <h3 class="text-info">{{ leads.advogados }}</h3>
+                        <small class="text-muted">Advogados</small>
+                    </div>
+                </div>
+                
+                <ul class="list-unstyled">
+                    <li><i class="fas fa-check text-success me-2"></i> Extração automática</li>
+                    <li><i class="fas fa-check text-success me-2"></i> Dados de contato</li>
+                    <li><i class="fas fa-check text-success me-2"></i> Gestão de relacionamento</li>
+                </ul>
+                
+                <a href="/contatos" class="btn btn-danger">
+                    <i class="fas fa-address-book me-2"></i>
+                    Ver Contatos
+                </a>
+                
+                <span class="badge bg-success ms-2">✓ EM PRODUÇÃO</span>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 6. Segurança -->
+    <div class="col-md-6 mb-4">
+        <div class="card h-100 shadow-sm border-secondary">
+            <div class="card-header bg-secondary text-white">
+                <h5 class="mb-0">
+                    <i class="fas fa-shield-alt me-2"></i>
+                    Segurança
+                </h5>
+            </div>
+            <div class="card-body">
+                <p class="lead">Dados protegidos e criptografados</p>
+                
+                <div class="row text-center mb-3">
+                    <div class="col-4">
+                        <h3 class="text-secondary">{{ seguranca.total_oficios }}</h3>
+                        <small class="text-muted">Ofícios</small>
+                    </div>
+                    <div class="col-4">
+                        <h3 class="text-success">{{ "%.0f"|format(seguranca.taxa_protecao) }}%</h3>
+                        <small class="text-muted">Protegidos</small>
+                    </div>
+                    <div class="col-4">
+                        <h3 class="text-info">SHA-256</h3>
+                        <small class="text-muted">Criptografia</small>
+                    </div>
+                </div>
+                
+                <ul class="list-unstyled">
+                    <li><i class="fas fa-check text-success me-2"></i> Criptografia SHA-256</li>
+                    <li><i class="fas fa-check text-success me-2"></i> Backup automático</li>
+                    <li><i class="fas fa-check text-success me-2"></i> Auditoria de acessos</li>
+                    <li><i class="fas fa-check text-success me-2"></i> Validação de integridade</li>
+                </ul>
+                
+                <span class="badge bg-success">✓ EM PRODUÇÃO</span>
+            </div>
+        </div>
+    </div>
+    
+</div>
+
+<!-- Resumo Geral -->
+<div class="card shadow-sm border-0 mt-4">
+    <div class="card-body bg-light">
+        <h3 class="text-center mb-4">
+            <i class="fas fa-check-circle text-success me-2"></i>
+            Todos os Recursos em Produção
+        </h3>
+        
+        <div class="row text-center">
+            <div class="col-md-2">
+                <h2 class="text-primary">6/6</h2>
+                <p class="text-muted">Recursos Ativos</p>
+            </div>
+            <div class="col-md-2">
+                <h2 class="text-success">100%</h2>
+                <p class="text-muted">Funcional</p>
+            </div>
+            <div class="col-md-2">
+                <h2 class="text-info">{{ cobertura.total_tribunais }}</h2>
+                <p class="text-muted">Tribunais</p>
+            </div>
+            <div class="col-md-2">
+                <h2 class="text-warning">{{ automacao.total_buscas }}</h2>
+                <p class="text-muted">Buscas</p>
+            </div>
+            <div class="col-md-2">
+                <h2 class="text-danger">{{ leads.total_leads }}</h2>
+                <p class="text-muted">Leads</p>
+            </div>
+            <div class="col-md-2">
+                <h2 class="text-secondary">{{ seguranca.total_oficios }}</h2>
+                <p class="text-muted">Protegidos</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

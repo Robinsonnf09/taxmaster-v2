@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TAX MASTER - Módulo I</title>
+    <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body>
+    <div id="module1-page">
+        <div class="container">
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">Módulo I - Transação Tributária Básica</h2>
+                    <p class="card-subtitle">Simule diferentes cenários de transação tributária e descubra a melhor opção para sua situação.</p>
+                </div>
+                <div class="card-body">
+                    <div class="tab-container">
+                        <ul class="tab-nav">
+                            <li class="tab-nav-item active" data-tab="simulacao">Simulação</li>
+                            <li class="tab-nav-item" data-tab="resultados">Resultados</li>
+                            <li class="tab-nav-item" data-tab="amortizacao">Tabela de Amortização</li>
+                            <li class="tab-nav-item" data-tab="graficos">Gráficos</li>
+                        </ul>
+                        
+                        <div id="tab-simulacao" class="tab-content active">
+                            <form id="simulacao-form" class="simulation-form">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="valor-debito">Valor do Débito (R$)</label>
+                                            <input type="number" id="valor-debito" name="valorDebito" min="1000" step="100" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="data-vencimento">Data de Vencimento Original</label>
+                                            <input type="date" id="data-vencimento" name="dataVencimento" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="tipo-debito">Tipo de Débito</label>
+                                            <select id="tipo-debito" name="tipoDebito" required>
+                                                <option value="">Selecione o tipo</option>
+                                                <option value="previdenciario">Previdenciário</option>
+                                                <option value="nao-previdenciario">Não Previdenciário</option>
+                                                <option value="multa">Multa Isolada</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="modalidade-transacao">Modalidade de Transação</label>
+                                            <select id="modalidade-transacao" name="modalidadeTransacao" required>
+                                                <option value="">Selecione a modalidade</option>
+                                                <option value="excepcional">Transação Excepcional</option>
+                                                <option value="extraordinaria">Transação Extraordinária</option>
+                                                <option value="regular">Transação Regular</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="prazo-pagamento">Prazo para Pagamento (meses)</label>
+                                            <input type="number" id="prazo-pagamento" name="prazoPagamento" min="1" max="145" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="entrada">Valor da Entrada (%)</label>
+                                            <input type="number" id="entrada" name="entrada" min="0" max="30" value="0">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group text-center mt-4">
+                                    <button type="submit" class="btn btn-primary btn-lg" id="btn-simular">Simular Transação</button>
+                                    <button type="reset" class="btn btn-secondary btn-lg ml-2">Limpar</button>
+                                </div>
+                            </form>
+                        </div>
+                        
+                        <div id="tab-resultados" class="tab-content">
+                            <div id="resultados-simulacao" class="simulation-results">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="card">
+                                            <div class="card-header">
+                                                <h3 class="card-title">Resumo da Simulação</h3>
+                                            </div>
+                                            <div class="card-body">
+                                                <table class="table">
+                                                    <tbody>
+                                                        <tr>
+                                                            <th>Valor Original do Débito:</th>
+                                                            <td id="resultado-valor-original">R$ 0,00</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th>Valor Atualizado (com juros e multa):</th>
+                                                            <td id="resultado-valor-atualizado">R$ 0,00</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th>Valor após Descontos:</th>
+                                                            <td id="resultado-valor-descontos">R$ 0,00</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th>Valor da Entrada:</th>
+                                                            <td id="resultado-valor-entrada">R$ 0,00</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th>Valor da Parcela Mensal:</th>
+                                                            <td id="resultado-valor-parcela">R$ 0,00</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th>Número de Parcelas:</th>
+                                                            <td id="resultado-num-parcelas">0</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="card">
+                                            <div class="card-header">
+                                                <h3 class="card-title">Economia Gerada</h3>
+                                            </div>
+                                            <div class="card-body">
+                                                <div class="text-center mb-4">
+                                                    <h2 class="result-highlight" id="resultado-economia-total">R$ 0,00</h2>
+                                                    <p>Economia Total</p>
+                                                </div>
+                                                <table class="table">
+                                                    <tbody>
+                                                        <tr>
+                                                            <th>Desconto em Multas:</th>
+                                                            <td id="resultado-desconto-multa">R$ 0,00</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th>Desconto em Juros:</th>
+                                                            <td id="resultado-desconto-juros">R$ 0,00</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th>Desconto em Encargos:</th>
+                                                            <td id="resultado-desconto-encargos">R$ 0,00</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th>Percentual de Economia:</th>
+                                                            <td id="resultado-percentual-economia">0%</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row mt-4">
+                                    <div class="col-12 text-center">
+                                        <button id="btn-salvar-simulacao" class="btn btn-success btn-lg">
+                                            <i class="fas fa-save"></i> Salvar Simulação
+                                        </button>
+                                        <button id="btn-exportar-simulacao" class="btn btn-primary btn-lg ml-2">
+                                            <i class="fas fa-file-export"></i> Exportar Relatório
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div id="tab-amortizacao" class="tab-content">
+                            <div id="tabela-amortizacao-container">
+                                <div class="table-responsive">
+                                    <table class="table" id="tabela-amortizacao">
+                                        <thead>
+                                            <tr>
+                                                <th>Nº</th>
+                                                <th>Valor da Parcela</th>
+                                                <th>Juros</th>
+                                                <th>Amortização</th>
+                                                <th>Saldo Devedor</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="tabela-amortizacao-body">
+                                            <!-- Preenchido via JavaScript -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div id="tab-graficos" class="tab-content">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="card">
+                                        <div class="card-header">
+                                            <h3 class="card-title">Composição do Débito</h3>
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="chart-container">
+                                                <canvas id="grafico-composicao"></canvas>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="card">
+                                        <div class="card-header">
+                                            <h3 class="card-title">Economia por Componente</h3>
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="chart-container">
+                                                <canvas id="grafico-economia"></canvas>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mt-4">
+                                <div class="col-12">
+                                    <div class="card">
+                                        <div class="card-header">
+                                            <h3 class="card-title">Evolução do Saldo Devedor</h3>
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="chart-container">
+                                                <canvas id="grafico-evolucao"></canvas>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

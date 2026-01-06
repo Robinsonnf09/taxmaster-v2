@@ -1,0 +1,378 @@
+﻿{% extends "base.html" %}
+
+{% block title %}Automação - Tax Master{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-12">
+        <h1 class="display-5">
+            <i class="fas fa-robot text-primary"></i>
+            Automação de Processos
+        </h1>
+        <p class="lead text-muted">Busca automática de ofícios requisitórios e atualizações</p>
+    </div>
+</div>
+
+<style>
+    .automation-card {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border-radius: 15px;
+        padding: 30px;
+        margin-bottom: 30px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    }
+    
+    .automation-card h3 {
+        margin-bottom: 20px;
+        font-weight: bold;
+    }
+    
+    .automation-option {
+        background: rgba(255,255,255,0.1);
+        padding: 20px;
+        border-radius: 10px;
+        margin-bottom: 15px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+    
+    .automation-option:hover {
+        background: rgba(255,255,255,0.2);
+        transform: translateX(5px);
+    }
+    
+    .automation-option h5 {
+        margin-bottom: 10px;
+    }
+    
+    .automation-option p {
+        margin-bottom: 0;
+        opacity: 0.9;
+    }
+    
+    .status-card {
+        background: white;
+        border-radius: 15px;
+        padding: 25px;
+        margin-bottom: 20px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+    
+    .log-area {
+        background: #1e1e1e;
+        color: #00ff00;
+        padding: 20px;
+        border-radius: 10px;
+        font-family: 'Courier New', monospace;
+        max-height: 400px;
+        overflow-y: auto;
+        margin-top: 20px;
+    }
+    
+    .log-line {
+        margin-bottom: 5px;
+    }
+    
+    .btn-automation {
+        background: #27ae60;
+        color: white;
+        border: none;
+        padding: 15px 40px;
+        border-radius: 10px;
+        font-size: 1.1em;
+        font-weight: bold;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        width: 100%;
+        margin-top: 20px;
+    }
+    
+    .btn-automation:hover {
+        background: #229954;
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(39, 174, 96, 0.4);
+    }
+    
+    .btn-automation:disabled {
+        background: #95a5a6;
+        cursor: not-allowed;
+        transform: none;
+    }
+</style>
+
+<!-- Opções de Automação -->
+<div class="automation-card">
+    <h3>🤖 Opções de Automação</h3>
+    
+    <div class="automation-option" onclick="selecionarAutomacao('buscar_oficios')">
+        <h5><i class="fas fa-search me-2"></i>Buscar Ofícios Requisitórios</h5>
+        <p>Busca automática de ofícios nos portais dos tribunais (TJSP, TJRJ, TJMG, TRF3, etc.)</p>
+    </div>
+    
+    <div class="automation-option" onclick="selecionarAutomacao('atualizar_valores')">
+        <h5><i class="fas fa-calculator me-2"></i>Atualizar Valores Automaticamente</h5>
+        <p>Atualiza valores de todos os processos com juros e correção monetária</p>
+    </div>
+    
+    <div class="automation-option" onclick="selecionarAutomacao('consultar_status')">
+        <h5><i class="fas fa-sync-alt me-2"></i>Consultar Status dos Processos</h5>
+        <p>Verifica status atual de todos os processos nos tribunais</p>
+    </div>
+    
+    <div class="automation-option" onclick="selecionarAutomacao('gerar_relatorios')">
+        <h5><i class="fas fa-file-pdf me-2"></i>Gerar Relatórios Automáticos</h5>
+        <p>Gera relatórios mensais de todos os processos automaticamente</p>
+    </div>
+</div>
+
+<!-- Configurações -->
+<div class="status-card">
+    <h4 class="mb-4">⚙️ Configurações da Automação</h4>
+    
+    <div class="row">
+        <div class="col-md-6 mb-3">
+            <label class="form-label"><strong>Tribunal</strong></label>
+            <select class="form-select" id="tribunalAutomacao">
+                <option value="TODOS">Todos os Tribunais</option>
+                <option value="TJSP">TJSP</option>
+                <option value="TJRJ">TJRJ</option>
+                <option value="TJMG">TJMG</option>
+                <option value="TRF3">TRF3</option>
+                <option value="TRF4">TRF4</option>
+            </select>
+        </div>
+        
+        <div class="col-md-6 mb-3">
+            <label class="form-label"><strong>Processos</strong></label>
+            <select class="form-select" id="processosAutomacao">
+                <option value="TODOS">Todos os Processos</option>
+                <option value="SEM_OFICIO">Apenas sem Ofício</option>
+                <option value="PRIORITARIOS">Apenas Prioritários</option>
+            </select>
+        </div>
+        
+        <div class="col-md-6 mb-3">
+            <label class="form-label"><strong>Intervalo de Atualização</strong></label>
+            <select class="form-select" id="intervaloAutomacao">
+                <option value="MANUAL">Manual</option>
+                <option value="DIARIO">Diário</option>
+                <option value="SEMANAL">Semanal</option>
+                <option value="MENSAL">Mensal</option>
+            </select>
+        </div>
+        
+        <div class="col-md-6 mb-3">
+            <label class="form-label"><strong>Notificações</strong></label>
+            <select class="form-select" id="notificacoesAutomacao">
+                <option value="EMAIL">Por Email</option>
+                <option value="SISTEMA">Apenas no Sistema</option>
+                <option value="AMBOS">Email e Sistema</option>
+            </select>
+        </div>
+    </div>
+    
+    <button class="btn-automation" id="btnIniciarAutomacao" onclick="iniciarAutomacao()">
+        <i class="fas fa-play me-2"></i>
+        INICIAR AUTOMAÇÃO
+    </button>
+</div>
+
+<!-- Status e Logs -->
+<div class="status-card">
+    <h4 class="mb-4">📊 Status da Automação</h4>
+    
+    <div class="row mb-3">
+        <div class="col-md-3">
+            <div class="text-center">
+                <h2 class="text-primary" id="statusProcessados">0</h2>
+                <p class="text-muted">Processados</p>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="text-center">
+                <h2 class="text-success" id="statusSucesso">0</h2>
+                <p class="text-muted">Sucesso</p>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="text-center">
+                <h2 class="text-warning" id="statusErros">0</h2>
+                <p class="text-muted">Erros</p>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="text-center">
+                <h2 class="text-info" id="statusTempo">0s</h2>
+                <p class="text-muted">Tempo Decorrido</p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="log-area" id="logArea">
+        <div class="log-line">[SISTEMA] Aguardando início da automação...</div>
+    </div>
+</div>
+
+<!-- Histórico de Execuções -->
+<div class="card shadow-sm">
+    <div class="card-header bg-secondary text-white">
+        <h5 class="mb-0">
+            <i class="fas fa-history me-2"></i>
+            Histórico de Execuções
+        </h5>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Data/Hora</th>
+                        <th>Tipo</th>
+                        <th>Tribunal</th>
+                        <th>Processados</th>
+                        <th>Sucesso</th>
+                        <th>Erros</th>
+                        <th>Tempo</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody id="tabelaHistorico">
+                    <tr>
+                        <td colspan="8" class="text-center text-muted">
+                            Nenhuma execução registrada ainda
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script>
+let automacaoSelecionada = null;
+let automacaoEmAndamento = false;
+let tempoInicio = null;
+let intervaloTempo = null;
+
+function selecionarAutomacao(tipo) {
+    automacaoSelecionada = tipo;
+    
+    // Feedback visual
+    document.querySelectorAll('.automation-option').forEach(el => {
+        el.style.background = 'rgba(255,255,255,0.1)';
+    });
+    
+    event.target.closest('.automation-option').style.background = 'rgba(255,255,255,0.3)';
+    
+    adicionarLog(`[INFO] Automação selecionada: ${tipo}`);
+}
+
+function iniciarAutomacao() {
+    if (!automacaoSelecionada) {
+        alert('Selecione uma opção de automação primeiro!');
+        return;
+    }
+    
+    if (automacaoEmAndamento) {
+        alert('Já existe uma automação em andamento!');
+        return;
+    }
+    
+    automacaoEmAndamento = true;
+    tempoInicio = Date.now();
+    
+    // Atualizar UI
+    document.getElementById('btnIniciarAutomacao').disabled = true;
+    document.getElementById('btnIniciarAutomacao').innerHTML = 
+        '<i class="fas fa-spinner fa-spin me-2"></i>EXECUTANDO...';
+    
+    // Limpar logs
+    document.getElementById('logArea').innerHTML = '';
+    
+    // Resetar contadores
+    document.getElementById('statusProcessados').textContent = '0';
+    document.getElementById('statusSucesso').textContent = '0';
+    document.getElementById('statusErros').textContent = '0';
+    document.getElementById('statusTempo').textContent = '0s';
+    
+    // Iniciar contador de tempo
+    intervaloTempo = setInterval(atualizarTempo, 1000);
+    
+    adicionarLog('[INICIO] Iniciando automação...');
+    
+    // Obter configurações
+    const tribunal = document.getElementById('tribunalAutomacao').value;
+    const processos = document.getElementById('processosAutomacao').value;
+    
+    adicionarLog(`[CONFIG] Tribunal: ${tribunal}`);
+    adicionarLog(`[CONFIG] Processos: ${processos}`);
+    
+    // Chamar API
+    fetch('/api/executar-automacao', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            tipo: automacaoSelecionada,
+            tribunal: tribunal,
+            processos: processos
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        finalizarAutomacao(data);
+    })
+    .catch(error => {
+        adicionarLog(`[ERRO] ${error.message}`, 'error');
+        finalizarAutomacao({ success: false, error: error.message });
+    });
+}
+
+function finalizarAutomacao(resultado) {
+    automacaoEmAndamento = false;
+    clearInterval(intervaloTempo);
+    
+    // Atualizar UI
+    document.getElementById('btnIniciarAutomacao').disabled = false;
+    document.getElementById('btnIniciarAutomacao').innerHTML = 
+        '<i class="fas fa-play me-2"></i>INICIAR AUTOMAÇÃO';
+    
+    if (resultado.success) {
+        adicionarLog('[SUCESSO] Automação concluída com sucesso!', 'success');
+        
+        // Atualizar contadores
+        document.getElementById('statusProcessados').textContent = resultado.processados || 0;
+        document.getElementById('statusSucesso').textContent = resultado.sucesso || 0;
+        document.getElementById('statusErros').textContent = resultado.erros || 0;
+    } else {
+        adicionarLog(`[ERRO] Automação falhou: ${resultado.error}`, 'error');
+    }
+}
+
+function atualizarTempo() {
+    const tempoDecorrido = Math.floor((Date.now() - tempoInicio) / 1000);
+    document.getElementById('statusTempo').textContent = tempoDecorrido + 's';
+}
+
+function adicionarLog(mensagem, tipo = 'info') {
+    const logArea = document.getElementById('logArea');
+    const timestamp = new Date().toLocaleTimeString();
+    
+    let cor = '#00ff00';
+    if (tipo === 'error') cor = '#ff0000';
+    if (tipo === 'success') cor = '#00ff00';
+    if (tipo === 'warning') cor = '#ffff00';
+    
+    const logLine = document.createElement('div');
+    logLine.className = 'log-line';
+    logLine.style.color = cor;
+    logLine.textContent = `[${timestamp}] ${mensagem}`;
+    
+    logArea.appendChild(logLine);
+    logArea.scrollTop = logArea.scrollHeight;
+}
+</script>
+
+{% endblock %}

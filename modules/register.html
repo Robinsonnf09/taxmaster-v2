@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TAX MASTER - Registro</title>
+    <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body>
+    <div id="register-page">
+        <div class="container">
+            <div class="card">
+                <div class="card-header text-center">
+                    <h2 class="card-title">Criar Conta no TAX MASTER</h2>
+                    <p class="card-subtitle">Preencha os dados abaixo para criar sua conta</p>
+                </div>
+                <div class="card-body">
+                    <form id="register-form">
+                        <div class="form-group">
+                            <label for="register-nome">Nome Completo</label>
+                            <input type="text" id="register-nome" name="nome" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="register-email">Email</label>
+                            <input type="email" id="register-email" name="email" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="register-senha">Senha</label>
+                            <input type="password" id="register-senha" name="senha" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="register-perfil">Perfil Profissional</label>
+                            <select id="register-perfil" name="perfil" required>
+                                <option value="">Selecione seu perfil</option>
+                                <option value="contador">Contador</option>
+                                <option value="advogado">Advogado Tributarista</option>
+                                <option value="gestor">Gestor Financeiro</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-primary btn-block">Criar Conta</button>
+                        </div>
+                    </form>
+                </div>
+                <div class="card-footer text-center">
+                    <p>Já tem uma conta? <a href="#" data-page="login">Faça login</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

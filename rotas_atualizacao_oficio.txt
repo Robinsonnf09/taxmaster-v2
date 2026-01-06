@@ -1,0 +1,149 @@
+﻿
+# ============================================================================
+# ROTAS PARA ATUALIZAÇÃO DE OFÍCIO REQUISITÓRIO
+# ============================================================================
+
+@app.route('/processo/<int:processo_id>/atualizar-oficio-page')
+def atualizar_oficio_page(processo_id):
+    """Página de atualização do ofício requisitório"""
+    db = SessionLocal()
+    
+    try:
+        processo = db.query(Processo).filter(Processo.id == processo_id).first()
+        
+        if not processo:
+            flash('Processo não encontrado', 'danger')
+            return redirect(url_for('listar_processos'))
+        
+        # Buscar histórico de atualizações
+        from sqlalchemy import text
+        atualizacoes = db.execute(text("""
+            SELECT * FROM atualizacoes_oficio 
+            WHERE processo_id = :processo_id 
+            ORDER BY data_atualizacao DESC
+        """), {"processo_id": processo_id}).fetchall()
+        
+        # Converter para lista de dicionários
+        atualizacoes_list = []
+        for row in atualizacoes:
+            atualizacoes_list.append({
+                'id': row[0],
+                'data_atualizacao': datetime.strptime(row[2], '%Y-%m-%d %H:%M:%S.%f') if '.' in row[2] else datetime.strptime(row[2], '%Y-%m-%d %H:%M:%S'),
+                'status_anterior': row[3],
+                'status_novo': row[4],
+                'descricao': row[5],
+                'observacoes': row[6],
+                'valor_atualizado': row[7],
+                'numero_oficio': row[8],
+                'numero_precatorio': row[9],
+                'origem': row[10],
+                'usuario': row[11],
+                'validado': row[12]
+            })
+        
+        ultima_atualizacao = atualizacoes_list[0] if atualizacoes_list else None
+        
+        from datetime import date
+        hoje = date.today().isoformat()
+        
+        return render_template('atualizar_oficio.html',
+            processo=processo,
+            atualizacoes=atualizacoes_list,
+            total_atualizacoes=len(atualizacoes_list),
+            ultima_atualizacao=ultima_atualizacao,
+            hoje=hoje
+        )
+        
+    finally:
+        db.close()
+
+@app.route('/processo/<int:processo_id>/atualizar-oficio', methods=['POST'])
+def atualizar_oficio(processo_id):
+    """Registra nova atualização do ofício requisitório"""
+    db = SessionLocal()
+    
+    try:
+        processo = db.query(Processo).filter(Processo.id == processo_id).first()
+        
+        if not processo:
+            flash('Processo não encontrado', 'danger')
+            return redirect(url_for('listar_processos'))
+        
+        # Dados do formulário
+        status_novo = request.form.get('status_novo')
+        data_atualizacao = request.form.get('data_atualizacao')
+        numero_oficio = request.form.get('numero_oficio')
+        numero_precatorio = request.form.get('numero_precatorio')
+        valor_atualizado = request.form.get('valor_atualizado', type=float)
+        origem = request.form.get('origem')
+        descricao = request.form.get('descricao')
+        observacoes = request.form.get('observacoes')
+        
+        # Status anterior
+        from sqlalchemy import text
+        status_anterior = db.execute(text("""
+            SELECT status_oficio FROM processos WHERE id = :id
+        """), {"id": processo_id}).scalar()
+        
+        # Registrar atualização
+        db.execute(text("""
+            INSERT INTO atualizacoes_oficio 
+            (processo_id, data_atualizacao, status_anterior, status_novo, 
+             descricao, observacoes, valor_atualizado, numero_oficio, 
+             numero_precatorio, origem, usuario, validado)
+            VALUES 
+            (:processo_id, :data_atualizacao, :status_anterior, :status_novo,
+             :descricao, :observacoes, :valor_atualizado, :numero_oficio,
+             :numero_precatorio, :origem, :usuario, :validado)
+        """), {
+            "processo_id": processo_id,
+            "data_atualizacao": datetime.now(),
+            "status_anterior": status_anterior,
+            "status_novo": status_novo,
+            "descricao": descricao,
+            "observacoes": observacoes,
+            "valor_atualizado": valor_atualizado,
+            "numero_oficio": numero_oficio,
+            "numero_precatorio": numero_precatorio,
+            "origem": origem,
+            "usuario": "Sistema",  # Aqui você pode pegar do login
+            "validado": True if origem in ['PORTAL_TRIBUNAL', 'DIARIO_OFICIAL'] else False
+        })
+        
+        # Atualizar processo
+        db.execute(text("""
+            UPDATE processos 
+            SET status_oficio = :status_novo,
+                data_ultima_atualizacao_oficio = :data_atualizacao,
+                numero_oficio = COALESCE(:numero_oficio, numero_oficio)
+            WHERE id = :id
+        """), {
+            "status_novo": status_novo,
+            "data_atualizacao": datetime.now(),
+            "numero_oficio": numero_oficio,
+            "id": processo_id
+        })
+        
+        # Atualizar valor se fornecido
+        if valor_atualizado:
+            db.execute(text("""
+                UPDATE processos 
+                SET valor_atualizado = :valor
+                WHERE id = :id
+            """), {
+                "valor": valor_atualizado,
+                "id": processo_id
+            })
+        
+        db.commit()
+        
+        flash('Atualização do ofício registrada com sucesso!', 'success')
+        return redirect(url_for('atualizar_oficio_page', processo_id=processo_id))
+        
+    except Exception as e:
+        db.rollback()
+        flash(f'Erro ao registrar atualização: {str(e)}', 'danger')
+        return redirect(url_for('atualizar_oficio_page', processo_id=processo_id))
+    finally:
+        db.close()
+

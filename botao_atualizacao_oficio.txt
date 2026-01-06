@@ -1,0 +1,39 @@
+﻿
+<!-- Adicionar este botão na página processo_detalhe.html -->
+
+<div class="card shadow-sm mb-4">
+    <div class="card-header bg-info text-white">
+        <h5 class="mb-0">
+            <i class="fas fa-sync-alt me-2"></i>
+            Atualização do Ofício Requisitório
+        </h5>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-6">
+                <p class="mb-2">
+                    <strong>Status Atual:</strong> 
+                    <span class="badge bg-primary">
+                        {{ processo.status_oficio or "Não Expedido" }}
+                    </span>
+                </p>
+                <p class="mb-2">
+                    <strong>Última Atualização:</strong> 
+                    {% if processo.data_ultima_atualizacao_oficio %}
+                        {{ processo.data_ultima_atualizacao_oficio.strftime('%d/%m/%Y %H:%M') }}
+                    {% else %}
+                        <span class="text-muted">Nunca atualizado</span>
+                    {% endif %}
+                </p>
+            </div>
+            <div class="col-md-6 text-end">
+                <a href="/processo/{{ processo.id }}/atualizar-oficio-page" 
+                   class="btn btn-info btn-lg">
+                    <i class="fas fa-sync-alt me-2"></i>
+                    Atualizar Ofício
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+

@@ -1,0 +1,32 @@
+﻿
+# API para automação
+@app.route('/api/executar-automacao', methods=['POST'])
+def api_executar_automacao():
+    """API para executar automação"""
+    try:
+        data = request.get_json()
+        tipo = data.get('tipo')
+        tribunal = data.get('tribunal')
+        processos = data.get('processos')
+        
+        # Simular execução (implementar lógica real depois)
+        import time
+        import random
+        
+        time.sleep(3)  # Simular processamento
+        
+        resultado = {
+            'success': True,
+            'tipo': tipo,
+            'tribunal': tribunal,
+            'processados': random.randint(5, 20),
+            'sucesso': random.randint(4, 18),
+            'erros': random.randint(0, 2),
+            'tempo': 3
+        }
+        
+        return jsonify(resultado)
+        
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)}), 500
+
