@@ -4,7 +4,7 @@ Sistema de Gestão de Precatórios com Automação Inteligente
 Versão: 2.0
 """
 
-from flask import Flask, render_template, request, jsonify, send_file, redirect, url_for, flash
+from flask import Flask, render_template, request, jsonify, send_file, redirect, url_for, flash, send_from_directory
 from flask_cors import CORS
 from calculadora import calculadora
 import sys
@@ -1151,7 +1151,7 @@ def api_executar_automacao():
 # APIs PARA CALCULADORA DE PRECATÓRIOS
 # ============================================================================
 
-from flask import jsonify
+from flask import jsonify, send_from_directory
 import sys
 sys.path.append('src')
 
@@ -1294,11 +1294,15 @@ def api_teste_calculadora():
 
 
 
+
 @app.route('/calculadora')
 def calculadora_page():
     """Página da calculadora"""
-    return send_from_directory('.', 'calculadora.html')
-
+    try:
+        with open('calculadora.html', 'r', encoding='utf-8') as f:
+            return f.read()
+    except Exception as e:
+        return f"Erro ao carregar calculadora: {str(e)}", 500
 @app.route('/api/calculadora/calcular', methods=['POST'])
 def api_calculadora_calcular():
     """
@@ -1424,6 +1428,7 @@ if __name__ == '__main__':
     print("="*60 + "\n")
     
     app.run(debug=True, host='0.0.0.0', port=8080)
+
 
 
 
