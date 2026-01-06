@@ -1206,7 +1206,6 @@ def api_calcular_valores():
             'message': 'Erro ao calcular valores'
         }), 500
 
-@app.route('/api/detalhamento-mensal', methods=['POST'])
 def api_detalhamento_mensal():
     """
     API para gerar detalhamento mensal
