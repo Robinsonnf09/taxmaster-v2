@@ -1296,14 +1296,7 @@ def api_teste_calculadora():
 
 
 
-@app.route('/calculadora')
-def calculadora_page():
-    """Página da calculadora"""
-    try:
-        with open('calculadora.html', 'r', encoding='utf-8') as f:
-            return f.read()
-    except Exception as e:
-        return f"Erro ao carregar calculadora: {str(e)}", 500
+
 @app.route('/api/calculadora/calcular', methods=['POST'])
 def api_calculadora_calcular():
     """
@@ -1407,6 +1400,23 @@ def api_calculadora_simular_multiplos():
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
+
+
+# ============================================================================
+# ROTA DA CALCULADORA DE PRECATÓRIOS
+# ============================================================================
+
+@app.route('/calculadora')
+def calculadora_page():
+    '''Pagina da calculadora de atualizacao de precatorios'''
+    try:
+        with open('calculadora.html', 'r', encoding='utf-8') as f:
+            return f.read()
+    except FileNotFoundError:
+        return "Erro: calculadora.html nao encontrado", 404
+    except Exception as e:
+        print(f'Erro ao carregar calculadora: {e}')
+        return f'Erro ao carregar calculadora: {str(e)}', 500
 
 if __name__ == '__main__':
     import os
