@@ -7,6 +7,7 @@ Versão: 2.0
 from flask import Flask, render_template, request, jsonify, send_file, redirect, url_for, flash, send_from_directory
 from flask_cors import CORS
 from calculadora import calculadora
+from blueprints.calculadora import calculadora_bp
 from service_calculadora import CalculadoraService
 import sys
 from pathlib import Path
@@ -20,6 +21,9 @@ from models_atualizado import Processo, LogBuscaOficio, Contato, StatusProcessoE
 app = Flask(__name__)
 CORS(app)
 app.config['SECRET_KEY'] = 'tax-master-2026-secret-key'
+
+# Registrar Blueprint da Calculadora
+app.register_blueprint(calculadora_bp)
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16MB max upload
 
 # Configurações
@@ -1359,6 +1363,7 @@ if __name__ == '__main__':
     print("="*60 + "\n")
     
     app.run(debug=True, host='0.0.0.0', port=8080)
+
 
 
 

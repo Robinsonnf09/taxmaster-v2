@@ -1,0 +1,143 @@
+﻿<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Automação - Tax Master</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            margin-bottom: 30px;
+        }
+        
+        .header h1 {
+            color: #667eea;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            color: #666;
+            font-size: 1.1em;
+        }
+        
+        .modules {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+        }
+        
+        .module-card {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            cursor: pointer;
+            text-decoration: none;
+            color: inherit;
+            display: block;
+        }
+        
+        .module-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+        }
+        
+        .module-card .icon {
+            font-size: 3em;
+            margin-bottom: 15px;
+        }
+        
+        .module-card h2 {
+            color: #667eea;
+            font-size: 1.8em;
+            margin-bottom: 10px;
+        }
+        
+        .module-card p {
+            color: #666;
+            font-size: 1em;
+            line-height: 1.6;
+        }
+        
+        .module-card .status {
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            margin-top: 15px;
+            font-weight: bold;
+        }
+        
+        .status.active {
+            background: #10b981;
+            color: white;
+        }
+        
+        .status.development {
+            background: #f59e0b;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🤖 Módulo de Automação</h1>
+            <p>Ferramentas automatizadas para otimizar seu trabalho</p>
+        </div>
+        
+        <div class="modules">
+            <a href="/automacao/calculadora" class="module-card">
+                <div class="icon">📊</div>
+                <h2>Calculadora de Precatórios</h2>
+                <p>Calcule automaticamente a atualização de valores de precatórios com múltiplos índices, juros e honorários.</p>
+                <span class="status active">✅ ATIVO</span>
+            </a>
+            
+            <div class="module-card" style="opacity: 0.6; cursor: not-allowed;">
+                <div class="icon">📄</div>
+                <h2>Gerador de Petições</h2>
+                <p>Gere petições jurídicas automaticamente com base em templates inteligentes.</p>
+                <span class="status development">🔄 EM DESENVOLVIMENTO</span>
+            </div>
+            
+            <div class="module-card" style="opacity: 0.6; cursor: not-allowed;">
+                <div class="icon">📧</div>
+                <h2>Envio Automatizado</h2>
+                <p>Automatize o envio de documentos e comunicações para tribunais e clientes.</p>
+                <span class="status development">🔄 EM DESENVOLVIMENTO</span>
+            </div>
+            
+            <div class="module-card" style="opacity: 0.6; cursor: not-allowed;">
+                <div class="icon">📊</div>
+                <h2>Análise de Dados</h2>
+                <p>Analise grandes volumes de processos e identifique padrões automaticamente.</p>
+                <span class="status development">🔄 EM DESENVOLVIMENTO</span>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
