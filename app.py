@@ -1536,6 +1536,94 @@ def api_validar_dados():
         return jsonify({'valido': False, 'erro': str(e)}), 400
 
 
+
+# ============================================================================
+# API ENDPOINTS PARA CALCULADORA DE PRECATÓRIOS
+# ============================================================================
+
+from flask import jsonify, request
+from datetime import datetime
+import json
+
+@app.route('/api/calculadora/calcular', methods=['POST'])
+def api_calcular():
+    """API para cálculo de precatórios"""
+    try:
+        dados = request.get_json()
+        
+        # Chamar módulo calculadora existente
+        resultado = calculadora(dados)
+        
+        if not resultado or 'erro' in resultado:
+            return jsonify({
+                'sucesso': False,
+                'erro': resultado.get('erro', 'Erro desconhecido')
+            }), 400
+        
+        resultado['sucesso'] = True
+        return jsonify(resultado), 200
+        
+    except Exception as e:
+        return jsonify({'sucesso': False, 'erro': str(e)}), 500
+
+@app.route('/api/calculadora/historico', methods=['GET'])
+def api_historico():
+    """Retorna histórico de cálculos (mockado por enquanto)"""
+    try:
+        # Por enquanto retornar exemplo
+        historico = {
+            'sucesso': True,
+            'total': 0,
+            'calculos': [],
+            'mensagem': 'Histórico vazio - sistema em desenvolvimento'
+        }
+        
+        return jsonify(historico), 200
+        
+    except Exception as e:
+        return jsonify({'sucesso': False, 'erro': str(e)}), 500
+
+@app.route('/api/calculadora/indices', methods=['GET'])
+def api_listar_indices():
+    """Lista índices disponíveis"""
+    indices = {
+        'sucesso': True,
+        'indices': {
+            'IPCA-E': 'Índice de Preços ao Consumidor Amplo Especial',
+            'INPC': 'Índice Nacional de Preços ao Consumidor',
+            'SELIC': 'Taxa Selic',
+            'TR': 'Taxa Referencial',
+            'IGPM': 'Índice Geral de Preços do Mercado'
+        }
+    }
+    return jsonify(indices), 200
+
+@app.route('/api/calculadora/validar', methods=['POST'])
+def api_validar_dados():
+    """Valida dados antes do cálculo"""
+    try:
+        dados = request.get_json()
+        erros = []
+        
+        # Validações básicas
+        if not dados.get('valor_original') or float(dados.get('valor_original', 0)) <= 0:
+            erros.append('Valor original inválido')
+        
+        if not dados.get('indice_correcao'):
+            erros.append('Índice de correção não informado')
+        
+        if not dados.get('data_inicial') or not dados.get('data_final'):
+            erros.append('Datas não informadas')
+        
+        if erros:
+            return jsonify({'valido': False, 'erros': erros}), 400
+        
+        return jsonify({'valido': True}), 200
+        
+    except Exception as e:
+        return jsonify({'valido': False, 'erro': str(e)}), 400
+
+
 if __name__ == '__main__':
     import os
     port = int(os.environ.get('PORT', 8080))
@@ -1557,6 +1645,7 @@ if __name__ == '__main__':
     print("="*60 + "\n")
     
     app.run(debug=True, host='0.0.0.0', port=8080)
+
 
 
 
