@@ -5,6 +5,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const nodemailer = require('nodemailer');
 const cron = require('node-cron');
+const { enviarEmail, notificarNovoProcesso, enviarRelatorioSemanal } = require('./email-service');
 const { autenticar, autorizarPerfil, JWT_SECRET } = require('./middleware-auth');
 
 const app = express();
@@ -182,8 +183,36 @@ app.get('/health', (req, res) => {
     });
 });
 
+
+app.get('/usuarios', autenticar, autorizarPerfil('admin'), (req, res) => {
+    res.sendFile(path.join(__dirname, 'pages', 'usuarios.html'));
+});
+
+// Relatório semanal automatizado (toda segunda às 8h)
+cron.schedule('0 8 * * 1', () => {
+    console.log('📧 Enviando relatórios semanais...');
+    db.all('SELECT * FROM usuarios WHERE ativo = 1 AND perfil IN ("admin", "gerente")', (err, usuarios) => {
+        if (!err && usuarios) {
+            const stats = {
+                total: processos.length,
+                novos: processos.filter(p => {
+                    const data = new Date(p.dataDistribuicao);
+                    const semanaAtras = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
+                    return data >= semanaAtras;
+                }).length,
+                valorTotal: processos.reduce((sum, p) => sum + parseFloat(p.valor || 0), 0)
+            };
+            
+            usuarios.forEach(usuario => {
+                enviarRelatorioSemanal(usuario, stats);
+            });
+        }
+    });
+});
+
 app.listen(PORT, () => {
     console.log(`🚀 Tax Master V3 rodando na porta ${PORT}`);
     console.log(`🔐 Sistema de autenticação: ATIVO`);
     console.log(`🤖 Automação diária: ATIVA (8h da manhã)`);
 });
+

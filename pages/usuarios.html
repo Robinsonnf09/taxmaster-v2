@@ -1,0 +1,124 @@
+﻿<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestão de Usuários - Tax Master V3</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f5f5;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+        
+        .usuarios-grid {
+            display: grid;
+            gap: 20px;
+        }
+        
+        .usuario-card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .perfil-badge {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        
+        .perfil-admin { background: #ff6b6b; color: white; }
+        .perfil-gerente { background: #4ecdc4; color: white; }
+        .perfil-analista { background: #95e1d3; color: white; }
+        .perfil-visualizador { background: #ddd; color: #333; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>👥 Gestão de Usuários</h1>
+            <button class="btn btn-primary" onclick="window.location.href='/processos'">← Voltar</button>
+        </div>
+        
+        <div id="usuariosGrid" class="usuarios-grid">
+            <p>Carregando usuários...</p>
+        </div>
+    </div>
+    
+    <script>
+        const token = localStorage.getItem('token');
+        
+        if (!token) {
+            window.location.href = '/login';
+        }
+        
+        async function carregarUsuarios() {
+            try {
+                const response = await fetch('/api/usuarios', {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                
+                if (!response.ok) throw new Error('Erro ao carregar');
+                
+                const usuarios = await response.json();
+                const grid = document.getElementById('usuariosGrid');
+                
+                grid.innerHTML = usuarios.map(u => `
+                    <div class="usuario-card">
+                        <h3>${u.nome}</h3>
+                        <p>📧 ${u.email}</p>
+                        <p>
+                            <span class="perfil-badge perfil-${u.perfil}">${u.perfil.toUpperCase()}</span>
+                            ${u.ativo ? '✅ Ativo' : '❌ Inativo'}
+                        </p>
+                        <p><small>Último acesso: ${u.ultimo_acesso || 'Nunca'}</small></p>
+                    </div>
+                `).join('');
+            } catch (error) {
+                console.error('Erro:', error);
+                alert('Erro ao carregar usuários');
+            }
+        }
+        
+        carregarUsuarios();
+    </script>
+</body>
+</html>
