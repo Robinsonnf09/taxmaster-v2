@@ -219,3 +219,5 @@ app.listen(PORT, '0.0.0.0', () => {
     console.log(`✅ Tax Master na porta ${PORT}`);
     console.log(`📊 Usando banco de dados REAL: taxmaster.db`);
 });
+
+
