@@ -1,5 +1,5 @@
 ﻿const jwt = require('jsonwebtoken');
-const JWT_SECRET = 'taxmaster-secret-key-2024-v3';
+const JWT_SECRET = process.env.JWT_SECRET || 'taxmaster-secret-key-2024-v3';
 
 function autenticar(req, res, next) {
     const token = req.headers.authorization?.replace('Bearer ', '');
