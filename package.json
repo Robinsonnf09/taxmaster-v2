@@ -1,4 +1,4 @@
-﻿{
+{
   "name": "tax-master-v2",
   "version": "2.0.0",
   "description": "Sistema de Gestão de Precatórios e Processos Judiciais",
@@ -8,14 +8,20 @@
     "dev": "node server.js",
     "test": "echo \"Tests not implemented yet\""
   },
-  "keywords": ["precatorios", "processos", "juridico", "tribunais"],
+  "keywords": [
+    "precatorios",
+    "processos",
+    "juridico",
+    "tribunais"
+  ],
   "author": "Tax Master",
   "license": "ISC",
   "dependencies": {
-    "express": "^4.18.2",
     "compression": "^1.7.4",
+    "cors": "^2.8.5",
+    "express": "^4.18.2",
     "helmet": "^7.1.0",
-    "cors": "^2.8.5"
+    "node-fetch": "^3.3.2"
   },
   "engines": {
     "node": ">=18.0.0",

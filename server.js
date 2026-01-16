@@ -42,7 +42,40 @@ app.get('/solicitar-token-cnj', (req, res) => {
   res.sendFile(path.join(__dirname, 'pages', 'solicitar-token-cnj.html'));
 });
 
-// API Mock - Processos
+
+// ============================================
+// SERVIÇO MOCK DE PROCESSOS
+// ============================================
+const processosMockService = require('./public/js/api/processos-mock-service.js');
+
+// API Mock - Processos (atualizada com dados realistas)
+app.get('/api/processos', (req, res) => {
+  const filtros = {
+    tribunal: req.query.tribunal,
+    status: req.query.status,
+    busca: req.query.busca
+  };
+  
+  const processos = processosMockService.buscarTodos(filtros);
+  res.json(processos);
+});
+
+// API Mock - Processo específico
+app.get('/api/processos/:numero', (req, res) => {
+  const processo = processosMockService.buscarPorNumero(req.params.numero);
+  
+  if (processo) {
+    res.json(processo);
+  } else {
+    res.status(404).json({ error: 'Processo não encontrado' });
+  }
+});
+
+// API Mock - Estatísticas
+app.get('/api/processos/estatisticas', (req, res) => {
+  const stats = processosMockService.getEstatisticas();
+  res.json(stats);
+});
 app.get('/api/processos', (req, res) => {
   const processosMock = [
     {
@@ -65,6 +98,31 @@ app.get('/api/processos', (req, res) => {
     }
   ];
   res.json(processosMock);
+});
+
+
+// ============================================
+// PROXY PARA API DATAJUD (evita CORS)
+// ============================================
+app.get('/api/datajud/*', async (req, res) => {
+  const path = req.params[0];
+  const apiUrl = `https://api-publica.datajud.cnj.jus.br/api_publica/${path}`;
+  
+  try {
+    const fetch = (await import('node-fetch')).default;
+    const response = await fetch(apiUrl, {
+      headers: {
+        'Authorization': 'APIKey cDZHYzlZa0JadVREZDJCendQbXY6SkJlTzNjLV9TRENyQk1RdnFKZGRQdw==',
+        'Content-Type': 'application/json'
+      }
+    });
+    
+    const data = await response.json();
+    res.json(data);
+  } catch (error) {
+    console.error('Erro no proxy DataJud:', error);
+    res.status(500).json({ error: 'Erro ao consultar API DataJud' });
+  }
 });
 
 // Health check
@@ -93,3 +151,5 @@ app.listen(PORT, () => {
 });
 
 module.exports = app;
+
+
