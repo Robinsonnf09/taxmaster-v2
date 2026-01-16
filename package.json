@@ -1,30 +1,31 @@
-{
-  "name": "tax-master-v2",
-  "version": "2.0.0",
-  "description": "Sistema de Gestão de Precatórios e Processos Judiciais",
-  "main": "server.js",
-  "scripts": {
-    "start": "node server.js",
-    "dev": "node server.js",
-    "test": "echo \"Tests not implemented yet\""
-  },
-  "keywords": [
-    "precatorios",
-    "processos",
-    "juridico",
-    "tribunais"
-  ],
-  "author": "Tax Master",
-  "license": "ISC",
-  "dependencies": {
-    "compression": "^1.7.4",
-    "cors": "^2.8.5",
-    "express": "^4.18.2",
-    "helmet": "^7.1.0",
-    "node-fetch": "^3.3.2"
-  },
-  "engines": {
-    "node": ">=18.0.0",
-    "npm": ">=9.0.0"
-  }
+﻿{
+    "name":  "tax-master-v2",
+    "version":  "2.0.0",
+    "description":  "Sistema de GestÃ£o de PrecatÃ³rios e Processos Judiciais",
+    "main":  "server.js",
+    "scripts":  {
+                    "start":  "node server.js",
+                    "dev":  "node server.js",
+                    "test":  "echo \"Tests not implemented yet\""
+                },
+    "keywords":  [
+                     "precatorios",
+                     "processos",
+                     "juridico",
+                     "tribunais"
+                 ],
+    "author":  "Tax Master",
+    "license":  "ISC",
+    "dependencies":  {
+                         "compression":  "^1.7.4",
+                         "cors":  "^2.8.5",
+                         "express":  "^4.18.2",
+                         "helmet":  "^7.1.0",
+                         "node-fetch":  "^3.3.2",
+                         "sqlite3":  "^5.1.7"
+                     },
+    "engines":  {
+                    "node":  "\u003e=18.0.0",
+                    "npm":  "\u003e=9.0.0"
+                }
 }
