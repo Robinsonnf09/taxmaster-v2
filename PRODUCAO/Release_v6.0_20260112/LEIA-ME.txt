@@ -1,0 +1,42 @@
+
+╔══════════════════════════════════════════════════════════════╗
+║    LOTOFÁCIL QUANTUM ULTIMATE v6.0                        ║
+║    Sistema Profissional de Análise Estatística              ║
+╚══════════════════════════════════════════════════════════════╝
+
+📋 INSTALAÇÃO:
+   1. Copie a pasta "LotofacilULTIMATE" para C:\Program Files\ ou local desejado
+   2. Execute LotofacilULTIMATE.exe
+   3. Pronto para usar!
+
+🚀 COMO USAR:
+   1. Clique em "🔬 Análise ULTIMATE" para baixar dados da Caixa
+   2. Aguarde 1-2 minutos (carrega 100 concursos)
+   3. Veja o ranking de números (quentes/frios/neutros)
+   4. Configure tipo de jogo e quantidade
+   5. Clique em "🎲 Gerar Jogos"
+   6. Salve em Excel ou PDF
+
+⚙️ REQUISITOS:
+   - Windows 10/11
+   - Conexão com internet (para baixar dados da Caixa)
+   - 100 MB de espaço em disco
+
+🔬 TECNOLOGIA:
+   ✅ Dados REAIS da API oficial da Caixa Econômica Federal
+   ✅ 6 algoritmos estatísticos combinados
+   ✅ Machine Learning para detecção de padrões
+   ✅ Cálculo de ROI e Expected Value
+   ✅ Gap Analysis (técnica avançada)
+
+⚠️ AVISO LEGAL:
+   Este sistema realiza análise estatística de dados históricos.
+   NÃO garante resultados futuros ou vitórias.
+   Cada sorteio da Lotofácil é independente e aleatório.
+   Jogue com responsabilidade.
+
+📧 SUPORTE:
+   Data de Release: 12/01/2026
+   Versão: 6.0
+   
+© 2026 - Uso Profissional

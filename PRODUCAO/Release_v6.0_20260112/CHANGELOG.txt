@@ -1,0 +1,18 @@
+
+CHANGELOG - LOTOFÁCIL ULTIMATE
+
+v6.0 (12/01/2026):
+  ✅ Interface colorida (números quentes/frios)
+  ✅ Correção de formatação de texto
+  ✅ Sistema de análise ULTIMATE funcionando
+  ✅ Conexão estável com API da Caixa
+  ✅ Geração de jogos otimizada
+  ✅ Export para Excel e PDF
+  
+Melhorias Técnicas:
+  - Algoritmo de 6 fatores estatísticos
+  - Machine Learning para padrões
+  - Gap Analysis avançada
+  - Cálculo de ROI e Expected Value
+  - Sistema de retry robusto
+  - Interface profissional
