@@ -251,6 +251,115 @@
             }
         }
     </script>
+<script>
+// Busca em tempo real
+document.addEventListener('DOMContentLoaded', function() {
+    const inputBusca = document.querySelector('#busca') || document.querySelector('input[name="busca"]');
+    const selectTribunal = document.querySelector('#tribunal') || document.querySelector('select[name="tribunal"]');
+    const selectStatus = document.querySelector('#status') || document.querySelector('select[name="status"]');
+    const btnBuscar = document.querySelector('button[type="submit"]') || document.querySelector('.btn-buscar');
+    
+    console.log('🔍 Inicializando busca...', {inputBusca, selectTribunal, selectStatus});
+    
+    // Função para filtrar processos
+    async function filtrarProcessos() {
+        const busca = inputBusca?.value || '';
+        const tribunal = selectTribunal?.value || '';
+        const status = selectStatus?.value || '';
+        
+        console.log('🔎 Filtrando:', {busca, tribunal, status});
+        
+        try {
+            // Construir query params
+            const params = new URLSearchParams();
+            if (busca) params.append('busca', busca);
+            if (tribunal && tribunal !== 'todos') params.append('tribunal', tribunal);
+            if (status && status !== 'todos') params.append('status', status);
+            
+            const url = `/api/processos${params.toString() ? '?' + params.toString() : ''}`;
+            console.log('📡 Consultando:', url);
+            
+            const response = await fetch(url);
+            const processos = await response.json();
+            
+            console.log('✅ Processos retornados:', processos.length);
+            
+            // Atualizar grid de processos
+            atualizarGrid(processos);
+            
+        } catch (error) {
+            console.error('❌ Erro ao filtrar:', error);
+            alert('Erro ao carregar processos. Tente novamente.');
+        }
+    }
+    
+    // Função para atualizar o grid
+    function atualizarGrid(processos) {
+        const grid = document.querySelector('.processos-grid') || document.querySelector('.grid');
+        
+        if (!grid) {
+            console.error('❌ Grid não encontrado!');
+            return;
+        }
+        
+        if (processos.length === 0) {
+            grid.innerHTML = '<div class="sem-resultados">Nenhum processo encontrado.</div>';
+            return;
+        }
+        
+        grid.innerHTML = processos.map(p => `
+            <div class="processo-card">
+                <div class="processo-numero">${p.numero}</div>
+                <div class="processo-info">
+                    <p><strong>Tribunal:</strong> ${p.tribunal}</p>
+                    <p><strong>Credor:</strong> ${p.credor}</p>
+                    <p class="processo-valor">R$ ${parseFloat(p.valor).toLocaleString('pt-BR', {minimumFractionDigits: 2})}</p>
+                    <p><small>Distribuição: ${p.dataDistribuicao || 'N/A'}</small></p>
+                </div>
+                <div class="processo-status ${p.status.toLowerCase().replace(/\s/g, '-')}">${p.status}</div>
+            </div>
+        `).join('');
+    }
+    
+    // Event listeners
+    if (inputBusca) {
+        // Busca em tempo real ao digitar
+        inputBusca.addEventListener('input', function() {
+            clearTimeout(window.buscaTimeout);
+            window.buscaTimeout = setTimeout(filtrarProcessos, 500);
+        });
+        
+        // Busca ao pressionar Enter
+        inputBusca.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                filtrarProcessos();
+            }
+        });
+    }
+    
+    // Filtrar ao mudar tribunal
+    if (selectTribunal) {
+        selectTribunal.addEventListener('change', filtrarProcessos);
+    }
+    
+    // Filtrar ao mudar status
+    if (selectStatus) {
+        selectStatus.addEventListener('change', filtrarProcessos);
+    }
+    
+    // Botão buscar
+    if (btnBuscar) {
+        btnBuscar.addEventListener('click', function(e) {
+            e.preventDefault();
+            filtrarProcessos();
+        });
+    }
+    
+    console.log('✅ Busca inicializada!');
+});
+</script>
 </body>
 </html>
+
 
