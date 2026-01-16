@@ -1,0 +1,195 @@
+﻿<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Processos e Precatórios - TAX MASTER</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 30px;
+            text-align: center;
+            font-size: 2.5em;
+        }
+        .filters {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+        }
+        .filter-group label {
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: #555;
+        }
+        .filter-group input,
+        .filter-group select {
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+        .filter-group input:focus,
+        .filter-group select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+        .btn-primary:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+        }
+        .processos-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+        .processo-card {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            transition: all 0.3s;
+        }
+        .processo-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+        }
+        .processo-numero {
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 10px;
+            font-size: 0.9em;
+        }
+        .processo-info {
+            margin: 8px 0;
+            color: #555;
+        }
+        .processo-valor {
+            font-size: 1.3em;
+            font-weight: bold;
+            color: #2d3748;
+            margin: 10px 0;
+        }
+        .status-badge {
+            display: inline-block;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: 600;
+            margin-top: 10px;
+        }
+        .status-pendente { background: #fef3c7; color: #92400e; }
+        .status-analise { background: #dbeafe; color: #1e40af; }
+        .status-aprovado { background: #d1fae5; color: #065f46; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🏛️ Processos e Precatórios</h1>
+        
+        <div class="filters">
+            <div class="filter-group">
+                <label>Tribunal:</label>
+                <select id="filtro-tribunal">
+                    <option value="">Todos</option>
+                    <option value="TJ-BA">TJ-BA</option>
+                    <option value="TJ-SP">TJ-SP</option>
+                    <option value="TJ-RJ">TJ-RJ</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label>Status:</label>
+                <select id="filtro-status">
+                    <option value="">Todos</option>
+                    <option value="Pendente">Pendente</option>
+                    <option value="Em Análise">Em Análise</option>
+                    <option value="Aprovado">Aprovado</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label>Buscar:</label>
+                <input type="text" id="busca" placeholder="Nome, número do processo...">
+            </div>
+            <div class="filter-group">
+                <label>&nbsp;</label>
+                <button class="btn btn-primary" onclick="buscarProcessos()">🔍 Buscar</button>
+            </div>
+        </div>
+
+        <div id="processos-lista" class="processos-grid">
+            <!-- Processos serão carregados aqui -->
+        </div>
+    </div>
+
+    <script>
+        // Carregar processos ao iniciar
+        window.onload = () => {
+            buscarProcessos();
+        };
+
+        async function buscarProcessos() {
+            try {
+                const response = await fetch('/api/processos');
+                const processos = await response.json();
+                
+                const lista = document.getElementById('processos-lista');
+                lista.innerHTML = '';
+                
+                processos.forEach(processo => {
+                    const statusClass = processo.status.toLowerCase().replace(' ', '-');
+                    
+                    const card = `
+                        <div class="processo-card">
+                            <div class="processo-numero">${processo.numero}</div>
+                            <div class="processo-info"><strong>Tribunal:</strong> ${processo.tribunal}</div>
+                            <div class="processo-info"><strong>Credor:</strong> ${processo.credor}</div>
+                            <div class="processo-valor">R$ ${processo.valor.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</div>
+                            <div class="processo-info"><strong>Distribuição:</strong> ${new Date(processo.dataDistribuicao).toLocaleDateString('pt-BR')}</div>
+                            <span class="status-badge status-${statusClass}">${processo.status}</span>
+                        </div>
+                    `;
+                    
+                    lista.innerHTML += card;
+                });
+            } catch (error) {
+                console.error('Erro ao buscar processos:', error);
+                document.getElementById('processos-lista').innerHTML = 
+                    '<p style="text-align: center; color: #e53e3e;">Erro ao carregar processos. Tente novamente.</p>';
+            }
+        }
+    </script>
+</body>
+</html>
