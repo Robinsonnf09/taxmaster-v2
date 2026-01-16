@@ -114,11 +114,71 @@
         .status-pendente { background: #fef3c7; color: #92400e; }
         .status-analise { background: #dbeafe; color: #1e40af; }
         .status-aprovado { background: #d1fae5; color: #065f46; }
+            .export-buttons {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .btn-export {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 14px;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-block;
+            color: white;
+        }
+
+        .btn-excel {
+            background: #48bb78;
+        }
+
+        .btn-excel:hover {
+            background: #38a169;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(72, 187, 120, 0.4);
+        }
+
+        .btn-pdf {
+            background: #f56565;
+        }
+
+        .btn-pdf:hover {
+            background: #e53e3e;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(245, 101, 101, 0.4);
+        }
+
+        .btn-dashboard {
+            background: #667eea;
+        }
+
+        .btn-dashboard:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>🏛️ Processos e Precatórios</h1>
+            <div class="export-buttons">
+                <a href="/api/export/excel" class="btn-export btn-excel" download>
+                    📊 Exportar Excel
+                </a>
+                <a href="/api/export/pdf" class="btn-export btn-pdf" download>
+                    📄 Exportar PDF
+                </a>
+                <a href="/dashboard" class="btn-export btn-dashboard">
+                    📈 Dashboard
+                </a>
+            </div>
         
         <div class="filters">
             <div class="filter-group">
@@ -193,3 +253,4 @@
     </script>
 </body>
 </html>
+
