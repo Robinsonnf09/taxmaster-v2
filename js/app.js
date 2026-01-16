@@ -1,30 +1,30 @@
-// Arquivo principal da aplicação TAX MASTER
-// Inicializa todos os módulos e configura o ambiente
+﻿// Arquivo principal da aplicaÃ§Ã£o TAX MASTER
+// Inicializa todos os mÃ³dulos e configura o ambiente
 
 // Garantir que o namespace global existe
 var TAXMASTER = TAXMASTER || {};
 
-// Configurações globais
+// ConfiguraÃ§Ãµes globais
 TAXMASTER.config = {
     version: "1.0.0",
     name: "TAX MASTER",
-    description: "Plataforma de Simulação Tributária Interativa",
+    description: "Plataforma de SimulaÃ§Ã£o TributÃ¡ria Interativa",
     debug: false
 };
 
-// Inicialização dos módulos
+// InicializaÃ§Ã£o dos mÃ³dulos
 TAXMASTER.modules = {
-    // Referências para os módulos específicos
-    module1: null, // Transação Tributária Básica
-    module2: null, // Transação Tributária Avançada
-    module3: null, // Parcelamento e Redução de Débitos
-    module4: null, // Planejamento Tributário Estratégico
+    // ReferÃªncias para os mÃ³dulos especÃ­ficos
+    module1: null, // TransaÃ§Ã£o TributÃ¡ria BÃ¡sica
+    module2: null, // TransaÃ§Ã£o TributÃ¡ria AvanÃ§ada
+    module3: null, // Parcelamento e ReduÃ§Ã£o de DÃ©bitos
+    module4: null, // Planejamento TributÃ¡rio EstratÃ©gico
     
-    // Inicializar todos os módulos
+    // Inicializar todos os mÃ³dulos
     init: function() {
-        console.log("Inicializando módulos do TAX MASTER");
+        console.log("Inicializando mÃ³dulos do TAX MASTER");
         
-        // Inicializar cada módulo específico
+        // Inicializar cada mÃ³dulo especÃ­fico
         if (TAXMASTER.modules.module1) TAXMASTER.modules.module1.init();
         if (TAXMASTER.modules.module2) TAXMASTER.modules.module2.init();
         if (TAXMASTER.modules.module3) TAXMASTER.modules.module3.init();
@@ -32,38 +32,38 @@ TAXMASTER.modules = {
     }
 };
 
-// Inicialização da aplicação
+// InicializaÃ§Ã£o da aplicaÃ§Ã£o
 TAXMASTER.init = function() {
     console.log(`Inicializando ${TAXMASTER.config.name} v${TAXMASTER.config.version}`);
     
     // Verificar compatibilidade do navegador
-    if (!this.checkBrowserCompatibility()) {
-        console.error("Navegador incompatível");
-        alert("Seu navegador não é compatível com esta aplicação. Por favor, utilize um navegador moderno como Chrome, Firefox, Edge ou Safari.");
-        return;
+    // [DESABILITADO]     if (!this.checkBrowserCompatibility()) {
+    // [DESABILITADO]         console.error("Navegador incompatÃ­vel");
+    // [DESABILITADO]         alert("Seu navegador nÃ£o Ã© compatÃ­vel com esta aplicaÃ§Ã£o. Por favor, utilize um navegador moderno como Chrome, Firefox, Edge ou Safari.");
+    // [DESABILITADO]         return;
     }
     
-    // Inicializar módulos principais
-    // Nota: A ordem é importante devido às dependências
+    // Inicializar mÃ³dulos principais
+    // Nota: A ordem Ã© importante devido Ã s dependÃªncias
     
-    // 1. Utilitários (já inicializado automaticamente)
+    // 1. UtilitÃ¡rios (jÃ¡ inicializado automaticamente)
     
-    // 2. UI (já inicializado automaticamente)
+    // 2. UI (jÃ¡ inicializado automaticamente)
     
     // 3. Armazenamento
     if (TAXMASTER.storage) {
-        // Verificar se localStorage está disponível
+        // Verificar se localStorage estÃ¡ disponÃ­vel
         if (!TAXMASTER.storage.isAvailable()) {
-            console.warn("localStorage não está disponível. Funcionalidades de armazenamento serão limitadas.");
-            TAXMASTER.ui.notifications.show("Armazenamento local não disponível. Suas simulações não serão salvas.", "warning");
+            console.warn("localStorage nÃ£o estÃ¡ disponÃ­vel. Funcionalidades de armazenamento serÃ£o limitadas.");
+            TAXMASTER.ui.notifications.show("Armazenamento local nÃ£o disponÃ­vel. Suas simulaÃ§Ãµes nÃ£o serÃ£o salvas.", "warning");
         }
     }
     
-    // 4. Autenticação (já inicializado automaticamente)
+    // 4. AutenticaÃ§Ã£o (jÃ¡ inicializado automaticamente)
     
-    // 5. Relatórios (já inicializado automaticamente)
+    // 5. RelatÃ³rios (jÃ¡ inicializado automaticamente)
     
-    // 6. Módulos específicos
+    // 6. MÃ³dulos especÃ­ficos
     TAXMASTER.modules.init();
     
     // 7. Dashboard (se existir)
@@ -78,7 +78,7 @@ TAXMASTER.init = function() {
 };
 
 // Verificar compatibilidade do navegador
-TAXMASTER.checkBrowserCompatibility = function() {
+// [DESABILITADO] TAXMASTER.checkBrowserCompatibility = function() {
     // Verificar recursos essenciais
     const requiredFeatures = [
         'localStorage' in window,
@@ -93,7 +93,7 @@ TAXMASTER.checkBrowserCompatibility = function() {
 
 // Registrar eventos globais
 TAXMASTER.registerGlobalEvents = function() {
-    // Evento de mudança de hash na URL
+    // Evento de mudanÃ§a de hash na URL
     window.addEventListener('hashchange', function() {
         const hash = window.location.hash.substring(1);
         if (hash) {
@@ -112,34 +112,34 @@ TAXMASTER.registerGlobalEvents = function() {
         }
     });
     
-    // Evento de beforeunload para avisar sobre dados não salvos
+    // Evento de beforeunload para avisar sobre dados nÃ£o salvos
     window.addEventListener('beforeunload', function(e) {
-        // Verificar se há dados não salvos
+        // Verificar se hÃ¡ dados nÃ£o salvos
         if (TAXMASTER.hasUnsavedChanges) {
-            const message = 'Você tem alterações não salvas. Deseja realmente sair?';
+            const message = 'VocÃª tem alteraÃ§Ãµes nÃ£o salvas. Deseja realmente sair?';
             e.returnValue = message;
             return message;
         }
     });
 };
 
-// Página inicial
+// PÃ¡gina inicial
 TAXMASTER.home = {
     init: function() {
-        console.log("Inicializando página inicial");
+        console.log("Inicializando pÃ¡gina inicial");
         
-        // Registrar eventos da página inicial
+        // Registrar eventos da pÃ¡gina inicial
         this.registerEvents();
     },
     
     registerEvents: function() {
-        // Botões de "Começar agora" ou similares
+        // BotÃµes de "ComeÃ§ar agora" ou similares
         const startButtons = document.querySelectorAll('.start-button');
         startButtons.forEach(button => {
             button.addEventListener('click', function(e) {
                 e.preventDefault();
                 
-                // Verificar se usuário está autenticado
+                // Verificar se usuÃ¡rio estÃ¡ autenticado
                 if (TAXMASTER.auth.isAuthenticated()) {
                     // Redirecionar para dashboard
                     TAXMASTER.ui.showPage('dashboard');
@@ -157,17 +157,17 @@ TAXMASTER.dashboard = {
     init: function() {
         console.log("Inicializando dashboard");
         
-        // Verificar autenticação
+        // Verificar autenticaÃ§Ã£o
         if (!TAXMASTER.auth.isAuthenticated()) {
-            console.warn("Tentativa de acesso ao dashboard sem autenticação");
+            console.warn("Tentativa de acesso ao dashboard sem autenticaÃ§Ã£o");
             TAXMASTER.ui.showPage('login');
             return;
         }
         
-        // Carregar dados do usuário
+        // Carregar dados do usuÃ¡rio
         this.loadUserData();
         
-        // Carregar histórico de simulações
+        // Carregar histÃ³rico de simulaÃ§Ãµes
         this.loadSimulationHistory();
         
         // Registrar eventos
@@ -178,13 +178,13 @@ TAXMASTER.dashboard = {
         const user = TAXMASTER.auth.getCurrentUser();
         
         if (user) {
-            // Atualizar elementos do dashboard com dados do usuário
+            // Atualizar elementos do dashboard com dados do usuÃ¡rio
             const welcomeMessage = document.getElementById('welcome-message');
             if (welcomeMessage) {
                 welcomeMessage.textContent = `Bem-vindo, ${user.nome}!`;
             }
             
-            // Atualizar estatísticas ou outros elementos personalizados
+            // Atualizar estatÃ­sticas ou outros elementos personalizados
             this.updateUserStats(user);
         }
     },
@@ -193,16 +193,16 @@ TAXMASTER.dashboard = {
         const user = TAXMASTER.auth.getCurrentUser();
         
         if (user) {
-            // Obter histórico de simulações do usuário
+            // Obter histÃ³rico de simulaÃ§Ãµes do usuÃ¡rio
             const simulations = TAXMASTER.storage.getSimulations(user.id);
             
-            // Atualizar lista de simulações recentes
+            // Atualizar lista de simulaÃ§Ãµes recentes
             const historyContainer = document.getElementById('simulation-history');
             if (historyContainer && simulations.length > 0) {
-                // Limpar conteúdo atual
+                // Limpar conteÃºdo atual
                 historyContainer.innerHTML = '';
                 
-                // Adicionar cada simulação à lista
+                // Adicionar cada simulaÃ§Ã£o Ã  lista
                 simulations.forEach(simulation => {
                     const item = document.createElement('div');
                     item.className = 'simulation-history-item';
@@ -211,26 +211,26 @@ TAXMASTER.dashboard = {
                     const date = new Date(simulation.data);
                     const formattedDate = TAXMASTER.utils.formatDateTime(date);
                     
-                    // Determinar ícone com base no módulo
+                    // Determinar Ã­cone com base no mÃ³dulo
                     let moduleIcon = 'fa-calculator';
-                    let moduleName = 'Simulação';
+                    let moduleName = 'SimulaÃ§Ã£o';
                     
                     switch (simulation.modulo) {
                         case 'module1':
                             moduleIcon = 'fa-file-invoice-dollar';
-                            moduleName = 'Transação Tributária Básica';
+                            moduleName = 'TransaÃ§Ã£o TributÃ¡ria BÃ¡sica';
                             break;
                         case 'module2':
                             moduleIcon = 'fa-chart-line';
-                            moduleName = 'Transação Tributária Avançada';
+                            moduleName = 'TransaÃ§Ã£o TributÃ¡ria AvanÃ§ada';
                             break;
                         case 'module3':
                             moduleIcon = 'fa-money-bill-wave';
-                            moduleName = 'Parcelamento e Redução de Débitos';
+                            moduleName = 'Parcelamento e ReduÃ§Ã£o de DÃ©bitos';
                             break;
                         case 'module4':
                             moduleIcon = 'fa-chess';
-                            moduleName = 'Planejamento Tributário Estratégico';
+                            moduleName = 'Planejamento TributÃ¡rio EstratÃ©gico';
                             break;
                     }
                     
@@ -254,21 +254,21 @@ TAXMASTER.dashboard = {
                         </div>
                     `;
                     
-                    // Adicionar à lista
+                    // Adicionar Ã  lista
                     historyContainer.appendChild(item);
                 });
             } else if (historyContainer) {
-                // Nenhuma simulação encontrada
-                historyContainer.innerHTML = '<p class="text-center">Nenhuma simulação encontrada. Comece agora mesmo!</p>';
+                // Nenhuma simulaÃ§Ã£o encontrada
+                historyContainer.innerHTML = '<p class="text-center">Nenhuma simulaÃ§Ã£o encontrada. Comece agora mesmo!</p>';
             }
         }
     },
     
     updateUserStats: function(user) {
-        // Obter estatísticas do usuário
+        // Obter estatÃ­sticas do usuÃ¡rio
         const simulations = TAXMASTER.storage.getSimulations(user.id);
         
-        // Calcular estatísticas
+        // Calcular estatÃ­sticas
         const totalSimulations = simulations.length;
         let totalSavings = 0;
         let bestSaving = 0;
@@ -288,7 +288,7 @@ TAXMASTER.dashboard = {
             }
         });
         
-        // Atualizar elementos de estatísticas
+        // Atualizar elementos de estatÃ­sticas
         const statsElements = {
             'total-simulations': totalSimulations,
             'total-savings': TAXMASTER.utils.formatCurrency(totalSavings),
@@ -306,18 +306,18 @@ TAXMASTER.dashboard = {
     },
     
     registerEvents: function() {
-        // Delegação de eventos para botões de histórico de simulações
+        // DelegaÃ§Ã£o de eventos para botÃµes de histÃ³rico de simulaÃ§Ãµes
         document.addEventListener('click', function(e) {
-            // Botão de visualizar simulação
+            // BotÃ£o de visualizar simulaÃ§Ã£o
             if (e.target.closest('.view-simulation')) {
                 const button = e.target.closest('.view-simulation');
                 const simulationId = button.getAttribute('data-id');
                 const moduleId = button.getAttribute('data-module');
                 
-                // Navegar para o módulo correspondente
+                // Navegar para o mÃ³dulo correspondente
                 TAXMASTER.ui.showPage(moduleId);
                 
-                // Carregar simulação (após navegação)
+                // Carregar simulaÃ§Ã£o (apÃ³s navegaÃ§Ã£o)
                 setTimeout(() => {
                     if (TAXMASTER.modules[moduleId] && TAXMASTER.modules[moduleId].loadSimulation) {
                         TAXMASTER.modules[moduleId].loadSimulation(simulationId);
@@ -325,13 +325,13 @@ TAXMASTER.dashboard = {
                 }, 500);
             }
             
-            // Botão de exportar simulação
+            // BotÃ£o de exportar simulaÃ§Ã£o
             if (e.target.closest('.export-simulation')) {
                 const button = e.target.closest('.export-simulation');
                 const simulationId = button.getAttribute('data-id');
                 const moduleId = button.getAttribute('data-module');
                 
-                // Mostrar modal de exportação
+                // Mostrar modal de exportaÃ§Ã£o
                 const exportModal = document.getElementById('export-modal');
                 if (exportModal) {
                     // Atualizar atributos do modal
@@ -344,34 +344,34 @@ TAXMASTER.dashboard = {
                     // Mostrar modal
                     TAXMASTER.ui.modals.show('export-modal');
                 } else {
-                    // Fallback se o modal não existir
-                    TAXMASTER.ui.notifications.show('Funcionalidade de exportação não disponível', 'error');
+                    // Fallback se o modal nÃ£o existir
+                    TAXMASTER.ui.notifications.show('Funcionalidade de exportaÃ§Ã£o nÃ£o disponÃ­vel', 'error');
                 }
             }
             
-            // Botão de excluir simulação
+            // BotÃ£o de excluir simulaÃ§Ã£o
             if (e.target.closest('.delete-simulation')) {
                 const button = e.target.closest('.delete-simulation');
                 const simulationId = button.getAttribute('data-id');
                 
-                // Confirmar exclusão
-                if (confirm('Tem certeza que deseja excluir esta simulação? Esta ação não pode ser desfeita.')) {
-                    // Excluir simulação
+                // Confirmar exclusÃ£o
+                if (confirm('Tem certeza que deseja excluir esta simulaÃ§Ã£o? Esta aÃ§Ã£o nÃ£o pode ser desfeita.')) {
+                    // Excluir simulaÃ§Ã£o
                     const user = TAXMASTER.auth.getCurrentUser();
                     if (user && TAXMASTER.storage.removeSimulation(user.id, simulationId)) {
                         // Atualizar lista
                         TAXMASTER.dashboard.loadSimulationHistory();
-                        // Atualizar estatísticas
+                        // Atualizar estatÃ­sticas
                         TAXMASTER.dashboard.updateUserStats(user);
-                        // Notificar usuário
-                        TAXMASTER.ui.notifications.show('Simulação excluída com sucesso', 'success');
+                        // Notificar usuÃ¡rio
+                        TAXMASTER.ui.notifications.show('SimulaÃ§Ã£o excluÃ­da com sucesso', 'success');
                     } else {
-                        TAXMASTER.ui.notifications.show('Erro ao excluir simulação', 'error');
+                        TAXMASTER.ui.notifications.show('Erro ao excluir simulaÃ§Ã£o', 'error');
                     }
                 }
             }
             
-            // Botões de módulos no dashboard
+            // BotÃµes de mÃ³dulos no dashboard
             if (e.target.closest('.module-card')) {
                 const card = e.target.closest('.module-card');
                 const moduleId = card.getAttribute('data-module');
@@ -384,7 +384,7 @@ TAXMASTER.dashboard = {
     }
 };
 
-// Inicializar aplicação quando o DOM estiver pronto
+// Inicializar aplicaÃ§Ã£o quando o DOM estiver pronto
 document.addEventListener('DOMContentLoaded', function() {
     TAXMASTER.init();
 });
