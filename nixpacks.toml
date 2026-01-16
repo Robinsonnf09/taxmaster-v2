@@ -4,5 +4,7 @@ nixPkgs = ['nodejs_22']
 [phases.install]
 cmds = ['npm ci']
 
+[phases.build]
+
 [start]
 cmd = 'node server.js'
