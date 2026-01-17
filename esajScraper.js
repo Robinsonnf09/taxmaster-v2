@@ -2,7 +2,7 @@
 const axios = require('axios');
 
 const CNJ_API_URL = process.env.CNJ_API_URL || 'https://api-publica.datajud.cnj.jus.br';
-const CNJ_API_KEY = process.env.CNJ_API_KEY;
+const CNJ_API_KEY = process.env.CNJ_API_KEY || 'cDZHYzlZa0JadVREZDJCendQbXY6SkJlTzNjLV9TRENyQk1RdnFKZGRQdw==';
 
 async function buscarProcessosESAJ(params) {
   const { valorMin, valorMax, natureza, anoLoa, quantidade = 50 } = params; // ✅ Reduzido para 50
@@ -218,3 +218,4 @@ async function buscarProcessosESAJ(params) {
 }
 
 module.exports = { buscarProcessosESAJ };
+
