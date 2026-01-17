@@ -17,8 +17,8 @@ const usuarios = [
 
 let processos = [];
 
-console.log('✅ Tax Master V3 - ESAJ REAL Scraper');
-console.log('🔍 Fonte: ESAJ TJ-SP (Dados REAIS)');
+console.log('✅ Tax Master V3 - API CNJ DataJud');
+console.log('🔍 Fonte: API CNJ DataJud (Oficial)');
 console.log('⚠️ Delay de 2s entre requisições');
 
 app.get('/', (req, res) => {
@@ -126,5 +126,6 @@ app.get('/importar', (req, res) => {
 
 app.listen(PORT, '0.0.0.0', () => {
     console.log(`🚀 Servidor na porta ${PORT}`);
-    console.log('✅ Sistema pronto com ESAJ REAL Scraper!');
+    console.log('✅ Sistema pronto com API CNJ DataJud!');
 });
+
