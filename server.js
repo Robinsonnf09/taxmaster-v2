@@ -1,4 +1,5 @@
-﻿const express = require('express');
+﻿require('dotenv').config();
+const express = require('express');
 const path = require('path');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
@@ -128,4 +129,5 @@ app.listen(PORT, '0.0.0.0', () => {
     console.log(`🚀 Servidor na porta ${PORT}`);
     console.log('✅ Sistema pronto com API CNJ DataJud!');
 });
+
 
