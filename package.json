@@ -1,16 +1,16 @@
-﻿{
-  "name": "tax-master-v3",
-  "version": "3.0.0",
-  "main": "server.js",
-  "scripts": {
-    "start": "node server.js"
-  },
-  "engines": {
-    "node": ">=18.0.0"
-  },
-  "dependencies": {
-    "express": "^4.18.2",
-    "bcryptjs": "^2.4.3",
-    "jsonwebtoken": "^9.0.2"
-  }
+{
+    "version":  "3.0.0",
+    "name":  "tax-master-v3",
+    "scripts":  {
+                    "start":  "node server.js"
+                },
+    "dependencies":  {
+                         "jsonwebtoken":  "^9.0.2",
+                         "express":  "^4.18.2",
+                         "bcryptjs":  "^2.4.3"
+                     },
+    "engines":  {
+                    "node":  "\u003e=18.0.0"
+                },
+    "main":  "server.js"
 }
