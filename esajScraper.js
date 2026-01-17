@@ -1,101 +1,109 @@
-﻿// esajScraper.js - CORREÇÃO DE TIMEOUT
+﻿// cnjAdapter.js - API OFICIAL CNJ DataJud
 const axios = require('axios');
-const cheerio = require('cheerio');
 
-const BASE_URL = 'https://esaj.tjsp.jus.br';
-
-// ✅ MODO TESTE ATIVO (scraping real causa timeout)
-const MODO_TESTE = true;
-
-// Gerar dados de teste REALISTAS
-function gerarDadosTesteRealistas(params) {
-  const { valorMin, valorMax, natureza, quantidade = 50 } = params;
-  
-  const processos = [];
-  const ano = new Date().getFullYear();
-  
-  const dadosPorNatureza = {
-    'Tributária': {
-      classes: ['Execução Fiscal', 'Ação Anulatória de Débito Fiscal'],
-      assuntos: ['IPTU', 'ISS', 'ICMS', 'Dívida Ativa Municipal'],
-      credores: ['MUNICÍPIO DE SÃO PAULO', 'FAZENDA DO ESTADO DE SÃO PAULO'],
-      valorMin: 10000, valorMax: 5000000
-    },
-    'Alimentar': {
-      classes: ['Execução de Alimentos', 'Ação de Alimentos'],
-      assuntos: ['Pensão Alimentícia', 'Cumprimento de Sentença - Alimentos'],
-      credores: ['MARIA DA SILVA SANTOS', 'JOSÉ OLIVEIRA SOUZA'],
-      valorMin: 5000, valorMax: 100000
-    },
-    'Comum': {
-      classes: ['Procedimento Comum Cível', 'Ação de Cobrança'],
-      assuntos: ['Cobrança de Aluguéis', 'Indenização'],
-      credores: ['EMPRESA XYZ LTDA', 'CONDOMÍNIO EDIFÍCIO PAULISTA'],
-      valorMin: 20000, valorMax: 1000000
-    }
-  };
-  
-  const naturezas = natureza && natureza !== 'Todas' ? [natureza] : Object.keys(dadosPorNatureza);
-  
-  for (let i = 0; i < quantidade; i++) {
-    const nat = naturezas[Math.floor(Math.random() * naturezas.length)];
-    const dados = dadosPorNatureza[nat];
-    
-    const sequencial = String(Math.floor(Math.random() * 9000000) + 1000000).padStart(7, '0');
-    const digito = String(Math.floor(Math.random() * 99)).padStart(2, '0');
-    const anoProc = ano - Math.floor(Math.random() * 5);
-    const comarca = ['0100', '0106', '0050'][Math.floor(Math.random() * 3)];
-    
-    let valor = Math.floor(Math.random() * (dados.valorMax - dados.valorMin)) + dados.valorMin;
-    
-    if (valorMin && valorMax) {
-      if (valor < valorMin || valor > valorMax) {
-        valor = Math.floor(Math.random() * (valorMax - valorMin)) + valorMin;
-      }
-    }
-    
-    if (valorMin && valor < valorMin) continue;
-    if (valorMax && valor > valorMax) continue;
-    
-    processos.push({
-      numero: `${sequencial}-${digito}.${anoProc}.8.26.${comarca}`,
-      tribunal: 'TJ-SP',
-      credor: dados.credores[Math.floor(Math.random() * dados.credores.length)],
-      valor: valor,
-      status: ['Em Análise', 'Pendente', 'Aprovado'][Math.floor(Math.random() * 3)],
-      natureza: nat,
-      anoLOA: anoProc + 2,
-      dataDistribuicao: `${String(Math.floor(Math.random() * 28) + 1).padStart(2, '0')}/${String(Math.floor(Math.random() * 12) + 1).padStart(2, '0')}/${anoProc}`,
-      classe: dados.classes[Math.floor(Math.random() * dados.classes.length)],
-      assunto: dados.assuntos[Math.floor(Math.random() * dados.assuntos.length)],
-      fonte: 'ESAJ TJ-SP (Modo Teste - Dados Simulados)',
-      comarca: ['São Paulo - Capital', 'Campinas', 'Santos'][Math.floor(Math.random() * 3)],
-      vara: `${Math.floor(Math.random() * 10) + 1}ª Vara Cível`
-    });
-  }
-  
-  return processos;
-}
+const CNJ_API_URL = process.env.CNJ_API_URL || 'https://api-publica.datajud.cnj.jus.br';
+const CNJ_USER = process.env.CNJ_USER;
+const CNJ_PASS = process.env.CNJ_PASS;
 
 async function buscarProcessosESAJ(params) {
-  const { valorMin, valorMax, natureza, anoLoa, quantidade = 50 } = params;
+  const { valorMin, valorMax, natureza, quantidade = 100 } = params;
 
-  console.log('\n🔍 BUSCA NO ESAJ TJ-SP');
-  console.log('   Modo: TESTE (scraping real causa timeout)');
-  console.log(`   Filtros: Valor ${valorMin || 0}-${valorMax || '∞'}, Natureza: ${natureza || 'Todas'}`);
+  console.log('\n🔍 BUSCA NA API CNJ DATAJUD (OFICIAL)');
+  console.log(`   Filtros: Valor ${valorMin || 0}-${valorMax || '∞'}`);
 
-  let resultados = gerarDadosTesteRealistas({ valorMin, valorMax, natureza, quantidade });
-  
-  if (anoLoa && anoLoa !== 'Todos') {
-    resultados = resultados.filter(p => p.anoLOA === parseInt(anoLoa));
+  if (!CNJ_USER || !CNJ_PASS) {
+    console.log('   ⚠️ Credenciais CNJ não configuradas');
+    console.log('   Configure CNJ_USER e CNJ_PASS no Railway\n');
+    return { processos: [], stats: { erro: 'Credenciais não configuradas' } };
   }
 
-  console.log(`   ✅ ${resultados.length} processos gerados\n`);
+  try {
+    const auth = Buffer.from(`${CNJ_USER}:${CNJ_PASS}`).toString('base64');
 
-  return {
-    processos: resultados,
-    stats: { totalAPI: resultados.length, final: resultados.length, modo: 'TESTE' }
-  };
+    const query = {
+      size: quantidade,
+      query: {
+        bool: {
+          must: []
+        }
+      }
+    };
+
+    // Filtro de valor
+    if (valorMin || valorMax) {
+      query.query.bool.must.push({
+        range: {
+          valorCausa: {
+            gte: valorMin || 0,
+            lte: valorMax || 999999999
+          }
+        }
+      });
+    }
+
+    // Filtro de natureza
+    if (natureza && natureza !== 'Todas') {
+      query.query.bool.must.push({
+        match: {
+          assunto: natureza
+        }
+      });
+    }
+
+    const response = await axios.post(
+      `${CNJ_API_URL}/api_publica_tjsp/_search`,
+      query,
+      {
+        headers: {
+          'Authorization': `Basic ${auth}`,
+          'Content-Type': 'application/json'
+        },
+        timeout: 30000
+      }
+    );
+
+    const processos = response.data.hits.hits.map(hit => {
+      const p = hit._source;
+      return {
+        numero: p.numeroProcesso,
+        tribunal: 'TJ-SP',
+        credor: p.polo?.ativo?.[0]?.nome || 'Não informado',
+        valor: p.valorCausa || 0,
+        classe: p.classe || 'Não informado',
+        assunto: p.assunto || 'Não informado',
+        dataDistribuicao: p.dataAjuizamento || 'Não informado',
+        comarca: p.orgaoJulgador?.comarca || 'São Paulo',
+        vara: p.orgaoJulgador?.nome || 'Não informado',
+        natureza: p.assunto?.includes('Tribut') ? 'Tributária' : 'Comum',
+        anoLOA: new Date().getFullYear() + 1,
+        status: 'Em Análise',
+        fonte: 'API CNJ DataJud (OFICIAL)'
+      };
+    });
+
+    console.log(`   ✅ ${processos.length} processos REAIS encontrados\n`);
+
+    return {
+      processos: processos,
+      stats: {
+        totalAPI: processos.length,
+        final: processos.length,
+        modo: 'API OFICIAL CNJ'
+      }
+    };
+
+  } catch (error) {
+    console.error('   ❌ Erro na API CNJ:', error.message);
+    
+    if (error.response?.status === 401) {
+      console.log('   ⚠️ Credenciais inválidas - verifique CNJ_USER e CNJ_PASS\n');
+    }
+
+    return {
+      processos: [],
+      stats: { erro: error.message }
+    };
+  }
 }
 
 module.exports = { buscarProcessosESAJ };
