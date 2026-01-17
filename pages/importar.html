@@ -1,0 +1,283 @@
+﻿<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Importar Planilha - Tax Master V3</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f5f5;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+        }
+        
+        .upload-box {
+            background: white;
+            padding: 40px;
+            border-radius: 10px;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .upload-area {
+            border: 3px dashed #667eea;
+            border-radius: 10px;
+            padding: 60px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .upload-area:hover {
+            background: #f0f4ff;
+            border-color: #764ba2;
+        }
+        
+        .upload-area.dragging {
+            background: #e8f0ff;
+            border-color: #667eea;
+        }
+        
+        .btn {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 16px;
+        }
+        
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+        
+        .info-box {
+            background: #e8f0ff;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        
+        table {
+            width: 100%;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            border-collapse: collapse;
+        }
+        
+        th {
+            background: #667eea;
+            color: white;
+            padding: 15px;
+            text-align: left;
+        }
+        
+        td {
+            padding: 15px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📥 Importar Dados Reais de Precatórios</h1>
+            <p>Importe planilhas Excel/CSV com processos reais dos tribunais</p>
+        </div>
+        
+        <div class="info-box">
+            <h3>📋 Formato da Planilha:</h3>
+            <p style="margin-top: 10px;">
+                A planilha deve conter as seguintes colunas:<br>
+                <strong>Número do Processo | Tribunal | Credor | Valor | Status | Natureza | ANO LOA | Data Distribuição</strong>
+            </p>
+            <p style="margin-top: 10px; color: #666;">
+                Exemplo: 0001234-56.2024.8.26.0100 | TJ-SP | João Silva | 150000 | Aprovado | Alimentar | 2025 | 15/03/2024
+            </p>
+        </div>
+        
+        <div class="upload-box">
+            <div class="upload-area" id="uploadArea">
+                <h2>🗂️ Arraste o arquivo aqui</h2>
+                <p style="margin: 20px 0;">ou</p>
+                <input type="file" id="fileInput" accept=".xlsx,.xls,.csv" style="display: none;">
+                <button class="btn btn-primary" onclick="document.getElementById('fileInput').click()">
+                    📂 Selecionar Arquivo
+                </button>
+                <p style="margin-top: 20px; color: #666; font-size: 14px;">
+                    Formatos aceitos: Excel (.xlsx, .xls) ou CSV (.csv)
+                </p>
+            </div>
+        </div>
+        
+        <div id="results" style="display: none; background: white; padding: 20px; border-radius: 10px;">
+            <h3>✅ Arquivo Processado</h3>
+            <p id="fileInfo" style="margin: 10px 0; color: #666;"></p>
+            <button class="btn btn-primary" onclick="importarDados()" style="margin-top: 20px;">
+                📥 Importar Todos os Processos
+            </button>
+            
+            <div style="margin-top: 30px; overflow-x: auto;">
+                <h4>Prévia dos Dados:</h4>
+                <table id="previewTable" style="margin-top: 15px;">
+                    <thead id="previewHeader"></thead>
+                    <tbody id="previewBody"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script>
+        const token = localStorage.getItem('token');
+        if (!token) window.location.href = '/login';
+        
+        let dadosProcessados = [];
+        
+        // Drag & Drop
+        const uploadArea = document.getElementById('uploadArea');
+        
+        uploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadArea.classList.add('dragging');
+        });
+        
+        uploadArea.addEventListener('dragleave', () => {
+            uploadArea.classList.remove('dragging');
+        });
+        
+        uploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadArea.classList.remove('dragging');
+            
+            const file = e.dataTransfer.files[0];
+            if (file) processarArquivo(file);
+        });
+        
+        document.getElementById('fileInput').addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file) processarArquivo(file);
+        });
+        
+        function processarArquivo(file) {
+            const reader = new FileReader();
+            
+            reader.onload = (e) => {
+                try {
+                    const data = new Uint8Array(e.target.result);
+                    const workbook = XLSX.read(data, { type: 'array' });
+                    const sheetName = workbook.SheetNames[0];
+                    const worksheet = workbook.Sheets[sheetName];
+                    const json = XLSX.utils.sheet_to_json(worksheet);
+                    
+                    dadosProcessados = json.map(row => ({
+                        numero: row['Número do Processo'] || row['Numero'] || row['numero'],
+                        tribunal: row['Tribunal'] || row['tribunal'] || 'TJ-SP',
+                        credor: row['Credor'] || row['credor'] || 'Não informado',
+                        valor: parseFloat(row['Valor'] || row['valor'] || 0),
+                        status: row['Status'] || row['status'] || 'Em Análise',
+                        natureza: row['Natureza'] || row['natureza'] || 'Comum',
+                        anoLOA: parseInt(row['ANO LOA'] || row['anoLOA'] || row['ano'] || 2025),
+                        dataDistribuicao: row['Data Distribuição'] || row['Data'] || row['data'] || 'N/A'
+                    }));
+                    
+                    mostrarPrevia(dadosProcessados, file.name);
+                    
+                } catch (error) {
+                    alert('Erro ao processar arquivo: ' + error.message);
+                }
+            };
+            
+            reader.readAsArrayBuffer(file);
+        }
+        
+        function mostrarPrevia(dados, nomeArquivo) {
+            document.getElementById('results').style.display = 'block';
+            document.getElementById('fileInfo').textContent = 
+                `Arquivo: ${nomeArquivo} | ${dados.length} processos encontrados`;
+            
+            const header = document.getElementById('previewHeader');
+            const body = document.getElementById('previewBody');
+            
+            header.innerHTML = `
+                <tr>
+                    <th>Número</th>
+                    <th>Tribunal</th>
+                    <th>Credor</th>
+                    <th>Valor</th>
+                    <th>Status</th>
+                    <th>Natureza</th>
+                    <th>ANO LOA</th>
+                </tr>
+            `;
+            
+            body.innerHTML = dados.slice(0, 10).map(p => `
+                <tr>
+                    <td>${p.numero}</td>
+                    <td>${p.tribunal}</td>
+                    <td>${p.credor}</td>
+                    <td>R$ ${p.valor.toLocaleString('pt-BR', {minimumFractionDigits: 2})}</td>
+                    <td>${p.status}</td>
+                    <td>${p.natureza}</td>
+                    <td>${p.anoLOA}</td>
+                </tr>
+            `).join('');
+            
+            if (dados.length > 10) {
+                body.innerHTML += `
+                    <tr>
+                        <td colspan="7" style="text-align: center; color: #666;">
+                            ... e mais ${dados.length - 10} processos
+                        </td>
+                    </tr>
+                `;
+            }
+        }
+        
+        async function importarDados() {
+            let sucesso = 0;
+            let erro = 0;
+            
+            for (const processo of dadosProcessados) {
+                try {
+                    const response = await fetch('/api/processos/importar', {
+                        method: 'POST',
+                        headers: {
+                            'Authorization': `Bearer ${token}`,
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(processo)
+                    });
+                    
+                    if (response.ok) sucesso++;
+                    else erro++;
+                } catch (e) {
+                    erro++;
+                }
+            }
+            
+            alert(`✅ Importação concluída!\n\nSucesso: ${sucesso}\nErros: ${erro}`);
+            
+            if (sucesso > 0) {
+                window.location.href = '/processos';
+            }
+        }
+    </script>
+</body>
+</html>
