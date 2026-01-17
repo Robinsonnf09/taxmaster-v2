@@ -1,7 +1,27 @@
 ﻿// datajudOficialAdapter.js
 const axios = require('axios');
 
-const BASE_URL = 'https://datajud-wiki.cnj.jus.br/api-publica/v1/processos';
+// ✅ ENDPOINT CORRETO (atualizado janeiro 2026)
+const BASE_URL = 'https://api-publica.datajud.cnj.jus.br';
+
+const ENDPOINTS_TRIBUNAIS = {
+  'TJ-SP': '/api_publica_tjsp/_search',
+  'TJSP': '/api_publica_tjsp/_search',
+  'TJ-RJ': '/api_publica_tjrj/_search',
+  'TJRJ': '/api_publica_tjrj/_search',
+  'TJ-MG': '/api_publica_tjmg/_search',
+  'TJMG': '/api_publica_tjmg/_search',
+  'TJ-RS': '/api_publica_tjrs/_search',
+  'TJRS': '/api_publica_tjrs/_search',
+  'TJ-PR': '/api_publica_tjpr/_search',
+  'TJPR': '/api_publica_tjpr/_search',
+  'TJ-BA': '/api_publica_tjba/_search',
+  'TJBA': '/api_publica_tjba/_search',
+  'TJ-SC': '/api_publica_tjsc/_search',
+  'TJSC': '/api_publica_tjsc/_search',
+  'TJ-PE': '/api_publica_tjpe/_search',
+  'TJPE': '/api_publica_tjpe/_search'
+};
 
 const MAPA_TRIBUNAIS = {
   '8.26': 'TJ-SP', '8.19': 'TJ-RJ', '8.13': 'TJ-MG', '8.21': 'TJ-RS',
@@ -23,7 +43,6 @@ async function buscarProcessosOficial(params) {
     dataFim,
   } = params;
 
-  // ✅ ESTATÍSTICAS
   const stats = {
     totalAPI: 0,
     aposTribunal: 0,
@@ -34,11 +53,16 @@ async function buscarProcessosOficial(params) {
     filtrosAplicados: []
   };
 
-  console.log('\n🔍 BUSCA OFICIAL DATAJUD CNJ');
-  console.log('   Endpoint:', BASE_URL);
+  // Determinar tribunais a consultar
+  const tribunaisParaConsultar = tribunalDesejado && tribunalDesejado !== '' 
+    ? [tribunalDesejado] 
+    : Object.keys(ENDPOINTS_TRIBUNAIS).filter(t => t.startsWith('TJ-'));
+
+  console.log('\n🔍 BUSCA OFICIAL DATAJUD CNJ (API ATUALIZADA)');
+  console.log('   Base URL:', BASE_URL);
+  console.log('   Tribunais:', tribunaisParaConsultar.join(', '));
   console.log('   Período:', dataInicio, 'até', dataFim);
 
-  if (tribunalDesejado) stats.filtrosAplicados.push(`Tribunal: ${tribunalDesejado}`);
   if (valorMin) stats.filtrosAplicados.push(`Valor Min: R$ ${valorMin.toLocaleString('pt-BR')}`);
   if (valorMax) stats.filtrosAplicados.push(`Valor Max: R$ ${valorMax.toLocaleString('pt-BR')}`);
   if (natureza) stats.filtrosAplicados.push(`Natureza: ${natureza}`);
@@ -46,141 +70,95 @@ async function buscarProcessosOficial(params) {
 
   console.log('   Filtros aplicados:', stats.filtrosAplicados.length || 'Nenhum');
 
-  const tamanhoPagina = 100;
-  let pagina = 0;
   let resultados = [];
-  let terminou = false;
 
-  while (!terminou) {
+  // Buscar em cada tribunal
+  for (const tribunal of tribunaisParaConsultar) {
+    const endpoint = ENDPOINTS_TRIBUNAIS[tribunal];
+    if (!endpoint) continue;
+
+    const url = `${BASE_URL}${endpoint}`;
+
+    console.log(`\n   📍 Buscando em ${tribunal}...`);
+    console.log(`      URL: ${url}`);
+
     try {
-      const url = `${BASE_URL}?dataInicio=${encodeURIComponent(
-        dataInicio
-      )}&dataFim=${encodeURIComponent(
-        dataFim
-      )}&pagina=${pagina}&tamanhoPagina=${tamanhoPagina}`;
+      // Query Elasticsearch
+      const query = {
+        size: 100,
+        query: {
+          bool: {
+            must: [],
+            filter: []
+          }
+        }
+      };
 
-      console.log(`   📄 Página ${pagina + 1}...`);
-
-      const response = await requestComRetry(url, 3);
-      const data = response.data;
-
-      const processos = data?.conteudo || data?.content || data || [];
-
-      stats.totalAPI += processos.length;
-      console.log(`      API retornou: ${processos.length} processos (Total acumulado: ${stats.totalAPI})`);
-
-      if (pagina === 0 && processos.length > 0) {
-        console.log('\n      📋 AMOSTRA (primeiros 3 processos):');
-        processos.slice(0, 3).forEach((proc, i) => {
-          const tribunalInf = inferirTribunal(proc.numeroProcesso || '');
-          console.log(`      ${i + 1}. Número: ${proc.numeroProcesso || 'N/A'}`);
-          console.log(`         Tribunal inferido: ${tribunalInf}`);
-          console.log(`         Valor: R$ ${Number(proc.valorCausa || 0).toLocaleString('pt-BR')}`);
-          console.log(`         Classe: ${proc.classe || 'N/A'}`);
+      // Filtro de data
+      if (dataInicio && dataFim) {
+        query.query.bool.filter.push({
+          range: {
+            dataAjuizamento: {
+              gte: dataInicio,
+              lte: dataFim
+            }
+          }
         });
-        console.log('');
       }
 
-      if (!processos.length) {
-        terminou = true;
-        break;
+      // Filtro de valor
+      if (valorMin || valorMax) {
+        const rangeQuery = { range: { valorCausa: {} } };
+        if (valorMin) rangeQuery.range.valorCausa.gte = valorMin;
+        if (valorMax) rangeQuery.range.valorCausa.lte = valorMax;
+        query.query.bool.filter.push(rangeQuery);
       }
 
-      // ✅ FILTRAR COM ESTATÍSTICAS
-      const filtrados = processos.filter((proc) => {
-        const valorCausa = Number(proc.valorCausa || 0);
-        const classe = (proc.classe || '').toString().toLowerCase();
-        const assunto = (proc.assunto || '').toString().toLowerCase();
-        const dataAjuizamento = proc.dataAjuizamento || proc.dataDistribuicao;
-        const numeroProcesso = proc.numeroProcesso || '';
-
-        const tribunalInferido = inferirTribunal(numeroProcesso);
-
-        // Filtro tribunal
-        if (tribunalDesejado && tribunalInferido !== tribunalDesejado) {
-          return false;
+      const response = await axios.post(url, query, {
+        timeout: 30000,
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+          'User-Agent': 'TaxMaster/3.0'
         }
-        stats.aposTribunal++;
-
-        // Filtro valor
-        if (valorMin != null && !Number.isNaN(valorMin) && valorCausa < valorMin) {
-          return false;
-        }
-        if (valorMax != null && !Number.isNaN(valorMax) && valorCausa > valorMax) {
-          return false;
-        }
-        stats.aposValor++;
-
-        // Filtro natureza
-        if (natureza) {
-          const nat = natureza.toString().toLowerCase();
-          if (!classe.includes(nat) && !assunto.includes(nat)) {
-            return false;
-          }
-        }
-        stats.aposNatureza++;
-
-        // Filtro ano LOA
-        if (anoLoa && dataAjuizamento) {
-          const anoProc = new Date(dataAjuizamento).getFullYear();
-          const loaProc = anoProc + 2;
-          if (loaProc !== Number(anoLoa)) {
-            return false;
-          }
-        }
-        stats.aposAnoLOA++;
-
-        return true;
       });
 
-      console.log(`      Após filtros: ${filtrados.length} processos`);
+      const hits = response.data?.hits?.hits || [];
+      stats.totalAPI += hits.length;
 
-      const processosFormatados = filtrados.map(proc => {
-        const numeroProcesso = proc.numeroProcesso || 'N/A';
-        const tribunalInferido = inferirTribunal(numeroProcesso);
+      console.log(`      API retornou: ${hits.length} processos`);
 
-        return {
-          numero: numeroProcesso,
-          tribunal: tribunalInferido,
-          credor: extrairCredor(proc),
-          valor: Number(proc.valorCausa || 0),
-          status: determinarStatus(proc),
-          natureza: extrairNatureza(proc),
-          anoLOA: calcularAnoLOA(proc),
-          dataDistribuicao: formatarData(proc.dataAjuizamento || proc.dataDistribuicao),
-          classe: proc.classe || 'N/A',
-          assunto: proc.assunto || 'N/A',
-          fonte: 'DataJud CNJ (API Oficial v1)'
-        };
-      });
+      if (hits.length > 0) {
+        const processosFormatados = hits.map(hit => {
+          const proc = hit._source;
+          
+          return {
+            numero: proc.numeroProcesso || 'N/A',
+            tribunal: tribunal,
+            credor: extrairCredor(proc),
+            valor: Number(proc.valorCausa || 0),
+            status: determinarStatus(proc),
+            natureza: extrairNatureza(proc),
+            anoLOA: calcularAnoLOA(proc),
+            dataDistribuicao: formatarData(proc.dataAjuizamento),
+            classe: proc.classe?.nome || 'N/A',
+            assunto: proc.assuntos?.[0]?.nome || 'N/A',
+            fonte: 'DataJud CNJ (API Oficial - Atualizada)'
+          };
+        });
 
-      resultados = resultados.concat(processosFormatados);
-
-      if (processos.length < tamanhoPagina) {
-        terminou = true;
-      } else {
-        pagina += 1;
-      }
-
-      if (pagina > 20 || resultados.length >= 200) {
-        console.log('   ⚠️ Limite atingido (20 páginas ou 200 processos)');
-        terminou = true;
+        resultados = resultados.concat(processosFormatados);
       }
 
     } catch (error) {
-      console.error(`   ❌ Erro na página ${pagina}:`, error.message);
-      terminou = true;
+      console.error(`      ❌ Erro em ${tribunal}:`, error.message);
     }
   }
 
   stats.final = resultados.length;
 
-  console.log(`\n📊 ESTATÍSTICAS DA BUSCA:`);
-  console.log(`   Total retornado pela API: ${stats.totalAPI}`);
-  if (tribunalDesejado) console.log(`   Após filtro Tribunal: ${stats.aposTribunal}`);
-  if (valorMin || valorMax) console.log(`   Após filtro Valor: ${stats.aposValor}`);
-  if (natureza) console.log(`   Após filtro Natureza: ${stats.aposNatureza}`);
-  if (anoLoa) console.log(`   Após filtro ANO LOA: ${stats.aposAnoLOA}`);
+  console.log(`\n📊 ESTATÍSTICAS:');
+  console.log(`   Total API: ${stats.totalAPI}`);
   console.log(`   ✅ RESULTADO FINAL: ${stats.final} processos\n`);
 
   return {
@@ -189,89 +167,12 @@ async function buscarProcessosOficial(params) {
   };
 }
 
-async function requestComRetry(url, maxTentativas = 3) {
-  let ultimoErro;
-  
-  for (let tentativa = 1; tentativa <= maxTentativas; tentativa++) {
-    try {
-      const response = await axios.get(url, {
-        timeout: 30000,
-        headers: {
-          'Accept': 'application/json',
-          'User-Agent': 'TaxMaster/3.0'
-        }
-      });
-      return response;
-    } catch (error) {
-      ultimoErro = error;
-      const status = error.response?.status;
-      
-      if (status === 502 || status === 503 || status === 504 || error.code === 'ETIMEDOUT') {
-        console.log(`      ⚠️ Tentativa ${tentativa}/${maxTentativas} falhou`);
-        
-        if (tentativa < maxTentativas) {
-          const delay = tentativa * 1000;
-          await new Promise(resolve => setTimeout(resolve, delay));
-        }
-      } else {
-        throw error;
-      }
-    }
-  }
-  throw ultimoErro;
-}
-
-function inferirTribunal(numeroProcesso) {
-  if (!numeroProcesso) return 'Não identificado';
-  
-  try {
-    const partes = numeroProcesso.split('.');
-    
-    if (partes.length >= 4) {
-      const j = partes[2];
-      let tr = partes[3];
-      
-      if (tr.length > 2) {
-        tr = tr.substring(0, 2);
-      }
-      
-      const jtr = `${j}.${tr}`;
-      const tribunal = MAPA_TRIBUNAIS[jtr];
-      
-      if (tribunal) return tribunal;
-    }
-    
-    const somenteNumeros = numeroProcesso.replace(/\D/g, '');
-    
-    if (somenteNumeros.length === 20) {
-      const j = somenteNumeros.substring(13, 14);
-      const tr = somenteNumeros.substring(14, 16);
-      const jtr = `${j}.${tr}`;
-      
-      const tribunal = MAPA_TRIBUNAIS[jtr];
-      if (tribunal) return tribunal;
-    }
-    
-    const match = numeroProcesso.match(/\.(\d)\.(\d{2})/);
-    if (match) {
-      const jtr = `${match[1]}.${match[2]}`;
-      const tribunal = MAPA_TRIBUNAIS[jtr];
-      if (tribunal) return tribunal;
-    }
-    
-  } catch (error) {
-    console.error('Erro ao inferir tribunal:', error.message);
-  }
-  
-  return 'Não identificado';
-}
-
 function extrairCredor(proc) {
-  if (proc.partes && Array.isArray(proc.partes)) {
-    const autor = proc.partes.find(p => 
-      p.polo === 'ATIVO' || p.tipo === 'AUTOR' || p.tipoParte === 'AUTOR'
-    );
-    if (autor && autor.nome) return autor.nome;
+  if (proc.polo && Array.isArray(proc.polo)) {
+    const poloAtivo = proc.polo.find(p => p.polo === 'Ativo');
+    if (poloAtivo && poloAtivo.partes && poloAtivo.partes.length > 0) {
+      return poloAtivo.partes[0].nome || 'Não informado';
+    }
   }
   return 'Consultar processo';
 }
@@ -290,19 +191,22 @@ function determinarStatus(proc) {
 }
 
 function extrairNatureza(proc) {
-  const assunto = (proc.assunto || '').toLowerCase();
-  const classe = (proc.classe || '').toLowerCase();
+  const assuntos = proc.assuntos || [];
+  const classe = proc.classe?.nome || '';
   
-  if (assunto.includes('aliment') || classe.includes('aliment')) return 'Alimentar';
-  if (assunto.includes('tribut') || classe.includes('tribut')) return 'Tributária';
-  if (assunto.includes('previd') || classe.includes('previd')) return 'Previdenciária';
-  if (assunto.includes('trabalh') || classe.includes('trabalh')) return 'Trabalhista';
+  const assuntoTexto = assuntos.map(a => a.nome).join(' ').toLowerCase();
+  const classeTexto = classe.toLowerCase();
+  
+  if (assuntoTexto.includes('aliment') || classeTexto.includes('aliment')) return 'Alimentar';
+  if (assuntoTexto.includes('tribut') || classeTexto.includes('tribut')) return 'Tributária';
+  if (assuntoTexto.includes('previd') || classeTexto.includes('previd')) return 'Previdenciária';
+  if (assuntoTexto.includes('trabalh') || classeTexto.includes('trabalh')) return 'Trabalhista';
   
   return 'Comum';
 }
 
 function calcularAnoLOA(proc) {
-  const data = proc.dataAjuizamento || proc.dataDistribuicao;
+  const data = proc.dataAjuizamento;
   if (!data) return new Date().getFullYear() + 1;
   
   try {
