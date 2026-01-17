@@ -2,7 +2,7 @@
 const path = require('path');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const { buscarDataJudReal, DATAJUD_CONFIG } = require('./busca-datajud-oficial');
+const { buscarProcessosOficial } = require('./datajudOficialAdapter');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -23,26 +23,9 @@ const usuarios = [
 
 let processos = [];
 
-console.log('✅ Tax Master V3 - Busca REAL CNJ iniciado');
-console.log('🔗 API DataJud CNJ: https://api-publica.datajud.cnj.jus.br');
-console.log('📋 Credenciais configuradas:', DATAJUD_CONFIG.auth.username ? 'SIM' : 'NÃO');
+console.log('✅ Tax Master V3 - API Oficial DataJud');
+console.log('🔗 Endpoint: datajud-wiki.cnj.jus.br/api-publica/v1/processos');
 
-if (!DATAJUD_CONFIG.auth.username) {
-    console.log('');
-    console.log('⚠️⚠️⚠️ ATENÇÃO! ⚠️⚠️⚠️');
-    console.log('Credenciais DataJud NÃO configuradas!');
-    console.log('');
-    console.log('COMO CONFIGURAR:');
-    console.log('1. Acesse: https://www.cnj.jus.br/sistemas/datajud/api-publica/');
-    console.log('2. Crie uma conta');
-    console.log('3. Obtenha usuário e senha');
-    console.log('4. Configure no Railway:');
-    console.log('   - Variável: DATAJUD_USER');
-    console.log('   - Variável: DATAJUD_PASS');
-    console.log('');
-}
-
-// Rotas básicas
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'pages', 'login.html'));
 });
@@ -51,9 +34,8 @@ app.get('/health', (req, res) => {
     res.json({ 
         status: 'ok', 
         processos: processos.length,
-        versao: '3.0.0-datajud-oficial',
-        api: 'DataJud CNJ (Documentação Oficial)',
-        credenciaisConfiguradas: !!DATAJUD_CONFIG.auth.username,
+        versao: '3.0.0-oficial',
+        api: 'DataJud CNJ (API Oficial v1)',
         timestamp: new Date().toISOString()
     });
 });
@@ -99,56 +81,49 @@ function autenticar(req, res, next) {
     }
 }
 
-// API de busca REAL oficial
 app.get('/api/buscar-tjsp', autenticar, async (req, res) => {
     try {
-        if (!DATAJUD_CONFIG.auth.username) {
-            return res.json({
-                sucesso: false,
-                erro: 'credenciais_nao_configuradas',
-                mensagem: 'Configure as credenciais DataJud CNJ. Acesse: https://www.cnj.jus.br/sistemas/datajud/api-publica/',
-                processos: [],
-                total: 0
+        const {
+            tribunal,
+            valorMinimo,
+            valorMaximo,
+            natureza,
+            anoLOA,
+        } = req.query;
+
+        const hoje = new Date();
+        const dataFim = hoje.toISOString().split('T')[0];
+        const umAnoAtras = new Date(hoje.setFullYear(hoje.getFullYear() - 1));
+        const dataInicio = umAnoAtras.toISOString().split('T')[0];
+
+        if (!dataInicio || !dataFim) {
+            return res.status(400).json({
+                erro: 'Erro ao definir datas'
             });
         }
-        
-        const filtros = {
-            tribunal: req.query.tribunal || 'TJ-SP',
-            valorMinimo: req.query.valorMinimo,
-            valorMaximo: req.query.valorMaximo,
-            natureza: req.query.natureza,
-            anoLOA: req.query.anoLOA,
-            status: req.query.status,
-            quantidade: req.query.quantidade || 50
-        };
-        
-        console.log('\n🔍 Nova busca recebida');
-        
-        const resultado = await buscarDataJudReal(filtros);
-        
-        if (resultado.erro === 'autenticacao') {
-            return res.status(401).json({
-                sucesso: false,
-                erro: 'autenticacao',
-                mensagem: resultado.mensagem,
-                processos: [],
-                total: 0
-            });
-        }
-        
+
+        const processosEncontrados = await buscarProcessosOficial({
+            tribunal: tribunal || 'TJSP',
+            valorMin: valorMinimo ? Number(valorMinimo) : null,
+            valorMax: valorMaximo ? Number(valorMaximo) : null,
+            natureza,
+            anoLoa: anoLOA ? Number(anoLOA) : null,
+            dataInicio,
+            dataFim,
+        });
+
         res.json({
             sucesso: true,
-            processos: resultado,
-            total: resultado.length,
-            fonte: 'DataJud CNJ (Oficial)',
-            tribunal: filtros.tribunal
+            total: processosEncontrados.length,
+            processos: processosEncontrados,
+            fonte: 'DataJud CNJ (API Oficial v1)',
+            periodo: `${dataInicio} até ${dataFim}`
         });
-        
-    } catch (error) {
-        console.error('❌ Erro na busca:', error);
+    } catch (err) {
+        console.error(err);
         res.status(500).json({ 
-            erro: 'Erro ao buscar processos',
-            mensagem: error.message 
+            erro: 'Erro ao consultar DataJud oficial.',
+            mensagem: err.message 
         });
     }
 });
@@ -180,6 +155,6 @@ app.get('/importar', (req, res) => {
 });
 
 app.listen(PORT, '0.0.0.0', () => {
-    console.log(`\n🚀 Servidor rodando na porta ${PORT}`);
+    console.log(`🚀 Servidor rodando na porta ${PORT}`);
     console.log(`✅ Sistema pronto!`);
 });
