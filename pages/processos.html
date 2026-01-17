@@ -55,6 +55,17 @@
             padding: 20px;
             border-radius: 10px;
             margin-bottom: 20px;
+        }
+        
+        .filters h3 {
+            color: #667eea;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .filters-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 15px;
@@ -89,6 +100,28 @@
             background: #667eea;
             color: white;
             grid-column: span 2;
+            margin-top: 10px;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 40px;
+            display: none;
+        }
+        
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
         
         .table-container {
@@ -127,20 +160,9 @@
             font-weight: bold;
         }
         
-        .badge-analise {
-            background: #fff3cd;
-            color: #856404;
-        }
-        
-        .badge-aprovado {
-            background: #d4edda;
-            color: #155724;
-        }
-        
-        .badge-pendente {
-            background: #f8d7da;
-            color: #721c24;
-        }
+        .badge-emanalise { background: #fff3cd; color: #856404; }
+        .badge-aprovado { background: #d4edda; color: #155724; }
+        .badge-pendente { background: #f8d7da; color: #721c24; }
         
         .btn-action {
             padding: 5px 10px;
@@ -149,20 +171,9 @@
             font-size: 12px;
         }
         
-        .btn-edit {
-            background: #17a2b8;
+        .btn-success {
+            background: #28a745;
             color: white;
-        }
-        
-        .btn-delete {
-            background: #dc3545;
-            color: white;
-        }
-        
-        .loading {
-            text-align: center;
-            padding: 40px;
-            color: #666;
         }
     </style>
 </head>
@@ -172,64 +183,85 @@
             <h1>🏛️ Tax Master V3</h1>
             <p id="userInfo">Carregando...</p>
         </div>
-        <a href="/busca-tjsp" class="btn btn-primary" style="margin-right: 10px; text-decoration: none;">🔍 Buscar TJ-SP</a><button class="btn btn-logout" onclick="logout()">🚪 Sair</button>
+        <button class="btn btn-logout" onclick="logout()">🚪 Sair</button>
     </div>
     
     <div class="filters">
-        <div class="filter-group">
-            <label for="busca">🔍 Buscar Número:</label>
-            <input type="text" id="busca" placeholder="Digite o número do processo">
-        </div>
+        <h3>
+            🔍 Busca Automática no TJ-SP
+            <span style="font-size: 12px; font-weight: normal; background: #28a745; color: white; padding: 3px 8px; border-radius: 3px;">
+                BUSCA DIRETA NO TRIBUNAL
+            </span>
+        </h3>
         
-        <div class="filter-group">
-            <label for="tribunal">🏛️ Tribunal:</label>
-            <select id="tribunal">
-                <option value="todos">Todos</option>
-                <option value="TJ-SP">TJ-SP</option>
-                <option value="TJ-RJ">TJ-RJ</option>
-                <option value="TJ-MG">TJ-MG</option>
-            </select>
+        <div class="filters-grid">
+            <div class="filter-group">
+                <label for="tribunal">🏛️ Tribunal:</label>
+                <select id="tribunal">
+                    <option value="TJ-SP">TJ-SP - São Paulo</option>
+                    <option value="TJ-RJ">TJ-RJ - Rio de Janeiro</option>
+                    <option value="TJ-MG">TJ-MG - Minas Gerais</option>
+                    <option value="TJ-RS">TJ-RS - Rio Grande do Sul</option>
+                </select>
+            </div>
+            
+            <div class="filter-group">
+                <label for="valorMinimo">💰 Valor Mínimo (R$):</label>
+                <input type="number" id="valorMinimo" placeholder="Ex: 100000" min="0" step="1000" value="100000">
+            </div>
+            
+            <div class="filter-group">
+                <label for="valorMaximo">💰 Valor Máximo (R$):</label>
+                <input type="number" id="valorMaximo" placeholder="Ex: 500000" min="0" step="1000" value="500000">
+            </div>
+            
+            <div class="filter-group">
+                <label for="natureza">📑 Natureza:</label>
+                <select id="natureza">
+                    <option value="">Todas</option>
+                    <option value="Alimentar">Alimentar</option>
+                    <option value="Comum">Comum</option>
+                    <option value="Tributária">Tributária</option>
+                    <option value="Previdenciária">Previdenciária</option>
+                    <option value="Trabalhista">Trabalhista</option>
+                </select>
+            </div>
+            
+            <div class="filter-group">
+                <label for="anoLOA">📆 ANO LOA:</label>
+                <select id="anoLOA">
+                    <option value="">Todos</option>
+                    <option value="2024">2024</option>
+                    <option value="2025">2025</option>
+                    <option value="2026">2026</option>
+                    <option value="2027">2027</option>
+                </select>
+            </div>
+            
+            <div class="filter-group">
+                <label for="status">📊 Status:</label>
+                <select id="status">
+                    <option value="">Todos</option>
+                    <option value="Em Análise">Em Análise</option>
+                    <option value="Aprovado">Aprovado</option>
+                    <option value="Pendente">Pendente</option>
+                </select>
+            </div>
+            
+            <button class="btn btn-primary" onclick="buscarNoTJSP()">
+                🔍 Buscar no TJ-SP
+            </button>
         </div>
-        
-        <div class="filter-group">
-            <label for="status">📊 Status:</label>
-            <select id="status">
-                <option value="todos">Todos</option>
-                <option value="Em Análise">Em Análise</option>
-                <option value="Aprovado">Aprovado</option>
-                <option value="Pendente">Pendente</option>
-            </select>
-        </div>
-        
-        <div class="filter-group">
-            <label for="natureza">📑 Natureza:</label>
-            <select id="natureza">
-                <option value="todos">Todas</option>
-                <option value="Alimentar">Alimentar</option>
-                <option value="Comum">Comum</option>
-                <option value="Tributária">Tributária</option>
-                <option value="Previdenciária">Previdenciária</option>
-                <option value="Trabalhista">Trabalhista</option>
-            </select>
-        </div>
-        
-        <div class="filter-group">
-            <label for="anoLOA">📆 ANO LOA:</label>
-            <select id="anoLOA">
-                <option value="todos">Todos</option>
-                <option value="2024">2024</option>
-                <option value="2025">2025</option>
-                <option value="2026">2026</option>
-                <option value="2027">2027</option>
-            </select>
-        </div>
-        
-        <button class="btn btn-primary" onclick="buscarProcessos()">🔍 Buscar</button>
+    </div>
+    
+    <div class="loading" id="loading">
+        <div class="spinner"></div>
+        <p style="margin-top: 20px; color: #666;">Buscando processos direto no TJ-SP...</p>
     </div>
     
     <div class="table-container">
-        <h2>📋 Lista de Processos</h2>
-        <div id="loading" class="loading">Carregando processos...</div>
+        <h2>📋 Lista de Processos <span id="totalCount" style="font-size: 14px; color: #666;"></span></h2>
+        <div id="resultMessage" style="padding: 20px; text-align: center; color: #666;"></div>
         <table id="processosTable" style="display: none;">
             <thead>
                 <tr>
@@ -258,6 +290,7 @@
         }
         
         document.getElementById('userInfo').textContent = `👤 ${usuario.nome} (${usuario.perfil})`;
+        document.getElementById('resultMessage').textContent = 'Configure os filtros e clique em "Buscar no TJ-SP" para buscar processos direto no tribunal';
         
         function logout() {
             localStorage.removeItem('token');
@@ -265,80 +298,102 @@
             window.location.href = '/login';
         }
         
-        async function buscarProcessos() {
-            document.getElementById('loading').style.display = 'block';
-            document.getElementById('processosTable').style.display = 'none';
-            
-            const busca = document.getElementById('busca').value;
+        async function buscarNoTJSP() {
             const tribunal = document.getElementById('tribunal').value;
-            const status = document.getElementById('status').value;
+            const valorMinimo = document.getElementById('valorMinimo').value;
+            const valorMaximo = document.getElementById('valorMaximo').value;
             const natureza = document.getElementById('natureza').value;
             const anoLOA = document.getElementById('anoLOA').value;
+            const status = document.getElementById('status').value;
+            
+            document.getElementById('loading').style.display = 'block';
+            document.getElementById('processosTable').style.display = 'none';
+            document.getElementById('resultMessage').textContent = '';
             
             const params = new URLSearchParams();
-            if (busca) params.append('busca', busca);
-            if (tribunal !== 'todos') params.append('tribunal', tribunal);
-            if (status !== 'todos') params.append('status', status);
-            if (natureza !== 'todos') params.append('natureza', natureza);
-            if (anoLOA !== 'todos') params.append('anoLOA', anoLOA);
+            params.append('tribunal', tribunal);
+            if (valorMinimo) params.append('valorMinimo', valorMinimo);
+            if (valorMaximo) params.append('valorMaximo', valorMaximo);
+            if (natureza) params.append('natureza', natureza);
+            if (anoLOA) params.append('anoLOA', anoLOA);
+            if (status) params.append('status', status);
+            params.append('quantidade', 100);
             
             try {
-                const response = await fetch(`/api/processos?${params}`, {
+                const response = await fetch(`/api/buscar-tjsp?${params}`, {
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
                 
-                if (!response.ok) throw new Error('Erro ao buscar');
+                if (!response.ok) throw new Error('Erro na busca');
                 
-                const processos = await response.json();
-                renderProcessos(processos);
+                const data = await response.json();
+                renderProcessos(data.processos);
                 
             } catch (error) {
                 console.error('Erro:', error);
-                alert('Erro ao carregar processos');
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('resultMessage').textContent = 'Erro ao buscar processos: ' + error.message;
             }
         }
         
         function renderProcessos(processos) {
+            document.getElementById('loading').style.display = 'none';
             const tbody = document.getElementById('processosBody');
+            const totalCount = document.getElementById('totalCount');
             
             if (processos.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="9" style="text-align:center;">Nenhum processo encontrado</td></tr>';
+                document.getElementById('resultMessage').textContent = 'Nenhum processo encontrado com os filtros selecionados no TJ-SP';
+                document.getElementById('processosTable').style.display = 'none';
+                totalCount.textContent = '';
             } else {
-                tbody.innerHTML = processos.map(p => `
+                totalCount.textContent = `(${processos.length} encontrados no TJ-SP)`;
+                tbody.innerHTML = processos.map((p, i) => `
                     <tr>
                         <td>${p.numero}</td>
                         <td>${p.tribunal}</td>
                         <td>${p.credor || 'N/A'}</td>
                         <td>R$ ${parseFloat(p.valor).toLocaleString('pt-BR', {minimumFractionDigits: 2})}</td>
-                        <td><span class="badge badge-${p.status.toLowerCase().replace(' ', '')}">${p.status}</span></td>
-                        <td>${p.natureza || 'Não informado'}</td>
+                        <td><span class="badge badge-${(p.status || '').toLowerCase().replace(' ', '')}">${p.status}</span></td>
+                        <td>${p.natureza || 'N/A'}</td>
                         <td>${p.anoLOA || 'N/A'}</td>
                         <td>${p.dataDistribuicao || 'N/A'}</td>
                         <td>
-                            <button class="btn btn-action btn-edit" onclick="editarProcesso(${p.id})">✏️ Editar</button>
-                            <button class="btn btn-action btn-delete" onclick="excluirProcesso(${p.id})">🗑️ Excluir</button>
+                            <button class="btn btn-action btn-success" onclick="importarProcesso(${i})">
+                                📥 Importar
+                            </button>
                         </td>
                     </tr>
                 `).join('');
+                
+                document.getElementById('processosTable').style.display = 'table';
+                document.getElementById('resultMessage').textContent = '';
             }
             
-            document.getElementById('loading').style.display = 'none';
-            document.getElementById('processosTable').style.display = 'table';
+            window.processosEncontrados = processos;
         }
         
-        function editarProcesso(id) {
-            alert(`Editar processo ID: ${id}\n(Funcionalidade em desenvolvimento)`);
-        }
-        
-        function excluirProcesso(id) {
-            if (confirm('Deseja realmente excluir este processo?')) {
-                alert(`Excluir processo ID: ${id}\n(Funcionalidade em desenvolvimento)`);
+        async function importarProcesso(index) {
+            const processo = window.processosEncontrados[index];
+            
+            try {
+                const response = await fetch('/api/processos/importar', {
+                    method: 'POST',
+                    headers: { 
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(processo)
+                });
+                
+                if (!response.ok) throw new Error('Erro ao importar');
+                
+                alert('✅ Processo importado com sucesso para o sistema!');
+                
+            } catch (error) {
+                console.error('Erro:', error);
+                alert('❌ Erro ao importar processo');
             }
         }
-        
-        // Carregar processos ao iniciar
-        buscarProcessos();
     </script>
 </body>
 </html>
-
