@@ -1,19 +1,120 @@
-﻿// esajScraper.js - API CNJ DataJud MELHORADO
+﻿// esajScraper.js - API CNJ DataJud (versão otimizada e melhorada)
 const axios = require('axios');
 
 const CNJ_API_URL = process.env.CNJ_API_URL || 'https://api-publica.datajud.cnj.jus.br';
 const CNJ_API_KEY = process.env.CNJ_API_KEY || 'cDZHYzlZa0JadVREZDJCendQbXY6SkJlTzNjLV9TRENyQk1RdnFKZGRQdw==';
 
+// ✅ Constantes
+const NATUREZAS = {
+  TRIBUTARIA: ['tribut', 'fiscal', 'iptu', 'iss', 'icms'],
+  ALIMENTAR: ['aliment'],
+  PREVIDENCIARIA: ['previd', 'aposentad', 'pensão'],
+  COMUM: []
+};
+
+// ✅ Função auxiliar: Extrair credor/autor
+function extrairCreador(partes) {
+  if (!partes || !Array.isArray(partes) || partes.length === 0) {
+    return 'Não informado';
+  }
+  
+  const autor = partes.find(parte => 
+    parte.polo === 'ATIVO' || 
+    parte.tipo === 'AUTOR' || 
+    parte.tipo === 'EXEQUENTE'
+  );
+  
+  return autor?.nome || partes[0]?.nome || 'Não informado';
+}
+
+// ✅ Função auxiliar: Determinar natureza
+function determinarNatureza(assuntoNome) {
+  if (!assuntoNome) return 'Comum';
+  
+  const assuntoLower = assuntoNome.toLowerCase();
+  
+  for (const [natureza, palavrasChave] of Object.entries(NATUREZAS)) {
+    if (palavrasChave.some(palavra => assuntoLower.includes(palavra))) {
+      return natureza.charAt(0) + natureza.slice(1).toLowerCase().replace('_', ' ');
+    }
+  }
+  
+  return 'Comum';
+}
+
+// ✅ Função auxiliar: Calcular ano LOA
+function calcularAnoLOA(dataAjuizamento) {
+  if (!dataAjuizamento) {
+    return new Date().getFullYear() + 1;
+  }
+  
+  const match = dataAjuizamento.match(/(\d{4})/);
+  return match ? parseInt(match[1]) + 2 : new Date().getFullYear() + 1;
+}
+
+// ✅ Função auxiliar: Validar se processo atende aos filtros
+function validarFiltros(processo, filtros) {
+  const { valorMin, valorMax, natureza } = filtros;
+  
+  // Filtro de valor
+  if (valorMin && processo.valor < valorMin) return false;
+  if (valorMax && processo.valor > valorMax) return false;
+  
+  // Filtro de natureza
+  if (natureza && natureza !== 'Todas' && processo.natureza !== natureza) {
+    // Verificar se o assunto contém a natureza procurada
+    const assuntoLower = (processo.assunto || '').toLowerCase();
+    const naturezaLower = natureza.toLowerCase();
+    if (!assuntoLower.includes(naturezaLower)) return false;
+  }
+  
+  return true;
+}
+
+// ✅ Função auxiliar: Processar hit do ElasticSearch
+function processarHit(hit, filtros) {
+  const p = hit._source;
+  
+  // Extrair dados básicos
+  const valor = p.valorCausa || 0;
+  const assuntoNome = p.assunto?.[0]?.nome || '';
+  const naturezaFinal = determinarNatureza(assuntoNome);
+  const credor = extrairCreador(p.partes);
+  const anoLOA = calcularAnoLOA(p.dataAjuizamento);
+  
+  // Criar objeto processo
+  const processo = {
+    numero: p.numeroProcesso || 'Não informado',
+    tribunal: 'TJ-SP',
+    credor: credor,
+    valor: valor,
+    classe: p.classe?.nome || 'Não informado',
+    assunto: assuntoNome || 'Não informado',
+    dataDistribuicao: p.dataAjuizamento || 'Não informado',
+    comarca: p.orgaoJulgador?.nomeOrgao || p.orgaoJulgador?.comarca || 'São Paulo',
+    vara: p.orgaoJulgador?.nomeOrgao || 'Não informado',
+    natureza: naturezaFinal,
+    anoLOA: anoLOA,
+    status: 'Em Análise',
+    fonte: 'API CNJ DataJud (Dados REAIS)'
+  };
+  
+  // Validar filtros
+  return validarFiltros(processo, filtros) ? processo : null;
+}
+
+// ✅ Função principal
 async function buscarProcessosESAJ(params) {
-  const { valorMin, valorMax, natureza, anoLoa, quantidade = 50 } = params; // ✅ Reduzido para 50
+  const { valorMin, valorMax, natureza, anoLoa, quantidade = 50 } = params;
 
   console.log('\n🔍 BUSCA NA API CNJ DATAJUD (OFICIAL)');
   console.log(`   URL: ${CNJ_API_URL}`);
-  console.log(`   Quantidade: ${quantidade}`);
+  console.log(`   Quantidade solicitada: ${quantidade}`);
   console.log(`   Filtros: Valor ${valorMin || 0}-${valorMax || '∞'}, Natureza: ${natureza || 'Todas'}, ANO LOA: ${anoLoa || 'Todos'}`);
 
+  // Validação da API Key
   if (!CNJ_API_KEY) {
-    console.log('   ❌ CNJ_API_KEY não configurada no Railway\n');
+    console.log('   ❌ CNJ_API_KEY não configurada\n');
     return { 
       processos: [], 
       stats: { erro: 'API Key não configurada' } 
@@ -21,72 +122,27 @@ async function buscarProcessosESAJ(params) {
   }
 
   try {
-    // Query ElasticSearch
+    // 🔥 Query otimizada - buscar tudo e filtrar localmente
     const query = {
-      size: quantidade,
+      size: quantidade * 2, // Pegar mais para compensar filtros locais
       query: {
-        bool: {
-          must: [],
-          filter: []
-        }
+        match_all: {}
       },
       sort: [
-        { 'dataAjuizamento': { order: 'desc' } }
+        { 'dataHoraUltimaAtualizacao': { order: 'desc' } }
+      ],
+      _source: [
+        'numeroProcesso',
+        'classe.nome',
+        'assunto',
+        'valorCausa',
+        'dataAjuizamento',
+        'partes',
+        'orgaoJulgador'
       ]
     };
 
-    // ✅ MELHORADO: Filtro de tribunal - testar múltiplos campos
-    // Alguns índices usam 'tribunal', outros 'siglaTribunal', outros 'codigoTribunal'
-    query.query.bool.should = [
-      { term: { 'tribunal': 'TJSP' } },
-      { term: { 'siglaTribunal': 'TJSP' } },
-      { match: { 'tribunal': 'TJ-SP' } }
-    ];
-    query.query.bool.minimum_should_match = 1;
-
-    // Filtro de valor
-    if (valorMin || valorMax) {
-      query.query.bool.filter.push({
-        range: {
-          'valorCausa': {
-            gte: valorMin || 0,
-            lte: valorMax || 999999999
-          }
-        }
-      });
-    }
-
-    // Filtro de natureza
-    if (natureza && natureza !== 'Todas') {
-      query.query.bool.must.push({
-        match: {
-          'assunto': {
-            query: natureza,
-            operator: 'and'
-          }
-        }
-      });
-    }
-
-    // ✅ MELHORADO: Filtro de ano LOA - validação mais robusta
-    if (anoLoa && anoLoa !== 'Todos' && !isNaN(parseInt(anoLoa))) {
-      const anoLoaInt = parseInt(anoLoa);
-      const anoProcesso = anoLoaInt - 2; // LOA = ano processo + 2
-      
-      console.log(`   📅 Filtro ANO LOA: ${anoLoaInt} → Processos de ${anoProcesso}`);
-      
-      query.query.bool.filter.push({
-        range: {
-          'dataAjuizamento': {
-            gte: `${anoProcesso}-01-01`,
-            lte: `${anoProcesso}-12-31`,
-            format: 'yyyy-MM-dd'
-          }
-        }
-      });
-    }
-
-    console.log(`   📤 Enviando requisição...`);
+    console.log(`   📤 Enviando requisição para CNJ...`);
 
     const response = await axios.post(
       `${CNJ_API_URL}/api_publica_tjsp/_search`,
@@ -97,125 +153,109 @@ async function buscarProcessosESAJ(params) {
           'Content-Type': 'application/json',
           'Accept': 'application/json'
         },
-        timeout: 30000
+        timeout: 30000,
+        validateStatus: (status) => status >= 200 && status < 500
       }
     );
 
     console.log(`   📥 Status: ${response.status}`);
 
-    if (!response.data || !response.data.hits) {
-      console.log('   ⚠️ Resposta vazia\n');
+    // Validar resposta
+    if (response.status !== 200) {
+      console.log(`   ❌ Erro HTTP: ${response.status}`);
+      console.log(`   Resposta: ${JSON.stringify(response.data)}\n`);
+      return { 
+        processos: [], 
+        stats: { 
+          erro: `HTTP ${response.status}`,
+          detalhes: response.data 
+        } 
+      };
+    }
+
+    if (!response.data || !response.data.hits || !response.data.hits.hits) {
+      console.log('   ⚠️ Resposta sem dados\n');
       return { processos: [], stats: { erro: 'Resposta vazia' } };
     }
 
     const hits = response.data.hits.hits;
-    console.log(`   ✅ ${hits.length} processos encontrados`);
+    const totalEncontrado = response.data.hits.total?.value || hits.length;
+    
+    console.log(`   ✅ ${hits.length} processos retornados da API`);
+    console.log(`   📊 Total disponível no índice: ${totalEncontrado}`);
 
-    // ✅ MELHORADO: Log do primeiro processo para debug
+    // Log de amostra
     if (hits.length > 0) {
-      console.log(`   🔍 Primeiro processo (debug):`);
-      console.log(`      Número: ${hits[0]._source.numeroProcesso}`);
-      console.log(`      Tribunal: ${hits[0]._source.tribunal || hits[0]._source.siglaTribunal}`);
-      console.log(`      Valor: ${hits[0]._source.valorCausa || 0}`);
+      const amostra = hits[0]._source;
+      console.log(`   🔍 Amostra do primeiro processo:`);
+      console.log(`      Número: ${amostra.numeroProcesso}`);
+      console.log(`      Classe: ${amostra.classe?.nome || 'N/A'}`);
+      console.log(`      Assunto: ${amostra.assunto?.[0]?.nome || 'N/A'}`);
+      console.log(`      Valor: R$ ${(amostra.valorCausa || 0).toLocaleString('pt-BR')}`);
     }
 
-    const processos = hits.map(hit => {
-      const p = hit._source;
-      
-      // Determinar natureza
-      let naturezaFinal = 'Comum';
-      const assuntoLower = (p.assunto || '').toLowerCase();
-      
-      if (assuntoLower.includes('tribut') || assuntoLower.includes('fiscal') || 
-          assuntoLower.includes('iptu') || assuntoLower.includes('iss')) {
-        naturezaFinal = 'Tributária';
-      } else if (assuntoLower.includes('aliment')) {
-        naturezaFinal = 'Alimentar';
-      } else if (assuntoLower.includes('previd')) {
-        naturezaFinal = 'Previdenciária';
-      }
+    // 🔎 Processar e filtrar
+    const filtros = { valorMin, valorMax, natureza, anoLoa };
+    const processos = hits
+      .map(hit => processarHit(hit, filtros))
+      .filter(p => p !== null)
+      .slice(0, quantidade); // Limitar ao número solicitado
 
-      // Extrair credor
-      let credor = 'Não informado';
-      if (p.polo && p.polo.ativo && p.polo.ativo.length > 0) {
-        credor = p.polo.ativo[0].nome || 'Não informado';
-      } else if (p.partes && p.partes.length > 0) {
-        const autor = p.partes.find(parte => 
-          parte.polo === 'ATIVO' || 
-          parte.tipo === 'AUTOR' || 
-          parte.tipo === 'EXEQUENTE'
-        );
-        if (autor) credor = autor.nome || 'Não informado';
-      }
-
-      // Calcular ano LOA
-      let anoLOA = new Date().getFullYear() + 1;
-      if (p.dataAjuizamento) {
-        const match = p.dataAjuizamento.match(/(\d{4})/);
-        if (match) anoLOA = parseInt(match[1]) + 2;
-      }
-
-      return {
-        numero: p.numeroProcesso || 'Não informado',
-        tribunal: 'TJ-SP',
-        credor: credor,
-        valor: p.valorCausa || 0,
-        classe: p.classe || 'Não informado',
-        assunto: p.assunto || 'Não informado',
-        dataDistribuicao: p.dataAjuizamento || 'Não informado',
-        comarca: p.orgaoJulgador?.comarca || p.comarca || 'São Paulo',
-        vara: p.orgaoJulgador?.nome || 'Não informado',
-        natureza: naturezaFinal,
-        anoLOA: anoLOA,
-        status: 'Em Análise',
-        fonte: 'API CNJ DataJud (Dados REAIS)'
-      };
-    });
-
-    console.log(`\n📊 RESULTADO:`);
-    console.log(`   Total: ${processos.length} processos REAIS`);
+    console.log(`\n📊 RESULTADO FINAL:`);
+    console.log(`   Recebidos da API: ${hits.length}`);
+    console.log(`   Após filtros: ${processos.length}`);
     console.log(`   ✅ Fonte: API CNJ DataJud (OFICIAL)\n`);
+
+    // Estatísticas extras
+    if (processos.length > 0) {
+      const valores = processos.map(p => p.valor).filter(v => v > 0);
+      if (valores.length > 0) {
+        const valorMedio = valores.reduce((a, b) => a + b, 0) / valores.length;
+        console.log(`   💰 Valor médio: R$ ${valorMedio.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`);
+      }
+      
+      const naturezasCount = processos.reduce((acc, p) => {
+        acc[p.natureza] = (acc[p.natureza] || 0) + 1;
+        return acc;
+      }, {});
+      console.log(`   📑 Distribuição por natureza:`, naturezasCount);
+      console.log('');
+    }
 
     return {
       processos: processos,
       stats: {
-        totalAPI: processos.length,
+        totalAPI: hits.length,
+        totalDisponivel: totalEncontrado,
         final: processos.length,
-        modo: 'API OFICIAL CNJ'
+        modo: 'API OFICIAL CNJ',
+        timestamp: new Date().toISOString()
       }
     };
 
   } catch (error) {
     console.error(`   ❌ ERRO: ${error.message}`);
-    
+
     if (error.response) {
-      console.log(`   Status: ${error.response.status}`);
-      
-      // ✅ MELHORADO: Tratamento de erros mais detalhado
-      if (error.response.status === 401) {
-        console.log(`   ⚠️ API Key inválida`);
-      } else if (error.response.status === 403) {
-        console.log(`   ⚠️ Acesso negado`);
-      } else if (error.response.status === 404) {
-        console.log(`   ⚠️ Endpoint não encontrado`);
-        console.log(`   Verifique se o índice 'api_publica_tjsp' existe`);
-      } else if (error.response.status === 400) {
-        console.log(`   ⚠️ Query inválida`);
-        console.log(`   Resposta: ${JSON.stringify(error.response.data)}`);
-      }
+      console.log(`   Status HTTP: ${error.response.status}`);
+      console.log(`   Dados: ${JSON.stringify(error.response.data).substring(0, 200)}...`);
+    } else if (error.request) {
+      console.log(`   ⚠️ Sem resposta do servidor`);
+    } else {
+      console.log(`   ⚠️ Erro de configuração: ${error.message}`);
     }
-    
+
     console.log('');
 
     return {
       processos: [],
-      stats: { 
+      stats: {
         erro: error.message,
-        status: error.response?.status
+        status: error.response?.status,
+        tipo: error.code
       }
     };
   }
 }
 
 module.exports = { buscarProcessosESAJ };
-
