@@ -75,6 +75,16 @@ function validarFiltros(processo, filtros) {
 function processarHit(hit, filtros) {
   const p = hit._source;
   
+  // 🔍 LOG DE DEBUG - Ver estrutura real dos dados (só para os 3 primeiros)
+  if (hit._id && Math.random() < 0.1) { // 10% dos processos
+    console.log(`\n   🔍 DEBUG - Estrutura do processo ${p.numeroProcesso}:`);
+    console.log(`      valorCausa: ${p.valorCausa}`);
+    console.log(`      partes (${p.partes?.length || 0}): ${JSON.stringify(p.partes?.slice(0, 2))}`);
+    console.log(`      assuntos: ${JSON.stringify(p.assunto)}`);
+    console.log(`      classe: ${JSON.stringify(p.classe)}`);
+    console.log(`      orgaoJulgador: ${JSON.stringify(p.orgaoJulgador)}`);
+  }
+  
   // Extrair dados básicos
   const valor = p.valorCausa || 0;
   const assuntoNome = p.assunto?.[0]?.nome || '';
@@ -259,3 +269,4 @@ async function buscarProcessosESAJ(params) {
 }
 
 module.exports = { buscarProcessosESAJ };
+
