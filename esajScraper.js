@@ -1,8 +1,57 @@
-﻿// esajScraper.js - API CNJ DataJud (versão com status correto)
+﻿// esajScraper.js - API CNJ DataJud (busca especializada em ofícios requisitórios)
 const axios = require('axios');
 
 const CNJ_API_URL = process.env.CNJ_API_URL || 'https://api-publica.datajud.cnj.jus.br';
 const CNJ_API_KEY = process.env.CNJ_API_KEY || 'cDZHYzlZa0JadVREZDJCendQbXY6SkJlTzNjLV9TRENyQk1RdnFKZGRQdw==';
+
+// ✅ Termos que indicam OFÍCIO REQUISITÓRIO EXPEDIDO
+const TERMOS_OFICIO_REQUISITORIO = [
+  'ofício requisitório',
+  'oficio requisitorio',
+  'requisição de pagamento',
+  'requisicao de pagamento',
+  'expedição de precatório',
+  'expedicao de precatorio',
+  'expedição de rpv',
+  'expedicao de rpv',
+  'precatório expedido',
+  'precatorio expedido',
+  'rpv expedido',
+  'rpv expedida',
+  'requisitória',
+  'requisitoria',
+  'remessa de precatório',
+  'remessa de precatorio',
+  'remessa à contadoria',
+  'encaminhado para pagamento',
+  'remetido ao tribunal',
+  'oficiar',
+  'requisitar pagamento'
+];
+
+// ✅ Termos que indicam PAGAMENTO REALIZADO
+const TERMOS_PAGAMENTO = [
+  'pago',
+  'quitado',
+  'quitação',
+  'quitacao',
+  'pagamento efetuado',
+  'pagamento realizado',
+  'pagamento concluído',
+  'pagamento concluido',
+  'levantamento realizado',
+  'levantamento efetuado',
+  'alvará de levantamento',
+  'alvara de levantamento',
+  'transferência realizada',
+  'transferencia realizada',
+  'depósito efetuado',
+  'deposito efetuado',
+  'crédito disponível',
+  'credito disponivel',
+  'baixa definitiva',
+  'arquivado definitivamente'
+];
 
 function extrairAnoDoNumero(numeroProcesso) {
   if (!numeroProcesso || numeroProcesso.length < 13) return null;
@@ -32,28 +81,42 @@ function determinarNatureza(classe, assuntos) {
   return 'Comum';
 }
 
+// ✅ Verificar se há OFÍCIO REQUISITÓRIO nos movimentos
+function temOficioRequisitorio(movimentos) {
+  if (!movimentos || movimentos.length === 0) return false;
+  
+  const textoMovimentos = movimentos
+    .map(m => (m.descricao || m.nome || '').toLowerCase())
+    .join(' ');
+  
+  return TERMOS_OFICIO_REQUISITORIO.some(termo => textoMovimentos.includes(termo));
+}
+
+// ✅ Verificar se foi PAGO
+function foiPago(movimentos) {
+  if (!movimentos || movimentos.length === 0) return false;
+  
+  const textoMovimentos = movimentos
+    .map(m => (m.descricao || m.nome || '').toLowerCase())
+    .join(' ');
+  
+  return TERMOS_PAGAMENTO.some(termo => textoMovimentos.includes(termo));
+}
+
+// ✅ Determinar status inteligente
 function determinarStatus(movimentos, classe) {
-  // Se não tiver movimentos, considerar pendente
-  if (!movimentos || movimentos.length === 0) {
-    return 'Pendente';
-  }
+  const temOficio = temOficioRequisitorio(movimentos);
+  const pago = foiPago(movimentos);
   
-  // Procurar por palavras-chave nos movimentos
-  const ultimosMovimentos = movimentos.slice(-5).map(m => 
-    (m.descricao || m.nome || '').toLowerCase()
-  ).join(' ');
-  
-  if (ultimosMovimentos.includes('arquivado') || ultimosMovimentos.includes('baixa')) {
-    return 'Arquivado';
-  }
-  if (ultimosMovimentos.includes('julgado') || ultimosMovimentos.includes('sentença')) {
-    return 'Julgado';
-  }
-  if (ultimosMovimentos.includes('pago') || ultimosMovimentos.includes('quitado')) {
+  if (pago) {
     return 'Pago';
   }
   
-  // Default: Em Análise
+  if (temOficio) {
+    return 'Pendente'; // Ofício expedido mas não pago = PENDENTE
+  }
+  
+  // Sem ofício e sem pagamento
   return 'Em Análise';
 }
 
@@ -65,11 +128,15 @@ function processarHit(hit) {
   const orgao = p.orgaoJulgador?.nome || 'Não informado';
   const assuntos = Array.isArray(p.assunto) ? p.assunto.map(a => a.nome).join(', ') : '';
   const dataAjuizamento = p.dataAjuizamento || p.dataHoraUltimaAtualizacao || 'Não informado';
+  const movimentos = p.movimentos || [];
   
   const anoLOA = calcularAnoLOA(numero);
   const natureza = determinarNatureza(classe, assuntos);
-  const status = determinarStatus(p.movimentos, classe);
+  const status = determinarStatus(movimentos, classe);
   const valor = p.valorCausa || 0;
+  
+  const temOficio = temOficioRequisitorio(movimentos);
+  const pago = foiPago(movimentos);
   
   return {
     numero: numero,
@@ -84,7 +151,9 @@ function processarHit(hit) {
     natureza: natureza,
     anoLOA: anoLOA,
     anoAjuizamento: extrairAnoDoNumero(numero),
-    status: status,  // ✅ AGORA É DINÂMICO!
+    status: status,
+    temOficioRequisitorio: temOficio,
+    foiPago: pago,
     fonte: 'API CNJ DataJud'
   };
 }
@@ -93,6 +162,7 @@ async function buscarProcessosESAJ(params) {
   const { valorMin, valorMax, natureza, anoLoa, status, quantidade = 50 } = params;
 
   console.log('\n🔍 BUSCA NA API CNJ DATAJUD (OFICIAL)');
+  console.log(`   🎯 MODO: Ofícios Requisitórios Pendentes`);
   console.log(`   URL: ${CNJ_API_URL}`);
   console.log(`   Filtros solicitados:`);
   console.log(`     Valor: ${valorMin || 0} - ${valorMax || '∞'}`);
@@ -102,8 +172,9 @@ async function buscarProcessosESAJ(params) {
   console.log(`     Quantidade: ${quantidade}`);
 
   try {
+    // Buscar muito mais para encontrar processos com ofícios
     const query = {
-      size: quantidade * 3,
+      size: quantidade * 5,
       query: {
         match_all: {}
       },
@@ -141,6 +212,21 @@ async function buscarProcessosESAJ(params) {
     console.log(`   🔍 Aplicando filtros locais...`);
 
     const filtrados = processados.filter(p => {
+      // ✅ FILTRO PRINCIPAL: Apenas com ofício requisitório E pendente
+      if (status === 'Pendente') {
+        if (!p.temOficioRequisitorio) {
+          return false; // Não tem ofício = descarta
+        }
+        if (p.foiPago) {
+          return false; // Foi pago = descarta
+        }
+      } else if (status && status !== 'Todos') {
+        // Outros status
+        if (status !== p.status) {
+          return false;
+        }
+      }
+      
       // Filtro de valor
       if (valorMin && p.valor > 0 && p.valor < valorMin) {
         return false;
@@ -162,16 +248,6 @@ async function buscarProcessosESAJ(params) {
         }
       }
       
-      // ✅ FILTRO DE STATUS
-      if (status && status !== 'Todos') {
-        // Mapear "Pendente" para "Em Análise" ou "Pendente"
-        if (status === 'Pendente' && p.status !== 'Pendente' && p.status !== 'Em Análise') {
-          return false;
-        } else if (status !== 'Pendente' && p.status !== status) {
-          return false;
-        }
-      }
-      
       return true;
     });
 
@@ -180,7 +256,9 @@ async function buscarProcessosESAJ(params) {
     console.log(`\n📊 RESULTADO FINAL:`);
     console.log(`   Retornados da API: ${hits.length}`);
     console.log(`   Processados: ${processados.length}`);
-    console.log(`   Após filtros: ${filtrados.length}`);
+    console.log(`   Com ofício requisitório: ${processados.filter(p => p.temOficioRequisitorio).length}`);
+    console.log(`   Pendentes (ofício + não pago): ${processados.filter(p => p.temOficioRequisitorio && !p.foiPago).length}`);
+    console.log(`   Após todos os filtros: ${filtrados.length}`);
     console.log(`   Retornando: ${resultado.length}`);
     
     if (resultado.length > 0) {
@@ -210,9 +288,11 @@ async function buscarProcessosESAJ(params) {
       stats: {
         totalAPI: hits.length,
         totalProcessados: processados.length,
+        comOficio: processados.filter(p => p.temOficioRequisitorio).length,
+        pendentes: processados.filter(p => p.temOficioRequisitorio && !p.foiPago).length,
         totalFiltrados: filtrados.length,
         totalRetornado: resultado.length,
-        modo: 'API OFICIAL CNJ'
+        modo: 'API OFICIAL CNJ - Ofícios Requisitórios'
       }
     };
 
