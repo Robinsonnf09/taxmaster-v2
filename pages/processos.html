@@ -3,363 +3,341 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Processos e Precatórios - TAX MASTER</title>
+    <title>Processos - Tax Master V3</title>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { 
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
+            background: #f5f5f5;
             padding: 20px;
         }
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            background: white;
-            border-radius: 15px;
+        
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
             padding: 30px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-        }
-        h1 {
-            color: #333;
+            border-radius: 10px;
             margin-bottom: 30px;
-            text-align: center;
-            font-size: 2.5em;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
+        
+        .header h1 {
+            font-size: 28px;
+        }
+        
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: transform 0.2s;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+        
+        .btn-logout {
+            background: white;
+            color: #667eea;
+        }
+        
         .filters {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 15px;
-            margin-bottom: 30px;
         }
+        
         .filter-group {
             display: flex;
             flex-direction: column;
         }
+        
         .filter-group label {
-            font-weight: 600;
             margin-bottom: 5px;
-            color: #555;
+            font-weight: 600;
+            color: #333;
         }
+        
         .filter-group input,
         .filter-group select {
             padding: 10px;
-            border: 2px solid #ddd;
-            border-radius: 8px;
+            border: 2px solid #e0e0e0;
+            border-radius: 5px;
             font-size: 14px;
-            transition: all 0.3s;
         }
+        
         .filter-group input:focus,
         .filter-group select:focus {
             outline: none;
             border-color: #667eea;
         }
-        .btn {
-            padding: 12px 24px;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: 600;
-            transition: all 0.3s;
-        }
+        
         .btn-primary {
             background: #667eea;
             color: white;
+            grid-column: span 2;
         }
-        .btn-primary:hover {
-            background: #5568d3;
-            transform: translateY(-2px);
-        }
-        .processos-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 20px;
-            margin-top: 30px;
-        }
-        .processo-card {
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        
+        .table-container {
+            background: white;
+            border-radius: 10px;
             padding: 20px;
-            border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-            transition: all 0.3s;
+            overflow-x: auto;
         }
-        .processo-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
         }
-        .processo-numero {
-            font-weight: bold;
-            color: #667eea;
-            margin-bottom: 10px;
-            font-size: 0.9em;
+        
+        th {
+            background: #667eea;
+            color: white;
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
         }
-        .processo-info {
-            margin: 8px 0;
-            color: #555;
+        
+        td {
+            padding: 15px;
+            border-bottom: 1px solid #e0e0e0;
         }
-        .processo-valor {
-            font-size: 1.3em;
-            font-weight: bold;
-            color: #2d3748;
-            margin: 10px 0;
+        
+        tr:hover {
+            background: #f9f9f9;
         }
-        .status-badge {
-            display: inline-block;
-            padding: 5px 12px;
+        
+        .badge {
+            padding: 5px 10px;
             border-radius: 20px;
-            font-size: 0.85em;
-            font-weight: 600;
-            margin-top: 10px;
+            font-size: 12px;
+            font-weight: bold;
         }
-        .status-pendente { background: #fef3c7; color: #92400e; }
-        .status-analise { background: #dbeafe; color: #1e40af; }
-        .status-aprovado { background: #d1fae5; color: #065f46; }
-            .export-buttons {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
-            flex-wrap: wrap;
+        
+        .badge-analise {
+            background: #fff3cd;
+            color: #856404;
         }
-
-        .btn-export {
-            padding: 12px 24px;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: 600;
-            font-size: 14px;
-            transition: all 0.3s;
-            text-decoration: none;
-            display: inline-block;
+        
+        .badge-aprovado {
+            background: #d4edda;
+            color: #155724;
+        }
+        
+        .badge-pendente {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        
+        .btn-action {
+            padding: 5px 10px;
+            margin: 0 3px;
+            border-radius: 3px;
+            font-size: 12px;
+        }
+        
+        .btn-edit {
+            background: #17a2b8;
             color: white;
         }
-
-        .btn-excel {
-            background: #48bb78;
+        
+        .btn-delete {
+            background: #dc3545;
+            color: white;
         }
-
-        .btn-excel:hover {
-            background: #38a169;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(72, 187, 120, 0.4);
-        }
-
-        .btn-pdf {
-            background: #f56565;
-        }
-
-        .btn-pdf:hover {
-            background: #e53e3e;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(245, 101, 101, 0.4);
-        }
-
-        .btn-dashboard {
-            background: #667eea;
-        }
-
-        .btn-dashboard:hover {
-            background: #5568d3;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #666;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>🏛️ Processos e Precatórios</h1>
-            <div class="export-buttons">
-                <a href="/api/export/excel" class="btn-export btn-excel" download>
-                    📊 Exportar Excel
-                </a>
-                <a href="/api/export/pdf" class="btn-export btn-pdf" download>
-                    📄 Exportar PDF
-                </a>
-                <a href="/dashboard" class="btn-export btn-dashboard">
-                    📈 Dashboard
-                </a>
-            </div>
-        
-        <div class="filters">
-            <div class="filter-group">
-                <label>Tribunal:</label>
-                <select id="filtro-tribunal">
-                    <option value="">Todos</option>
-                    <option value="TJ-BA">TJ-BA</option>
-                    <option value="TJ-SP">TJ-SP</option>
-                    <option value="TJ-RJ">TJ-RJ</option>
-                </select>
-            </div>
-            <div class="filter-group">
-                <label>Status:</label>
-                <select id="filtro-status">
-                    <option value="">Todos</option>
-                    <option value="Pendente">Pendente</option>
-                    <option value="Em Análise">Em Análise</option>
-                    <option value="Aprovado">Aprovado</option>
-                </select>
-            </div>
-            <div class="filter-group">
-                <label>Buscar:</label>
-                <input type="text" id="busca" placeholder="Nome, número do processo...">
-            </div>
-            <div class="filter-group">
-                <label>&nbsp;</label>
-                <button class="btn btn-primary" onclick="buscarProcessos()">🔍 Buscar</button>
-            </div>
+    <div class="header">
+        <div>
+            <h1>🏛️ Tax Master V3</h1>
+            <p id="userInfo">Carregando...</p>
         </div>
-
-        <div id="processos-lista" class="processos-grid">
-            <!-- Processos serão carregados aqui -->
-        </div>
+        <button class="btn btn-logout" onclick="logout()">🚪 Sair</button>
     </div>
-
+    
+    <div class="filters">
+        <div class="filter-group">
+            <label for="busca">🔍 Buscar Número:</label>
+            <input type="text" id="busca" placeholder="Digite o número do processo">
+        </div>
+        
+        <div class="filter-group">
+            <label for="tribunal">🏛️ Tribunal:</label>
+            <select id="tribunal">
+                <option value="todos">Todos</option>
+                <option value="TJ-SP">TJ-SP</option>
+                <option value="TJ-RJ">TJ-RJ</option>
+                <option value="TJ-MG">TJ-MG</option>
+            </select>
+        </div>
+        
+        <div class="filter-group">
+            <label for="status">📊 Status:</label>
+            <select id="status">
+                <option value="todos">Todos</option>
+                <option value="Em Análise">Em Análise</option>
+                <option value="Aprovado">Aprovado</option>
+                <option value="Pendente">Pendente</option>
+            </select>
+        </div>
+        
+        <div class="filter-group">
+            <label for="natureza">📑 Natureza:</label>
+            <select id="natureza">
+                <option value="todos">Todas</option>
+                <option value="Alimentar">Alimentar</option>
+                <option value="Comum">Comum</option>
+                <option value="Tributária">Tributária</option>
+                <option value="Previdenciária">Previdenciária</option>
+                <option value="Trabalhista">Trabalhista</option>
+            </select>
+        </div>
+        
+        <div class="filter-group">
+            <label for="anoLOA">📆 ANO LOA:</label>
+            <select id="anoLOA">
+                <option value="todos">Todos</option>
+                <option value="2024">2024</option>
+                <option value="2025">2025</option>
+                <option value="2026">2026</option>
+                <option value="2027">2027</option>
+            </select>
+        </div>
+        
+        <button class="btn btn-primary" onclick="buscarProcessos()">🔍 Buscar</button>
+    </div>
+    
+    <div class="table-container">
+        <h2>📋 Lista de Processos</h2>
+        <div id="loading" class="loading">Carregando processos...</div>
+        <table id="processosTable" style="display: none;">
+            <thead>
+                <tr>
+                    <th>📋 Número</th>
+                    <th>🏛️ Tribunal</th>
+                    <th>👤 Credor</th>
+                    <th>💰 Valor</th>
+                    <th>📊 Status</th>
+                    <th>📑 Natureza</th>
+                    <th>📆 ANO LOA</th>
+                    <th>📅 Data</th>
+                    <th>⚙️ Ações</th>
+                </tr>
+            </thead>
+            <tbody id="processosBody">
+            </tbody>
+        </table>
+    </div>
+    
     <script>
-        // Carregar processos ao iniciar
-        window.onload = () => {
-            buscarProcessos();
-        };
-
-        async function buscarProcessos() {
-            try {
-                const response = await fetch('/api/processos');
-                const processos = await response.json();
-                
-                const lista = document.getElementById('processos-lista');
-                lista.innerHTML = '';
-                
-                processos.forEach(processo => {
-                    const statusClass = processo.status.toLowerCase().replace(' ', '-');
-                    
-                    const card = `
-                        <div class="processo-card">
-                            <div class="processo-numero">${processo.numero}</div>
-                            <div class="processo-info"><strong>Tribunal:</strong> ${processo.tribunal}</div>
-                            <div class="processo-info"><strong>Credor:</strong> ${processo.credor}</div>
-                            <div class="processo-valor">R$ ${processo.valor.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</div>
-                            <div class="processo-info"><strong>Distribuição:</strong> ${new Date(processo.dataDistribuicao).toLocaleDateString('pt-BR')}</div>
-                            <span class="status-badge status-${statusClass}">${processo.status}</span>
-                        </div>
-                    `;
-                    
-                    lista.innerHTML += card;
-                });
-            } catch (error) {
-                console.error('Erro ao buscar processos:', error);
-                document.getElementById('processos-lista').innerHTML = 
-                    '<p style="text-align: center; color: #e53e3e;">Erro ao carregar processos. Tente novamente.</p>';
-            }
+        const token = localStorage.getItem('token');
+        const usuario = JSON.parse(localStorage.getItem('usuario') || '{}');
+        
+        if (!token) {
+            window.location.href = '/login';
         }
-    </script>
-<script>
-// Busca em tempo real
-document.addEventListener('DOMContentLoaded', function() {
-    const inputBusca = document.querySelector('#busca') || document.querySelector('input[name="busca"]');
-    const selectTribunal = document.querySelector('#tribunal') || document.querySelector('select[name="tribunal"]');
-    const selectStatus = document.querySelector('#status') || document.querySelector('select[name="status"]');
-    const btnBuscar = document.querySelector('button[type="submit"]') || document.querySelector('.btn-buscar');
-    
-    console.log('🔍 Inicializando busca...', {inputBusca, selectTribunal, selectStatus});
-    
-    // Função para filtrar processos
-    async function filtrarProcessos() {
-        const busca = inputBusca?.value || '';
-        const tribunal = selectTribunal?.value || '';
-        const status = selectStatus?.value || '';
         
-        console.log('🔎 Filtrando:', {busca, tribunal, status});
+        document.getElementById('userInfo').textContent = `👤 ${usuario.nome} (${usuario.perfil})`;
         
-        try {
-            // Construir query params
+        function logout() {
+            localStorage.removeItem('token');
+            localStorage.removeItem('usuario');
+            window.location.href = '/login';
+        }
+        
+        async function buscarProcessos() {
+            document.getElementById('loading').style.display = 'block';
+            document.getElementById('processosTable').style.display = 'none';
+            
+            const busca = document.getElementById('busca').value;
+            const tribunal = document.getElementById('tribunal').value;
+            const status = document.getElementById('status').value;
+            const natureza = document.getElementById('natureza').value;
+            const anoLOA = document.getElementById('anoLOA').value;
+            
             const params = new URLSearchParams();
             if (busca) params.append('busca', busca);
-            if (tribunal && tribunal !== 'todos') params.append('tribunal', tribunal);
-            if (status && status !== 'todos') params.append('status', status);
+            if (tribunal !== 'todos') params.append('tribunal', tribunal);
+            if (status !== 'todos') params.append('status', status);
+            if (natureza !== 'todos') params.append('natureza', natureza);
+            if (anoLOA !== 'todos') params.append('anoLOA', anoLOA);
             
-            const url = `/api/processos${params.toString() ? '?' + params.toString() : ''}`;
-            console.log('📡 Consultando:', url);
-            
-            const response = await fetch(url);
-            const processos = await response.json();
-            
-            console.log('✅ Processos retornados:', processos.length);
-            
-            // Atualizar grid de processos
-            atualizarGrid(processos);
-            
-        } catch (error) {
-            console.error('❌ Erro ao filtrar:', error);
-            alert('Erro ao carregar processos. Tente novamente.');
-        }
-    }
-    
-    // Função para atualizar o grid
-    function atualizarGrid(processos) {
-        const grid = document.querySelector('.processos-grid') || document.querySelector('.grid');
-        
-        if (!grid) {
-            console.error('❌ Grid não encontrado!');
-            return;
-        }
-        
-        if (processos.length === 0) {
-            grid.innerHTML = '<div class="sem-resultados">Nenhum processo encontrado.</div>';
-            return;
-        }
-        
-        grid.innerHTML = processos.map(p => `
-            <div class="processo-card">
-                <div class="processo-numero">${p.numero}</div>
-                <div class="processo-info">
-                    <p><strong>Tribunal:</strong> ${p.tribunal}</p>
-                    <p><strong>Credor:</strong> ${p.credor}</p>
-                    <p class="processo-valor">R$ ${parseFloat(p.valor).toLocaleString('pt-BR', {minimumFractionDigits: 2})}</p>
-                    <p><small>Distribuição: ${p.dataDistribuicao || 'N/A'}</small></p>
-                </div>
-                <div class="processo-status ${p.status.toLowerCase().replace(/\s/g, '-')}">${p.status}</div>
-            </div>
-        `).join('');
-    }
-    
-    // Event listeners
-    if (inputBusca) {
-        // Busca em tempo real ao digitar
-        inputBusca.addEventListener('input', function() {
-            clearTimeout(window.buscaTimeout);
-            window.buscaTimeout = setTimeout(filtrarProcessos, 500);
-        });
-        
-        // Busca ao pressionar Enter
-        inputBusca.addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                e.preventDefault();
-                filtrarProcessos();
+            try {
+                const response = await fetch(`/api/processos?${params}`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                
+                if (!response.ok) throw new Error('Erro ao buscar');
+                
+                const processos = await response.json();
+                renderProcessos(processos);
+                
+            } catch (error) {
+                console.error('Erro:', error);
+                alert('Erro ao carregar processos');
             }
-        });
-    }
-    
-    // Filtrar ao mudar tribunal
-    if (selectTribunal) {
-        selectTribunal.addEventListener('change', filtrarProcessos);
-    }
-    
-    // Filtrar ao mudar status
-    if (selectStatus) {
-        selectStatus.addEventListener('change', filtrarProcessos);
-    }
-    
-    // Botão buscar
-    if (btnBuscar) {
-        btnBuscar.addEventListener('click', function(e) {
-            e.preventDefault();
-            filtrarProcessos();
-        });
-    }
-    
-    console.log('✅ Busca inicializada!');
-});
-</script>
+        }
+        
+        function renderProcessos(processos) {
+            const tbody = document.getElementById('processosBody');
+            
+            if (processos.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="9" style="text-align:center;">Nenhum processo encontrado</td></tr>';
+            } else {
+                tbody.innerHTML = processos.map(p => `
+                    <tr>
+                        <td>${p.numero}</td>
+                        <td>${p.tribunal}</td>
+                        <td>${p.credor || 'N/A'}</td>
+                        <td>R$ ${parseFloat(p.valor).toLocaleString('pt-BR', {minimumFractionDigits: 2})}</td>
+                        <td><span class="badge badge-${p.status.toLowerCase().replace(' ', '')}">${p.status}</span></td>
+                        <td>${p.natureza || 'Não informado'}</td>
+                        <td>${p.anoLOA || 'N/A'}</td>
+                        <td>${p.dataDistribuicao || 'N/A'}</td>
+                        <td>
+                            <button class="btn btn-action btn-edit" onclick="editarProcesso(${p.id})">✏️ Editar</button>
+                            <button class="btn btn-action btn-delete" onclick="excluirProcesso(${p.id})">🗑️ Excluir</button>
+                        </td>
+                    </tr>
+                `).join('');
+            }
+            
+            document.getElementById('loading').style.display = 'none';
+            document.getElementById('processosTable').style.display = 'table';
+        }
+        
+        function editarProcesso(id) {
+            alert(`Editar processo ID: ${id}\n(Funcionalidade em desenvolvimento)`);
+        }
+        
+        function excluirProcesso(id) {
+            if (confirm('Deseja realmente excluir este processo?')) {
+                alert(`Excluir processo ID: ${id}\n(Funcionalidade em desenvolvimento)`);
+            }
+        }
+        
+        // Carregar processos ao iniciar
+        buscarProcessos();
+    </script>
 </body>
 </html>
-
-
