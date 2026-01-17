@@ -2,7 +2,7 @@
 const path = require('path');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const { buscarProcessosOficial } = require('./datajudOficialAdapter');
+const { buscarProcessosESAJ } = require('./esajScraper');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -17,14 +17,22 @@ const usuarios = [
 
 let processos = [];
 
-console.log('✅ Tax Master V3 - com Estatísticas e Debug');
+console.log('✅ Tax Master V3 - ESAJ REAL Scraper');
+console.log('🔍 Fonte: ESAJ TJ-SP (Dados REAIS)');
+console.log('⚠️ Delay de 2s entre requisições');
 
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'pages', 'login.html'));
 });
 
 app.get('/health', (req, res) => {
-    res.json({ status: 'ok', processos: processos.length, versao: '3.0.0-stats', timestamp: new Date().toISOString() });
+    res.json({ 
+        status: 'ok', 
+        processos: processos.length, 
+        versao: '3.0.0-esaj-real', 
+        fonte: 'ESAJ TJ-SP (Scraping Real)',
+        timestamp: new Date().toISOString() 
+    });
 });
 
 app.post('/api/auth/login', (req, res) => {
@@ -57,37 +65,24 @@ app.get('/api/buscar-processos-oficiais', autenticar, async (req, res) => {
     try {
         const { tribunal, valorMinimo, valorMaximo, natureza, anoLOA } = req.query;
 
-        const hoje = new Date();
-        const dataFim = hoje.toISOString().split('T')[0];
-        const umAnoAtras = new Date(hoje.setFullYear(hoje.getFullYear() - 1));
-        const dataInicio = umAnoAtras.toISOString().split('T')[0];
+        console.log('\n📥 Nova busca REAL no ESAJ:');
+        console.log('   Valor:', valorMinimo || '0', '-', valorMaximo || '∞');
+        console.log('   Natureza:', natureza || 'Todas');
 
-        const resultado = await buscarProcessosOficial({
-            tribunalDesejado: tribunal || null,
+        const resultado = await buscarProcessosESAJ({
             valorMin: valorMinimo ? Number(valorMinimo) : null,
             valorMax: valorMaximo ? Number(valorMaximo) : null,
             natureza,
-            anoLoa: anoLOA ? Number(anoLOA) : null,
-            dataInicio,
-            dataFim,
+            quantidade: 30 // Limitar para não demorar muito
         });
 
-        // ✅ SUGESTÕES SE RESULTADO = 0
         let sugestoes = [];
-        if (resultado.processos.length === 0 && resultado.stats.totalAPI > 0) {
-            sugestoes.push('💡 A API retornou dados, mas os filtros eliminaram tudo');
-            
-            if (valorMinimo || valorMaximo) {
-                sugestoes.push(`Tente relaxar o filtro de valor (atual: R$ ${valorMinimo || 0} - R$ ${valorMaximo || '∞'})`);
-            }
-            
-            if (tribunal) {
-                sugestoes.push(`Tente buscar em TODOS os tribunais (não apenas ${tribunal})`);
-            }
-            
-            if (natureza) {
-                sugestoes.push(`Tente buscar TODAS as naturezas (não apenas ${natureza})`);
-            }
+        if (resultado.processos.length === 0) {
+            sugestoes.push('💡 Nenhum processo encontrado com os filtros');
+            sugestoes.push('💡 Tente relaxar os filtros ou aguarde nova busca');
+        } else if (resultado.processos.length < 5) {
+            sugestoes.push(`💡 Apenas ${resultado.processos.length} processos encontrados`);
+            sugestoes.push('💡 Busca com mais processos pode demorar alguns minutos');
         }
 
         res.json({
@@ -96,12 +91,12 @@ app.get('/api/buscar-processos-oficiais', autenticar, async (req, res) => {
             processos: resultado.processos,
             stats: resultado.stats,
             sugestoes: sugestoes,
-            fonte: 'DataJud CNJ (API Oficial v1)',
-            periodo: `${dataInicio} até ${dataFim}`
+            fonte: 'ESAJ TJ-SP (Scraping Real)',
+            aviso: 'Dados REAIS extraídos do ESAJ - Delay de 2s entre requisições'
         });
     } catch (err) {
         console.error(err);
-        res.status(500).json({ erro: 'Erro ao consultar DataJud', mensagem: err.message });
+        res.status(500).json({ erro: 'Erro ao buscar processos', mensagem: err.message });
     }
 });
 
@@ -131,4 +126,5 @@ app.get('/importar', (req, res) => {
 
 app.listen(PORT, '0.0.0.0', () => {
     console.log(`🚀 Servidor na porta ${PORT}`);
+    console.log('✅ Sistema pronto com ESAJ REAL Scraper!');
 });
