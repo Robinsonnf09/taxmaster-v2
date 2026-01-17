@@ -1,12 +1,10 @@
-﻿// esajScraper.js - API CNJ DataJud (versão com filtros corretos)
+﻿// esajScraper.js - API CNJ DataJud (versão com status correto)
 const axios = require('axios');
 
 const CNJ_API_URL = process.env.CNJ_API_URL || 'https://api-publica.datajud.cnj.jus.br';
 const CNJ_API_KEY = process.env.CNJ_API_KEY || 'cDZHYzlZa0JadVREZDJCendQbXY6SkJlTzNjLV9TRENyQk1RdnFKZGRQdw==';
 
 function extrairAnoDoNumero(numeroProcesso) {
-  // Formato CNJ: NNNNNNN-DD.AAAA.J.TR.OOOO
-  // Posição 9-12 contém o ano
   if (!numeroProcesso || numeroProcesso.length < 13) return null;
   const ano = parseInt(numeroProcesso.substring(9, 13));
   return isNaN(ano) ? null : ano;
@@ -15,7 +13,7 @@ function extrairAnoDoNumero(numeroProcesso) {
 function calcularAnoLOA(numeroProcesso) {
   const anoAjuizamento = extrairAnoDoNumero(numeroProcesso);
   if (!anoAjuizamento) return new Date().getFullYear() + 1;
-  return anoAjuizamento + 2; // LOA é geralmente ano + 2
+  return anoAjuizamento + 2;
 }
 
 function determinarNatureza(classe, assuntos) {
@@ -34,6 +32,31 @@ function determinarNatureza(classe, assuntos) {
   return 'Comum';
 }
 
+function determinarStatus(movimentos, classe) {
+  // Se não tiver movimentos, considerar pendente
+  if (!movimentos || movimentos.length === 0) {
+    return 'Pendente';
+  }
+  
+  // Procurar por palavras-chave nos movimentos
+  const ultimosMovimentos = movimentos.slice(-5).map(m => 
+    (m.descricao || m.nome || '').toLowerCase()
+  ).join(' ');
+  
+  if (ultimosMovimentos.includes('arquivado') || ultimosMovimentos.includes('baixa')) {
+    return 'Arquivado';
+  }
+  if (ultimosMovimentos.includes('julgado') || ultimosMovimentos.includes('sentença')) {
+    return 'Julgado';
+  }
+  if (ultimosMovimentos.includes('pago') || ultimosMovimentos.includes('quitado')) {
+    return 'Pago';
+  }
+  
+  // Default: Em Análise
+  return 'Em Análise';
+}
+
 function processarHit(hit) {
   const p = hit._source;
   
@@ -45,8 +68,7 @@ function processarHit(hit) {
   
   const anoLOA = calcularAnoLOA(numero);
   const natureza = determinarNatureza(classe, assuntos);
-  
-  // Tentar extrair valor (pode não existir)
+  const status = determinarStatus(p.movimentos, classe);
   const valor = p.valorCausa || 0;
   
   return {
@@ -62,13 +84,13 @@ function processarHit(hit) {
     natureza: natureza,
     anoLOA: anoLOA,
     anoAjuizamento: extrairAnoDoNumero(numero),
-    status: 'Em Análise',
+    status: status,  // ✅ AGORA É DINÂMICO!
     fonte: 'API CNJ DataJud'
   };
 }
 
 async function buscarProcessosESAJ(params) {
-  const { valorMin, valorMax, natureza, anoLoa, quantidade = 50 } = params;
+  const { valorMin, valorMax, natureza, anoLoa, status, quantidade = 50 } = params;
 
   console.log('\n🔍 BUSCA NA API CNJ DATAJUD (OFICIAL)');
   console.log(`   URL: ${CNJ_API_URL}`);
@@ -76,10 +98,10 @@ async function buscarProcessosESAJ(params) {
   console.log(`     Valor: ${valorMin || 0} - ${valorMax || '∞'}`);
   console.log(`     Natureza: ${natureza || 'Todas'}`);
   console.log(`     ANO LOA: ${anoLoa || 'Todos'}`);
+  console.log(`     Status: ${status || 'Todos'}`);
   console.log(`     Quantidade: ${quantidade}`);
 
   try {
-    // Buscar quantidade maior para compensar filtros
     const query = {
       size: quantidade * 3,
       query: {
@@ -114,12 +136,10 @@ async function buscarProcessosESAJ(params) {
     const hits = response.data.hits.hits;
     console.log(`   ✅ ${hits.length} processos retornados da API`);
 
-    // Processar todos os hits
     const processados = hits.map(hit => processarHit(hit));
     
     console.log(`   🔍 Aplicando filtros locais...`);
 
-    // Aplicar filtros
     const filtrados = processados.filter(p => {
       // Filtro de valor
       if (valorMin && p.valor > 0 && p.valor < valorMin) {
@@ -142,10 +162,19 @@ async function buscarProcessosESAJ(params) {
         }
       }
       
+      // ✅ FILTRO DE STATUS
+      if (status && status !== 'Todos') {
+        // Mapear "Pendente" para "Em Análise" ou "Pendente"
+        if (status === 'Pendente' && p.status !== 'Pendente' && p.status !== 'Em Análise') {
+          return false;
+        } else if (status !== 'Pendente' && p.status !== status) {
+          return false;
+        }
+      }
+      
       return true;
     });
 
-    // Limitar à quantidade solicitada
     const resultado = filtrados.slice(0, quantidade);
 
     console.log(`\n📊 RESULTADO FINAL:`);
@@ -155,13 +184,13 @@ async function buscarProcessosESAJ(params) {
     console.log(`   Retornando: ${resultado.length}`);
     
     if (resultado.length > 0) {
-      console.log(`\n   📑 Distribuição por ANO LOA:`);
-      const porAno = resultado.reduce((acc, p) => {
-        acc[p.anoLOA] = (acc[p.anoLOA] || 0) + 1;
+      console.log(`\n   📑 Distribuição por Status:`);
+      const porStatus = resultado.reduce((acc, p) => {
+        acc[p.status] = (acc[p.status] || 0) + 1;
         return acc;
       }, {});
-      Object.entries(porAno).forEach(([ano, qtd]) => {
-        console.log(`      ${ano}: ${qtd} processos`);
+      Object.entries(porStatus).forEach(([st, qtd]) => {
+        console.log(`      ${st}: ${qtd} processos`);
       });
       
       console.log(`\n   📑 Distribuição por Natureza:`);
