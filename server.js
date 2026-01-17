@@ -2,7 +2,7 @@
 const path = require('path');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const { buscarProcessosDataJud } = require('./busca-datajud');
+const { buscarProcessosReais } = require('./busca-real');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -23,8 +23,16 @@ const usuarios = [
 
 let processos = [];
 
-console.log('✅ Sistema iniciado');
-console.log('🔗 Conectado à API DataJud do CNJ');
+console.log('✅ Tax Master V3 iniciado');
+console.log('🔥 Sistema de busca REAL ativo');
+console.log('   • Puppeteer (Scraping TJ-SP)');
+console.log('   • API DataJud CNJ');
+console.log('   • Cache inteligente');
+console.log('   • Retry automático');
+
+// ==========================================
+// ROTAS BÁSICAS
+// ==========================================
 
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'pages', 'login.html'));
@@ -34,16 +42,20 @@ app.get('/health', (req, res) => {
     res.json({ 
         status: 'ok', 
         processos: processos.length,
-        usuarios: usuarios.length,
-        versao: '3.0.0-datajud-real',
-        api: 'DataJud CNJ Integrado',
+        versao: '3.0.0-real-search',
+        features: [
+            'Busca Real TJ-SP',
+            'API DataJud CNJ',
+            'Scraping Robusto',
+            'Cache 1h',
+            'Retry Logic'
+        ],
         timestamp: new Date().toISOString()
     });
 });
 
 app.post('/api/auth/login', (req, res) => {
     const { email, senha } = req.body;
-    
     const usuario = usuarios.find(u => u.email === email);
     
     if (!usuario || !bcrypt.compareSync(senha, usuario.senha)) {
@@ -83,7 +95,10 @@ function autenticar(req, res, next) {
     }
 }
 
-// API de busca REAL no DataJud
+// ==========================================
+// API DE BUSCA REAL
+// ==========================================
+
 app.get('/api/buscar-tjsp', autenticar, async (req, res) => {
     try {
         const filtros = {
@@ -93,37 +108,33 @@ app.get('/api/buscar-tjsp', autenticar, async (req, res) => {
             natureza: req.query.natureza,
             anoLOA: req.query.anoLOA,
             status: req.query.status,
-            quantidade: req.query.quantidade || 100
+            quantidade: req.query.quantidade || 50
         };
         
-        console.log(`🔍 Buscando no DataJud: ${filtros.tribunal}`);
-        console.log(`   Valor: ${filtros.valorMinimo} - ${filtros.valorMaximo}`);
-        console.log(`   Natureza: ${filtros.natureza || 'Todas'}`);
-        console.log(`   ANO LOA: ${filtros.anoLOA || 'Todos'}`);
+        console.log('\n🔍 Nova busca recebida:', filtros);
         
-        const processosEncontrados = await buscarProcessosDataJud(filtros);
+        const resultado = await buscarProcessosReais(filtros);
         
         res.json({
             sucesso: true,
-            processos: processosEncontrados,
-            total: processosEncontrados.length,
-            fonte: 'DataJud CNJ',
+            processos: resultado.processos,
+            total: resultado.processos.length,
+            fonte: resultado.fonte,
+            mensagem: resultado.mensagem,
             tribunal: filtros.tribunal
         });
         
     } catch (error) {
-        console.error('❌ Erro na busca DataJud:', error);
+        console.error('❌ Erro na busca:', error);
         res.status(500).json({ 
-            erro: 'Erro ao buscar no DataJud',
+            erro: 'Erro ao buscar processos',
             mensagem: error.message 
         });
     }
 });
 
-// API de importação
 app.post('/api/processos/importar', autenticar, (req, res) => {
     const processo = req.body;
-    
     processo.id = processos.length + 1;
     processos.push(processo);
     
@@ -144,8 +155,16 @@ app.get('/processos', (req, res) => {
     res.sendFile(path.join(__dirname, 'pages', 'processos.html'));
 });
 
+app.get('/importar', (req, res) => {
+    res.sendFile(path.join(__dirname, 'pages', 'importar.html'));
+});
+
+// ==========================================
+// INICIAR SERVIDOR
+// ==========================================
+
 app.listen(PORT, '0.0.0.0', () => {
-    console.log(`🚀 Tax Master V3 rodando na porta ${PORT}`);
-    console.log(`🔗 API DataJud CNJ: https://api-publica.datajud.cnj.jus.br`);
-    console.log(`✅ Busca REAL em tribunais implementada`);
+    console.log(`\n🚀 Tax Master V3 rodando na porta ${PORT}`);
+    console.log(`🔥 Sistema de busca REAL em produção`);
+    console.log(`✅ Pronto para uso!`);
 });
