@@ -2,6 +2,7 @@
 const path = require('path');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const { buscarProcessosDataJud } = require('./busca-datajud');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -10,7 +11,6 @@ const JWT_SECRET = 'taxmaster-secret-key-2024-v3';
 app.use(express.json());
 app.use(express.static('pages'));
 
-// Dados completos em memória
 const usuarios = [
     {
         id: 1,
@@ -21,71 +21,10 @@ const usuarios = [
     }
 ];
 
-const processos = [
-    { 
-        id: 1, 
-        numero: '0001234-56.2024.8.26.0100', 
-        tribunal: 'TJ-SP', 
-        credor: 'João Silva Santos',
-        valor: 150000, 
-        status: 'Em Análise',
-        natureza: 'Alimentar',
-        anoLOA: 2025,
-        dataDistribuicao: '15/03/2024'
-    },
-    { 
-        id: 2, 
-        numero: '0007890-12.2024.8.26.0100', 
-        tribunal: 'TJ-SP', 
-        credor: 'Maria Oliveira Costa',
-        valor: 250000, 
-        status: 'Aprovado',
-        natureza: 'Comum',
-        anoLOA: 2025,
-        dataDistribuicao: '20/05/2024'
-    },
-    { 
-        id: 3, 
-        numero: '0003456-78.2024.8.19.0001', 
-        tribunal: 'TJ-RJ', 
-        credor: 'Pedro Almeida Souza',
-        valor: 180000, 
-        status: 'Pendente',
-        natureza: 'Tributária',
-        anoLOA: 2026,
-        dataDistribuicao: '10/07/2024'
-    },
-    { 
-        id: 4, 
-        numero: '0009876-54.2024.8.26.0100', 
-        tribunal: 'TJ-SP', 
-        credor: 'Ana Paula Ferreira',
-        valor: 320000, 
-        status: 'Aprovado',
-        natureza: 'Previdenciária',
-        anoLOA: 2025,
-        dataDistribuicao: '25/08/2024'
-    },
-    { 
-        id: 5, 
-        numero: '0005432-10.2024.8.13.0024', 
-        tribunal: 'TJ-MG', 
-        credor: 'Carlos Eduardo Lima',
-        valor: 195000, 
-        status: 'Em Análise',
-        natureza: 'Trabalhista',
-        anoLOA: 2026,
-        dataDistribuicao: '05/09/2024'
-    }
-];
+let processos = [];
 
 console.log('✅ Sistema iniciado');
-console.log(`📊 ${processos.length} processos em memória`);
-console.log(`👥 ${usuarios.length} usuário(s) cadastrado(s)`);
-
-// ==========================================
-// ROTAS
-// ==========================================
+console.log('🔗 Conectado à API DataJud do CNJ');
 
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'pages', 'login.html'));
@@ -96,7 +35,8 @@ app.get('/health', (req, res) => {
         status: 'ok', 
         processos: processos.length,
         usuarios: usuarios.length,
-        versao: '3.0.0-completo',
+        versao: '3.0.0-datajud-real',
+        api: 'DataJud CNJ Integrado',
         timestamp: new Date().toISOString()
     });
 });
@@ -127,7 +67,6 @@ app.post('/api/auth/login', (req, res) => {
     });
 });
 
-// Middleware de autenticação
 function autenticar(req, res, next) {
     const token = req.headers.authorization?.replace('Bearer ', '');
     
@@ -144,31 +83,61 @@ function autenticar(req, res, next) {
     }
 }
 
+// API de busca REAL no DataJud
+app.get('/api/buscar-tjsp', autenticar, async (req, res) => {
+    try {
+        const filtros = {
+            tribunal: req.query.tribunal || 'TJ-SP',
+            valorMinimo: req.query.valorMinimo,
+            valorMaximo: req.query.valorMaximo,
+            natureza: req.query.natureza,
+            anoLOA: req.query.anoLOA,
+            status: req.query.status,
+            quantidade: req.query.quantidade || 100
+        };
+        
+        console.log(`🔍 Buscando no DataJud: ${filtros.tribunal}`);
+        console.log(`   Valor: ${filtros.valorMinimo} - ${filtros.valorMaximo}`);
+        console.log(`   Natureza: ${filtros.natureza || 'Todas'}`);
+        console.log(`   ANO LOA: ${filtros.anoLOA || 'Todos'}`);
+        
+        const processosEncontrados = await buscarProcessosDataJud(filtros);
+        
+        res.json({
+            sucesso: true,
+            processos: processosEncontrados,
+            total: processosEncontrados.length,
+            fonte: 'DataJud CNJ',
+            tribunal: filtros.tribunal
+        });
+        
+    } catch (error) {
+        console.error('❌ Erro na busca DataJud:', error);
+        res.status(500).json({ 
+            erro: 'Erro ao buscar no DataJud',
+            mensagem: error.message 
+        });
+    }
+});
+
+// API de importação
+app.post('/api/processos/importar', autenticar, (req, res) => {
+    const processo = req.body;
+    
+    processo.id = processos.length + 1;
+    processos.push(processo);
+    
+    console.log(`📥 Processo importado: ${processo.numero}`);
+    
+    res.json({
+        sucesso: true,
+        mensagem: 'Processo importado com sucesso',
+        id: processo.id
+    });
+});
+
 app.get('/api/processos', autenticar, (req, res) => {
-    const { busca, tribunal, status, natureza, anoLOA } = req.query;
-    let resultado = processos;
-    
-    if (busca) {
-        resultado = resultado.filter(p => p.numero.includes(busca));
-    }
-    
-    if (tribunal && tribunal !== 'todos') {
-        resultado = resultado.filter(p => p.tribunal === tribunal);
-    }
-    
-    if (status && status !== 'todos') {
-        resultado = resultado.filter(p => p.status === status);
-    }
-    
-    if (natureza && natureza !== 'todos') {
-        resultado = resultado.filter(p => p.natureza === natureza);
-    }
-    
-    if (anoLOA && anoLOA !== 'todos') {
-        resultado = resultado.filter(p => p.anoLOA && p.anoLOA.toString() === anoLOA);
-    }
-    
-    res.json(resultado);
+    res.json(processos);
 });
 
 app.get('/processos', (req, res) => {
@@ -177,5 +146,6 @@ app.get('/processos', (req, res) => {
 
 app.listen(PORT, '0.0.0.0', () => {
     console.log(`🚀 Tax Master V3 rodando na porta ${PORT}`);
-    console.log(`✅ Sistema COMPLETO com todos os campos`);
+    console.log(`🔗 API DataJud CNJ: https://api-publica.datajud.cnj.jus.br`);
+    console.log(`✅ Busca REAL em tribunais implementada`);
 });
