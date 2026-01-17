@@ -1,42 +1,32 @@
-﻿// esajScraper.js - API OFICIAL CNJ DataJud com APIKey
+﻿// esajScraper.js - API CNJ DataJud MELHORADO
 const axios = require('axios');
 
 const CNJ_API_URL = process.env.CNJ_API_URL || 'https://api-publica.datajud.cnj.jus.br';
 const CNJ_API_KEY = process.env.CNJ_API_KEY;
 
 async function buscarProcessosESAJ(params) {
-  const { valorMin, valorMax, natureza, anoLoa, quantidade = 100 } = params;
+  const { valorMin, valorMax, natureza, anoLoa, quantidade = 50 } = params; // ✅ Reduzido para 50
 
   console.log('\n🔍 BUSCA NA API CNJ DATAJUD (OFICIAL)');
   console.log(`   URL: ${CNJ_API_URL}`);
-  console.log(`   Filtros: Valor ${valorMin || 0}-${valorMax || '∞'}, Natureza: ${natureza || 'Todas'}`);
+  console.log(`   Quantidade: ${quantidade}`);
+  console.log(`   Filtros: Valor ${valorMin || 0}-${valorMax || '∞'}, Natureza: ${natureza || 'Todas'}, ANO LOA: ${anoLoa || 'Todos'}`);
 
-  // Verificar API Key
   if (!CNJ_API_KEY) {
-    console.log('   ❌ CNJ_API_KEY não configurada no Railway');
-    console.log('   Configure a variável de ambiente CNJ_API_KEY\n');
+    console.log('   ❌ CNJ_API_KEY não configurada no Railway\n');
     return { 
       processos: [], 
-      stats: { 
-        erro: 'API Key não configurada',
-        solucao: 'Configure CNJ_API_KEY no Railway'
-      } 
+      stats: { erro: 'API Key não configurada' } 
     };
   }
 
   try {
-    // Montar query ElasticSearch
+    // Query ElasticSearch
     const query = {
       size: quantidade,
       query: {
         bool: {
-          must: [
-            {
-              term: {
-                'tribunal': 'TJSP'
-              }
-            }
-          ],
+          must: [],
           filter: []
         }
       },
@@ -44,6 +34,15 @@ async function buscarProcessosESAJ(params) {
         { 'dataAjuizamento': { order: 'desc' } }
       ]
     };
+
+    // ✅ MELHORADO: Filtro de tribunal - testar múltiplos campos
+    // Alguns índices usam 'tribunal', outros 'siglaTribunal', outros 'codigoTribunal'
+    query.query.bool.should = [
+      { term: { 'tribunal': 'TJSP' } },
+      { term: { 'siglaTribunal': 'TJSP' } },
+      { match: { 'tribunal': 'TJ-SP' } }
+    ];
+    query.query.bool.minimum_should_match = 1;
 
     // Filtro de valor
     if (valorMin || valorMax) {
@@ -69,20 +68,25 @@ async function buscarProcessosESAJ(params) {
       });
     }
 
-    // Filtro de ano LOA (baseado em data de ajuizamento)
-    if (anoLoa && anoLoa !== 'Todos') {
-      const anoProcesso = parseInt(anoLoa) - 2; // LOA = ano processo + 2
+    // ✅ MELHORADO: Filtro de ano LOA - validação mais robusta
+    if (anoLoa && anoLoa !== 'Todos' && !isNaN(parseInt(anoLoa))) {
+      const anoLoaInt = parseInt(anoLoa);
+      const anoProcesso = anoLoaInt - 2; // LOA = ano processo + 2
+      
+      console.log(`   📅 Filtro ANO LOA: ${anoLoaInt} → Processos de ${anoProcesso}`);
+      
       query.query.bool.filter.push({
         range: {
           'dataAjuizamento': {
             gte: `${anoProcesso}-01-01`,
-            lte: `${anoProcesso}-12-31`
+            lte: `${anoProcesso}-12-31`,
+            format: 'yyyy-MM-dd'
           }
         }
       });
     }
 
-    console.log(`   📤 Enviando requisição para CNJ...`);
+    console.log(`   📤 Enviando requisição...`);
 
     const response = await axios.post(
       `${CNJ_API_URL}/api_publica_tjsp/_search`,
@@ -97,15 +101,23 @@ async function buscarProcessosESAJ(params) {
       }
     );
 
-    console.log(`   📥 Resposta recebida: ${response.status}`);
+    console.log(`   📥 Status: ${response.status}`);
 
     if (!response.data || !response.data.hits) {
-      console.log('   ⚠️ Resposta sem dados\n');
-      return { processos: [], stats: { erro: 'Resposta vazia da API' } };
+      console.log('   ⚠️ Resposta vazia\n');
+      return { processos: [], stats: { erro: 'Resposta vazia' } };
     }
 
     const hits = response.data.hits.hits;
     console.log(`   ✅ ${hits.length} processos encontrados`);
+
+    // ✅ MELHORADO: Log do primeiro processo para debug
+    if (hits.length > 0) {
+      console.log(`   🔍 Primeiro processo (debug):`);
+      console.log(`      Número: ${hits[0]._source.numeroProcesso}`);
+      console.log(`      Tribunal: ${hits[0]._source.tribunal || hits[0]._source.siglaTribunal}`);
+      console.log(`      Valor: ${hits[0]._source.valorCausa || 0}`);
+    }
 
     const processos = hits.map(hit => {
       const p = hit._source;
@@ -123,7 +135,7 @@ async function buscarProcessosESAJ(params) {
         naturezaFinal = 'Previdenciária';
       }
 
-      // Extrair credor/autor
+      // Extrair credor
       let credor = 'Não informado';
       if (p.polo && p.polo.ativo && p.polo.ativo.length > 0) {
         credor = p.polo.ativo[0].nome || 'Não informado';
@@ -160,18 +172,16 @@ async function buscarProcessosESAJ(params) {
       };
     });
 
-    console.log(`\n📊 ESTATÍSTICAS:`);
-    console.log(`   Total encontrado: ${processos.length}`);
-    console.log(`   Fonte: API CNJ DataJud (OFICIAL)`);
-    console.log(`   ✅ DADOS 100% REAIS\n`);
+    console.log(`\n📊 RESULTADO:`);
+    console.log(`   Total: ${processos.length} processos REAIS`);
+    console.log(`   ✅ Fonte: API CNJ DataJud (OFICIAL)\n`);
 
     return {
       processos: processos,
       stats: {
         totalAPI: processos.length,
         final: processos.length,
-        modo: 'API OFICIAL CNJ',
-        fonte: 'DataJud'
+        modo: 'API OFICIAL CNJ'
       }
     };
 
@@ -180,16 +190,22 @@ async function buscarProcessosESAJ(params) {
     
     if (error.response) {
       console.log(`   Status: ${error.response.status}`);
-      console.log(`   Mensagem: ${error.response.data?.error?.reason || error.response.statusText}`);
       
+      // ✅ MELHORADO: Tratamento de erros mais detalhado
       if (error.response.status === 401) {
-        console.log(`   ⚠️ API Key inválida - verifique CNJ_API_KEY\n`);
+        console.log(`   ⚠️ API Key inválida`);
       } else if (error.response.status === 403) {
-        console.log(`   ⚠️ Acesso negado - API Key sem permissão\n`);
+        console.log(`   ⚠️ Acesso negado`);
       } else if (error.response.status === 404) {
-        console.log(`   ⚠️ Endpoint não encontrado - verifique CNJ_API_URL\n`);
+        console.log(`   ⚠️ Endpoint não encontrado`);
+        console.log(`   Verifique se o índice 'api_publica_tjsp' existe`);
+      } else if (error.response.status === 400) {
+        console.log(`   ⚠️ Query inválida`);
+        console.log(`   Resposta: ${JSON.stringify(error.response.data)}`);
       }
     }
+    
+    console.log('');
 
     return {
       processos: [],
