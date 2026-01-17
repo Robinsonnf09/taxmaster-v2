@@ -2,7 +2,7 @@
 const path = require('path');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const { buscarProcessosReais } = require('./busca-real');
+const { buscarDataJudReal, DATAJUD_CONFIG } = require('./busca-datajud-oficial');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -23,17 +23,26 @@ const usuarios = [
 
 let processos = [];
 
-console.log('✅ Tax Master V3 iniciado');
-console.log('🔥 Sistema de busca REAL ativo');
-console.log('   • Puppeteer (Scraping TJ-SP)');
-console.log('   • API DataJud CNJ');
-console.log('   • Cache inteligente');
-console.log('   • Retry automático');
+console.log('✅ Tax Master V3 - Busca REAL CNJ iniciado');
+console.log('🔗 API DataJud CNJ: https://api-publica.datajud.cnj.jus.br');
+console.log('📋 Credenciais configuradas:', DATAJUD_CONFIG.auth.username ? 'SIM' : 'NÃO');
 
-// ==========================================
-// ROTAS BÁSICAS
-// ==========================================
+if (!DATAJUD_CONFIG.auth.username) {
+    console.log('');
+    console.log('⚠️⚠️⚠️ ATENÇÃO! ⚠️⚠️⚠️');
+    console.log('Credenciais DataJud NÃO configuradas!');
+    console.log('');
+    console.log('COMO CONFIGURAR:');
+    console.log('1. Acesse: https://www.cnj.jus.br/sistemas/datajud/api-publica/');
+    console.log('2. Crie uma conta');
+    console.log('3. Obtenha usuário e senha');
+    console.log('4. Configure no Railway:');
+    console.log('   - Variável: DATAJUD_USER');
+    console.log('   - Variável: DATAJUD_PASS');
+    console.log('');
+}
 
+// Rotas básicas
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'pages', 'login.html'));
 });
@@ -42,14 +51,9 @@ app.get('/health', (req, res) => {
     res.json({ 
         status: 'ok', 
         processos: processos.length,
-        versao: '3.0.0-real-search',
-        features: [
-            'Busca Real TJ-SP',
-            'API DataJud CNJ',
-            'Scraping Robusto',
-            'Cache 1h',
-            'Retry Logic'
-        ],
+        versao: '3.0.0-datajud-oficial',
+        api: 'DataJud CNJ (Documentação Oficial)',
+        credenciaisConfiguradas: !!DATAJUD_CONFIG.auth.username,
         timestamp: new Date().toISOString()
     });
 });
@@ -95,12 +99,19 @@ function autenticar(req, res, next) {
     }
 }
 
-// ==========================================
-// API DE BUSCA REAL
-// ==========================================
-
+// API de busca REAL oficial
 app.get('/api/buscar-tjsp', autenticar, async (req, res) => {
     try {
+        if (!DATAJUD_CONFIG.auth.username) {
+            return res.json({
+                sucesso: false,
+                erro: 'credenciais_nao_configuradas',
+                mensagem: 'Configure as credenciais DataJud CNJ. Acesse: https://www.cnj.jus.br/sistemas/datajud/api-publica/',
+                processos: [],
+                total: 0
+            });
+        }
+        
         const filtros = {
             tribunal: req.query.tribunal || 'TJ-SP',
             valorMinimo: req.query.valorMinimo,
@@ -111,16 +122,25 @@ app.get('/api/buscar-tjsp', autenticar, async (req, res) => {
             quantidade: req.query.quantidade || 50
         };
         
-        console.log('\n🔍 Nova busca recebida:', filtros);
+        console.log('\n🔍 Nova busca recebida');
         
-        const resultado = await buscarProcessosReais(filtros);
+        const resultado = await buscarDataJudReal(filtros);
+        
+        if (resultado.erro === 'autenticacao') {
+            return res.status(401).json({
+                sucesso: false,
+                erro: 'autenticacao',
+                mensagem: resultado.mensagem,
+                processos: [],
+                total: 0
+            });
+        }
         
         res.json({
             sucesso: true,
-            processos: resultado.processos,
-            total: resultado.processos.length,
-            fonte: resultado.fonte,
-            mensagem: resultado.mensagem,
+            processos: resultado,
+            total: resultado.length,
+            fonte: 'DataJud CNJ (Oficial)',
             tribunal: filtros.tribunal
         });
         
@@ -159,12 +179,7 @@ app.get('/importar', (req, res) => {
     res.sendFile(path.join(__dirname, 'pages', 'importar.html'));
 });
 
-// ==========================================
-// INICIAR SERVIDOR
-// ==========================================
-
 app.listen(PORT, '0.0.0.0', () => {
-    console.log(`\n🚀 Tax Master V3 rodando na porta ${PORT}`);
-    console.log(`🔥 Sistema de busca REAL em produção`);
-    console.log(`✅ Pronto para uso!`);
+    console.log(`\n🚀 Servidor rodando na porta ${PORT}`);
+    console.log(`✅ Sistema pronto!`);
 });
