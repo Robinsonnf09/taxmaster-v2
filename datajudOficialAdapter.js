@@ -3,9 +3,21 @@ const axios = require('axios');
 
 const BASE_URL = 'https://datajud-wiki.cnj.jus.br/api-publica/v1/processos';
 
+// Mapeamento J.TR → Tribunal (do número CNJ)
+const MAPA_TRIBUNAIS = {
+  '8.26': 'TJ-SP',
+  '8.19': 'TJ-RJ',
+  '8.13': 'TJ-MG',
+  '8.21': 'TJ-RS',
+  '8.16': 'TJ-PR',
+  '8.05': 'TJ-BA',
+  '8.24': 'TJ-SC',
+  '8.17': 'TJ-PE'
+};
+
 async function buscarProcessosOficial(params) {
   const {
-    tribunal,
+    tribunalDesejado,
     valorMin,
     valorMax,
     natureza,
@@ -16,8 +28,8 @@ async function buscarProcessosOficial(params) {
 
   console.log('\n🔍 BUSCA OFICIAL DATAJUD CNJ');
   console.log('   Endpoint:', BASE_URL);
-  console.log('   Tribunal:', tribunal);
   console.log('   Período:', dataInicio, 'até', dataFim);
+  console.log('   Tribunal desejado:', tribunalDesejado || 'TODOS');
 
   const tamanhoPagina = 100;
   let pagina = 0;
@@ -32,7 +44,7 @@ async function buscarProcessosOficial(params) {
         dataFim
       )}&pagina=${pagina}&tamanhoPagina=${tamanhoPagina}`;
 
-      console.log(`   📄 Buscando página ${pagina + 1}...`);
+      console.log(`   📄 Página ${pagina + 1}...`);
 
       const { data } = await axios.get(url, { 
         timeout: 30000,
@@ -44,24 +56,30 @@ async function buscarProcessosOficial(params) {
 
       const processos = data?.conteudo || data?.content || data || [];
 
-      console.log(`      Encontrados: ${processos.length} processos`);
+      console.log(`      API retornou: ${processos.length} processos`);
 
       if (!processos.length) {
         terminou = true;
         break;
       }
 
+      // ✅ FILTROS
       const filtrados = processos.filter((proc) => {
-        const tribunalProc = proc.tribunal || proc.siglaTribunal || '';
         const valorCausa = Number(proc.valorCausa || 0);
         const classe = (proc.classe || '').toString().toLowerCase();
         const assunto = (proc.assunto || '').toString().toLowerCase();
         const dataAjuizamento = proc.dataAjuizamento || proc.dataDistribuicao;
+        const numeroProcesso = proc.numeroProcesso || '';
 
-        if (tribunal && tribunalProc.toUpperCase() !== tribunal.toUpperCase()) {
+        // ✅ Inferir tribunal pelo número (NNNNNNN-DD.AAAA.J.TR.OOOO)
+        const tribunalInferido = inferirTribunal(numeroProcesso);
+
+        // Filtro opcional por tribunal (se especificado)
+        if (tribunalDesejado && tribunalInferido !== tribunalDesejado) {
           return false;
         }
 
+        // ✅ Filtro por valor
         if (valorMin != null && !Number.isNaN(valorMin) && valorCausa < valorMin) {
           return false;
         }
@@ -69,6 +87,7 @@ async function buscarProcessosOficial(params) {
           return false;
         }
 
+        // ✅ Filtro por natureza
         if (natureza) {
           const nat = natureza.toString().toLowerCase();
           if (!classe.includes(nat) && !assunto.includes(nat)) {
@@ -76,6 +95,7 @@ async function buscarProcessosOficial(params) {
           }
         }
 
+        // ✅ Filtro por ANO LOA
         if (anoLoa && dataAjuizamento) {
           const anoProc = new Date(dataAjuizamento).getFullYear();
           const loaProc = anoProc + 2;
@@ -89,20 +109,24 @@ async function buscarProcessosOficial(params) {
 
       console.log(`      Após filtros: ${filtrados.length} processos`);
 
-      const processosFormatados = filtrados.map(proc => ({
-        numero: proc.numeroProcesso || proc.numero || 'N/A',
-        tribunal: proc.tribunal || proc.siglaTribunal || tribunal,
-        credor: extrairCredor(proc),
-        valor: Number(proc.valorCausa || 0),
-        status: determinarStatus(proc),
-        natureza: extrairNatureza(proc),
-        anoLOA: calcularAnoLOA(proc),
-        dataDistribuicao: formatarData(proc.dataAjuizamento || proc.dataDistribuicao),
-        classe: proc.classe || 'N/A',
-        assunto: proc.assunto || 'N/A',
-        orgaoJulgador: proc.orgaoJulgador || 'N/A',
-        fonte: 'DataJud CNJ (API Oficial v1)'
-      }));
+      const processosFormatados = filtrados.map(proc => {
+        const numeroProcesso = proc.numeroProcesso || 'N/A';
+        const tribunalInferido = inferirTribunal(numeroProcesso);
+
+        return {
+          numero: numeroProcesso,
+          tribunal: tribunalInferido,
+          credor: extrairCredor(proc),
+          valor: Number(proc.valorCausa || 0),
+          status: determinarStatus(proc),
+          natureza: extrairNatureza(proc),
+          anoLOA: calcularAnoLOA(proc),
+          dataDistribuicao: formatarData(proc.dataAjuizamento || proc.dataDistribuicao),
+          classe: proc.classe || 'N/A',
+          assunto: proc.assunto || 'N/A',
+          fonte: 'DataJud CNJ (API Oficial v1)'
+        };
+      });
 
       resultados = resultados.concat(processosFormatados);
 
@@ -112,24 +136,50 @@ async function buscarProcessosOficial(params) {
         pagina += 1;
       }
 
-      if (pagina > 50 || resultados.length >= 500) {
+      if (pagina > 20 || resultados.length >= 200) {
         console.log('   ⚠️ Limite atingido');
         terminou = true;
       }
 
     } catch (error) {
       console.error(`   ❌ Erro:`, error.message);
+      if (error.response) {
+        console.error(`      Status: ${error.response.status}`);
+      }
       terminou = true;
     }
   }
 
-  console.log(`\n✅ Total: ${resultados.length} processos\n`);
+  console.log(`\n✅ Total encontrado: ${resultados.length} processos\n`);
   return resultados;
+}
+
+// ✅ INFERIR TRIBUNAL PELO NÚMERO CNJ
+// Formato: NNNNNNN-DD.AAAA.J.TR.OOOO
+// Exemplo: 0001234-56.2024.8.26.0100 → 8.26 → TJ-SP
+function inferirTribunal(numeroProcesso) {
+  if (!numeroProcesso) return 'Não identificado';
+  
+  try {
+    const partes = numeroProcesso.split('.');
+    if (partes.length >= 3) {
+      const jtr = `${partes[2]}.${partes[3]}`;
+      return MAPA_TRIBUNAIS[jtr] || 'Não identificado';
+    }
+  } catch (error) {
+    console.error('Erro ao inferir tribunal:', error.message);
+  }
+  
+  return 'Não identificado';
 }
 
 function extrairCredor(proc) {
   if (proc.partes && Array.isArray(proc.partes)) {
-    const autor = proc.partes.find(p => p.polo === 'ATIVO' || p.tipo === 'AUTOR');
+    const autor = proc.partes.find(p => 
+      p.polo === 'ATIVO' || 
+      p.tipo === 'AUTOR' ||
+      p.tipoParte === 'AUTOR'
+    );
     if (autor && autor.nome) {
       return autor.nome;
     }

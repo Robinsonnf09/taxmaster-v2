@@ -23,8 +23,9 @@ const usuarios = [
 
 let processos = [];
 
-console.log('✅ Tax Master V3 - API Oficial DataJud');
-console.log('🔗 Endpoint: datajud-wiki.cnj.jus.br/api-publica/v1/processos');
+console.log('✅ Tax Master V3 - API DataJud CNJ (Oficial)');
+console.log('🔗 Endpoint único: /api-publica/v1/processos');
+console.log('🎯 Tribunal inferido pelo número do processo');
 
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'pages', 'login.html'));
@@ -34,8 +35,8 @@ app.get('/health', (req, res) => {
     res.json({ 
         status: 'ok', 
         processos: processos.length,
-        versao: '3.0.0-oficial',
-        api: 'DataJud CNJ (API Oficial v1)',
+        versao: '3.0.0-oficial-correto',
+        api: 'DataJud CNJ v1 (endpoint correto)',
         timestamp: new Date().toISOString()
     });
 });
@@ -96,14 +97,8 @@ app.get('/api/buscar-tjsp', autenticar, async (req, res) => {
         const umAnoAtras = new Date(hoje.setFullYear(hoje.getFullYear() - 1));
         const dataInicio = umAnoAtras.toISOString().split('T')[0];
 
-        if (!dataInicio || !dataFim) {
-            return res.status(400).json({
-                erro: 'Erro ao definir datas'
-            });
-        }
-
         const processosEncontrados = await buscarProcessosOficial({
-            tribunal: tribunal || 'TJSP',
+            tribunalDesejado: tribunal || null,
             valorMin: valorMinimo ? Number(valorMinimo) : null,
             valorMax: valorMaximo ? Number(valorMaximo) : null,
             natureza,
@@ -117,12 +112,13 @@ app.get('/api/buscar-tjsp', autenticar, async (req, res) => {
             total: processosEncontrados.length,
             processos: processosEncontrados,
             fonte: 'DataJud CNJ (API Oficial v1)',
-            periodo: `${dataInicio} até ${dataFim}`
+            periodo: `${dataInicio} até ${dataFim}`,
+            nota: 'Tribunal inferido pelo número do processo'
         });
     } catch (err) {
         console.error(err);
         res.status(500).json({ 
-            erro: 'Erro ao consultar DataJud oficial.',
+            erro: 'Erro ao consultar DataJud',
             mensagem: err.message 
         });
     }
