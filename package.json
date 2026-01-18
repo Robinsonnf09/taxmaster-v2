@@ -1,22 +1,22 @@
-﻿{
-  "name": "taxmaster-v3",
-  "version": "3.0.0",
-  "description": "Sistema de Gestão Financeira e Precatórios",
-  "main": "server.js",
-  "scripts": {
-    "start": "node server.js",
-    "popular": "node scripts/popular-banco.js",
-    "dev": "nodemon server.js"
-  },
-  "dependencies": {
-    "express": "^4.18.2",
-    "cors": "^2.8.5",
-    "pg": "^8.11.3",
-    "dotenv": "^16.3.1",
-    "jsonwebtoken": "^9.0.2",
-    "bcrypt": "^5.1.1"
-  },
-  "engines": {
-    "node": ">=18.0.0"
-  }
+{
+    "version":  "3.0.0",
+    "name":  "taxmaster-v3",
+    "description":  "Sistema de Gest?o Financeira e Precat?rios",
+    "scripts":  {
+                    "popular":  "node scripts/popular-banco.js",
+                    "dev":  "nodemon server.js",
+                    "start":  "node server.js"
+                },
+    "dependencies":  {
+                         "cors":  "^2.8.5",
+                         "pg":  "^8.11.3",
+                         "dotenv":  "^16.3.1",
+                         "jsonwebtoken":  "^9.0.2",
+                         "express":  "^4.18.2",
+                         "bcrypt":  "^5.1.1"
+                     },
+    "engines":  {
+                    "node":  "\u003e=18.0.0"
+                },
+    "main":  "server.js"
 }
