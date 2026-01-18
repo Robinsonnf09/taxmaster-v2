@@ -1,0 +1,54 @@
+﻿# .gitguardian.yaml - Tax Master V3
+# Configuração de monitoramento GitGuardian
+
+version: 2
+
+# Caminhos a serem ignorados
+paths-ignore:
+  # Templates e exemplos (não são credenciais reais)
+  - "**/.env.example"
+  - "**/*.example.*"
+  - "**/example/**"
+  
+  # Dependências
+  - "**/node_modules/**"
+  - "**/bower_components/**"
+  
+  # Builds e distribuição
+  - "**/dist/**"
+  - "**/build/**"
+  - "**/out/**"
+  
+  # Testes
+  - "**/test/**"
+  - "**/tests/**"
+  - "**/__tests__/**"
+  - "**/*.test.js"
+  - "**/*.spec.js"
+  
+  # Coverage e CI/CD
+  - "**/.coveralls.yml"
+  - "**/coverage/**"
+  - "**/.nyc_output/**"
+
+# Tipos de secrets a monitorar
+detectors:
+  # Detectores habilitados
+  - name: generic_high_entropy_secret
+    enabled: true
+  - name: api_key
+    enabled: true
+  - name: database_connection_string
+    enabled: true
+  - name: jwt
+    enabled: true
+  
+# Configurações de sensibilidade
+sensitivity:
+  # Reduzir falsos positivos
+  minimum_occurrences: 1
+  
+# Excluir secrets específicos (use com cuidado!)
+# matches-ignore:
+#   - name: "Placeholder values"
+#     match: "YOUR_.*_HERE"
