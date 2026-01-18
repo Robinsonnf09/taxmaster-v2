@@ -1,0 +1,313 @@
+﻿<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Financeiro - Tax Master V3</title>
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body class="dashboard-body">
+    <nav class="navbar">
+        <div class="container">
+            <div class="nav-brand">💼 Tax Master V3</div>
+            <div class="nav-menu">
+                <a href="/">Home</a>
+                <a href="/dashboard-financeiro.html" class="active">Dashboard</a>
+                <span class="user-info">👤 Robinson</span>
+            </div>
+        </div>
+    </nav>
+
+    <div class="dashboard-container">
+        <aside class="sidebar">
+            <div class="sidebar-section">
+                <h3>💰 Financeiro</h3>
+                <a href="#" class="sidebar-link active" data-section="dashboard">
+                    <span>📊</span> Dashboard
+                </a>
+                <a href="#" class="sidebar-link" data-section="receitas">
+                    <span>💵</span> Receitas
+                </a>
+                <a href="#" class="sidebar-link" data-section="despesas">
+                    <span>💸</span> Despesas
+                </a>
+                <a href="#" class="sidebar-link" data-section="relatorios">
+                    <span>📈</span> Relatórios
+                </a>
+            </div>
+        </aside>
+
+        <main class="main-content">
+            <!-- DASHBOARD SECTION -->
+            <section id="dashboard" class="content-section active">
+                <div class="section-header">
+                    <h1>📊 Dashboard Financeiro</h1>
+                    <button class="btn btn-primary" onclick="atualizarDashboard()">🔄 Atualizar</button>
+                </div>
+
+                <div class="cards-grid">
+                    <div class="dashboard-card receitas">
+                        <div class="card-icon">💵</div>
+                        <div class="card-content">
+                            <div class="card-label">Total de Receitas</div>
+                            <div class="card-value" id="totalReceitas">R$ 0,00</div>
+                            <div class="card-change positive">+12% este mês</div>
+                        </div>
+                    </div>
+
+                    <div class="dashboard-card despesas">
+                        <div class="card-icon">💸</div>
+                        <div class="card-content">
+                            <div class="card-label">Total de Despesas</div>
+                            <div class="card-value" id="totalDespesas">R$ 0,00</div>
+                            <div class="card-change negative">+5% este mês</div>
+                        </div>
+                    </div>
+
+                    <div class="dashboard-card saldo">
+                        <div class="card-icon">💰</div>
+                        <div class="card-content">
+                            <div class="card-label">Saldo Líquido</div>
+                            <div class="card-value" id="saldoLiquido">R$ 0,00</div>
+                            <div class="card-change positive">Positivo</div>
+                        </div>
+                    </div>
+
+                    <div class="dashboard-card rentabilidade">
+                        <div class="card-icon">📈</div>
+                        <div class="card-content">
+                            <div class="card-label">Rentabilidade</div>
+                            <div class="card-value" id="rentabilidade">0%</div>
+                            <div class="card-change positive">Meta: 20%</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="charts-row">
+                    <div class="chart-card">
+                        <h3>📊 Receitas vs Despesas (Últimos 6 meses)</h3>
+                        <canvas id="chartReceitasDespesas"></canvas>
+                    </div>
+                    <div class="chart-card">
+                        <h3>🥧 Despesas por Categoria</h3>
+                        <canvas id="chartDespesasCategoria"></canvas>
+                    </div>
+                </div>
+
+                <div class="transactions-section">
+                    <h3>💼 Últimas Transações</h3>
+                    <table class="transactions-table">
+                        <thead>
+                            <tr>
+                                <th>Data</th>
+                                <th>Descrição</th>
+                                <th>Categoria</th>
+                                <th>Tipo</th>
+                                <th>Valor</th>
+                            </tr>
+                        </thead>
+                        <tbody id="transactionsBody">
+                            <!-- Preenchido dinamicamente -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- RECEITAS SECTION -->
+            <section id="receitas" class="content-section">
+                <div class="section-header">
+                    <h1>💵 Gestão de Receitas</h1>
+                    <button class="btn btn-primary" onclick="abrirModalReceita()">+ Nova Receita</button>
+                </div>
+
+                <div class="filter-bar">
+                    <input type="text" placeholder="🔍 Buscar receitas..." id="searchReceitas">
+                    <select id="filterCategoriaReceita">
+                        <option value="">Todas as categorias</option>
+                        <option value="precatorios">Precatórios</option>
+                        <option value="consultoria">Consultoria</option>
+                        <option value="creditos">Créditos Fiscais</option>
+                        <option value="honorarios">Honorários</option>
+                    </select>
+                    <input type="month" id="filterMesReceita">
+                </div>
+
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Data</th>
+                            <th>Descrição</th>
+                            <th>Categoria</th>
+                            <th>Valor</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody id="receitasBody">
+                        <!-- Preenchido dinamicamente -->
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- DESPESAS SECTION -->
+            <section id="despesas" class="content-section">
+                <div class="section-header">
+                    <h1>💸 Gestão de Despesas</h1>
+                    <button class="btn btn-primary" onclick="abrirModalDespesa()">+ Nova Despesa</button>
+                </div>
+
+                <div class="filter-bar">
+                    <input type="text" placeholder="🔍 Buscar despesas..." id="searchDespesas">
+                    <select id="filterCategoriaDespesa">
+                        <option value="">Todas as categorias</option>
+                        <option value="operacional">Operacional</option>
+                        <option value="pessoal">Pessoal</option>
+                        <option value="marketing">Marketing</option>
+                        <option value="juridico">Jurídico</option>
+                        <option value="tecnologia">Tecnologia</option>
+                    </select>
+                    <input type="month" id="filterMesDespesa">
+                </div>
+
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Data</th>
+                            <th>Descrição</th>
+                            <th>Categoria</th>
+                            <th>Valor</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody id="despesasBody">
+                        <!-- Preenchido dinamicamente -->
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- RELATÓRIOS SECTION -->
+            <section id="relatorios" class="content-section">
+                <div class="section-header">
+                    <h1>📈 Relatórios Financeiros</h1>
+                    <button class="btn btn-primary" onclick="exportarRelatorio()">📥 Exportar PDF</button>
+                </div>
+
+                <div class="report-filters">
+                    <label>
+                        Período:
+                        <input type="date" id="reportDataInicio">
+                        até
+                        <input type="date" id="reportDataFim">
+                    </label>
+                    <button class="btn btn-secondary" onclick="gerarRelatorio()">Gerar Relatório</button>
+                </div>
+
+                <div class="report-summary">
+                    <h3>📊 Resumo do Período</h3>
+                    <div class="summary-grid">
+                        <div class="summary-item">
+                            <span class="summary-label">Total Receitas:</span>
+                            <span class="summary-value" id="reportReceitas">R$ 0,00</span>
+                        </div>
+                        <div class="summary-item">
+                            <span class="summary-label">Total Despesas:</span>
+                            <span class="summary-value" id="reportDespesas">R$ 0,00</span>
+                        </div>
+                        <div class="summary-item">
+                            <span class="summary-label">Resultado:</span>
+                            <span class="summary-value" id="reportResultado">R$ 0,00</span>
+                        </div>
+                        <div class="summary-item">
+                            <span class="summary-label">Margem:</span>
+                            <span class="summary-value" id="reportMargem">0%</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="report-chart">
+                    <h3>📈 Fluxo de Caixa</h3>
+                    <canvas id="chartFluxoCaixa"></canvas>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- MODAL RECEITA -->
+    <div id="modalReceita" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>💵 Nova Receita</h2>
+                <span class="close" onclick="fecharModalReceita()">&times;</span>
+            </div>
+            <form id="formReceita" onsubmit="salvarReceita(event)">
+                <div class="form-group">
+                    <label>Data</label>
+                    <input type="date" id="receitaData" required>
+                </div>
+                <div class="form-group">
+                    <label>Descrição</label>
+                    <input type="text" id="receitaDescricao" placeholder="Ex: Venda de precatório" required>
+                </div>
+                <div class="form-group">
+                    <label>Categoria</label>
+                    <select id="receitaCategoria" required>
+                        <option value="">Selecione...</option>
+                        <option value="precatorios">Precatórios</option>
+                        <option value="consultoria">Consultoria</option>
+                        <option value="creditos">Créditos Fiscais</option>
+                        <option value="honorarios">Honorários</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Valor (R$)</label>
+                    <input type="number" id="receitaValor" step="0.01" placeholder="0,00" required>
+                </div>
+                <div class="modal-buttons">
+                    <button type="button" class="btn btn-secondary" onclick="fecharModalReceita()">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Salvar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL DESPESA -->
+    <div id="modalDespesa" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>💸 Nova Despesa</h2>
+                <span class="close" onclick="fecharModalDespesa()">&times;</span>
+            </div>
+            <form id="formDespesa" onsubmit="salvarDespesa(event)">
+                <div class="form-group">
+                    <label>Data</label>
+                    <input type="date" id="despesaData" required>
+                </div>
+                <div class="form-group">
+                    <label>Descrição</label>
+                    <input type="text" id="despesaDescricao" placeholder="Ex: Aluguel escritório" required>
+                </div>
+                <div class="form-group">
+                    <label>Categoria</label>
+                    <select id="despesaCategoria" required>
+                        <option value="">Selecione...</option>
+                        <option value="operacional">Operacional</option>
+                        <option value="pessoal">Pessoal</option>
+                        <option value="marketing">Marketing</option>
+                        <option value="juridico">Jurídico</option>
+                        <option value="tecnologia">Tecnologia</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Valor (R$)</label>
+                    <input type="number" id="despesaValor" step="0.01" placeholder="0,00" required>
+                </div>
+                <div class="modal-buttons">
+                    <button type="button" class="btn btn-secondary" onclick="fecharModalDespesa()">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Salvar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="/js/dashboard.js"></script>
+</body>
+</html>

@@ -3,301 +3,104 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tax Master V3 - Enterprise Edition</title>
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-        }
-        
-        .container {
-            background: white;
-            border-radius: 20px;
-            padding: 60px 50px;
-            box-shadow: 0 30px 80px rgba(0,0,0,0.3);
-            width: 100%;
-            max-width: 480px;
-            animation: slideUp 0.6s ease;
-        }
-        
-        @keyframes slideUp {
-            from { opacity: 0; transform: translateY(30px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        
-        .logo {
-            text-align: center;
-            margin-bottom: 40px;
-        }
-        
-        .logo-icon {
-            font-size: 4em;
-            margin-bottom: 10px;
-        }
-        
-        h1 {
-            color: #667eea;
-            font-size: 2.5em;
-            margin-bottom: 10px;
-            text-align: center;
-            font-weight: 700;
-        }
-        
-        .subtitle {
-            color: #666;
-            text-align: center;
-            margin-bottom: 10px;
-            font-size: 1.1em;
-        }
-        
-        .badges {
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-            margin-bottom: 40px;
-            flex-wrap: wrap;
-        }
-        
-        .badge {
-            display: inline-block;
-            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-            color: white;
-            padding: 8px 18px;
-            border-radius: 25px;
-            font-size: 0.85em;
-            font-weight: 600;
-            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
-        }
-        
-        .form-group {
-            margin-bottom: 25px;
-        }
-        
-        label {
-            display: block;
-            color: #333;
-            font-weight: 600;
-            margin-bottom: 10px;
-            font-size: 0.95em;
-        }
-        
-        .input-wrapper {
-            position: relative;
-        }
-        
-        .input-icon {
-            position: absolute;
-            left: 15px;
-            top: 50%;
-            transform: translateY(-50%);
-            font-size: 1.2em;
-            color: #999;
-        }
-        
-        input {
-            width: 100%;
-            padding: 16px 16px 16px 50px;
-            border: 2px solid #e0e0e0;
-            border-radius: 12px;
-            font-size: 1em;
-            transition: all 0.3s;
-            background: #f9fafb;
-        }
-        
-        input:focus {
-            outline: none;
-            border-color: #667eea;
-            background: white;
-            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
-        }
-        
-        button {
-            width: 100%;
-            padding: 16px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border: none;
-            border-radius: 12px;
-            font-size: 1.1em;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.3s;
-            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
-        }
-        
-        button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.5);
-        }
-        
-        button:active {
-            transform: translateY(0);
-        }
-        
-        button:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-            transform: none;
-        }
-        
-        .message {
-            margin-top: 20px;
-            padding: 15px;
-            border-radius: 10px;
-            text-align: center;
-            display: none;
-            animation: fadeIn 0.3s;
-        }
-        
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-        
-        .message.error {
-            background: #fee;
-            color: #c33;
-            border: 1px solid #fcc;
-        }
-        
-        .message.success {
-            background: #efe;
-            color: #3c3;
-            border: 1px solid #cfc;
-        }
-        
-        .info-text {
-            text-align: center;
-            color: #999;
-            font-size: 0.85em;
-            margin-top: 25px;
-            padding-top: 25px;
-            border-top: 1px solid #eee;
-        }
-        
-        .loading-spinner {
-            display: inline-block;
-            width: 20px;
-            height: 20px;
-            border: 3px solid rgba(255,255,255,0.3);
-            border-radius: 50%;
-            border-top-color: white;
-            animation: spin 0.8s linear infinite;
-            margin-right: 10px;
-            vertical-align: middle;
-        }
-        
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-        
-        @media (max-width: 600px) {
-            .container { padding: 40px 30px; }
-            h1 { font-size: 2em; }
-        }
-    </style>
+    <title>Tax Master V3 - Sistema de Gestão Financeira e Precatórios</title>
+    <link rel="stylesheet" href="/css/styles.css">
 </head>
 <body>
-    <div class="container">
-        <div class="logo">
-            <div class="logo-icon">📊</div>
-            <h1>Tax Master V3</h1>
-            <p class="subtitle">Enterprise Edition</p>
-            <div class="badges">
-                <span class="badge">🟢 Dados Oficiais CNJ</span>
-                <span class="badge">🔒 Seguro</span>
+    <nav class="navbar">
+        <div class="container">
+            <div class="nav-brand">💼 Tax Master V3</div>
+            <div class="nav-menu">
+                <a href="/">Home</a>
+                <a href="/dashboard-financeiro.html">Dashboard Financeiro</a>
+                <a href="#servicos">Serviços</a>
+                <a href="#contato">Contato</a>
             </div>
         </div>
-        
-        <form id="loginForm">
-            <div class="form-group">
-                <label for="usuario">👤 Usuário</label>
-                <div class="input-wrapper">
-                    <span class="input-icon">👤</span>
-                    <input type="text" id="usuario" name="usuario" placeholder="Digite seu usuário" required autocomplete="username" value="admin">
-                </div>
-            </div>
-            
-            <div class="form-group">
-                <label for="senha">🔒 Senha</label>
-                <div class="input-wrapper">
-                    <span class="input-icon">🔒</span>
-                    <input type="password" id="senha" name="senha" placeholder="Digite sua senha" required autocomplete="current-password" value="admin123">
-                </div>
-            </div>
-            
-            <button type="submit" id="btnLogin">
-                <span id="btnText">Entrar no Sistema</span>
-            </button>
-            
-            <div class="message" id="message"></div>
-        </form>
-        
-        <p class="info-text">
-            Sistema de Gestão de Precatórios e Requisições<br>
-            © 2026 Tax Master V3 - Todos os direitos reservados
-        </p>
-    </div>
+    </nav>
 
-    <script>
-        document.getElementById('loginForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            
-            const usuario = document.getElementById('usuario').value;
-            const senha = document.getElementById('senha').value;
-            const message = document.getElementById('message');
-            const btnLogin = document.getElementById('btnLogin');
-            const btnText = document.getElementById('btnText');
-            
-            // Loading state
-            btnLogin.disabled = true;
-            btnText.innerHTML = '<span class="loading-spinner"></span>Autenticando...';
-            message.style.display = 'none';
-            
-            try {
-                const response = await fetch('/api/auth/login', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ usuario, senha })
-                });
-                
-                const data = await response.json();
-                
-                if (data.success) {
-                    message.textContent = '✅ Login bem-sucedido! Redirecionando...';
-                    message.className = 'message success';
-                    message.style.display = 'block';
-                    
-                    // Salvar token se fornecido
-                    if (data.token) {
-                        localStorage.setItem('token', data.token);
-                    }
-                    
-                    setTimeout(() => {
-                        window.location.href = data.redirect || '/processos';
-                    }, 1000);
-                } else {
-                    throw new Error(data.message || 'Erro ao fazer login');
-                }
-            } catch (error) {
-                message.textContent = '❌ ' + error.message;
-                message.className = 'message error';
-                message.style.display = 'block';
-                
-                btnLogin.disabled = false;
-                btnText.textContent = 'Entrar no Sistema';
-            }
-        });
-        
-        // Auto-focus no primeiro campo
-        document.getElementById('usuario').focus();
-    </script>
+    <section class="hero">
+        <div class="container">
+            <h1>🚀 Tax Master V3</h1>
+            <h2>Sistema de Gestão Financeira e Precatórios</h2>
+            <p class="subtitle">Consultoria e Recuperação de Impostos | Compra e Venda de Precatórios | Gestão de Créditos Fiscais</p>
+            <div class="hero-buttons">
+                <a href="/dashboard-financeiro.html" class="btn btn-primary">Acessar Dashboard</a>
+                <a href="#servicos" class="btn btn-secondary">Nossos Serviços</a>
+            </div>
+        </div>
+    </section>
+
+    <section id="servicos" class="services">
+        <div class="container">
+            <h2>📊 Nossos Serviços</h2>
+            <div class="services-grid">
+                <div class="service-card">
+                    <div class="service-icon">💰</div>
+                    <h3>Recuperação de Créditos Fiscais</h3>
+                    <p>Identificamos e recuperamos créditos tributários para sua empresa</p>
+                </div>
+                <div class="service-card">
+                    <div class="service-icon">⚖️</div>
+                    <h3>Precatórios</h3>
+                    <p>Compramos e vendemos precatórios federais, estaduais e municipais</p>
+                </div>
+                <div class="service-card">
+                    <div class="service-icon">🏦</div>
+                    <h3>E-CREDAC</h3>
+                    <p>Negociação de créditos acumulados de ICMS</p>
+                </div>
+                <div class="service-card">
+                    <div class="service-icon">📈</div>
+                    <h3>Reestruturação de Dívidas</h3>
+                    <p>PGFN e Receita Federal - CAPAGUE A, B, C e D</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="stats">
+        <div class="container">
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number">R$ 50M+</div>
+                    <div class="stat-label">Em Créditos Recuperados</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">500+</div>
+                    <div class="stat-label">Clientes Atendidos</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">15+</div>
+                    <div class="stat-label">Anos de Experiência</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">98%</div>
+                    <div class="stat-label">Satisfação</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="contato" class="contact">
+        <div class="container">
+            <h2>📞 Entre em Contato</h2>
+            <p>Estamos prontos para ajudar sua empresa</p>
+            <form class="contact-form">
+                <input type="text" placeholder="Seu nome" required>
+                <input type="email" placeholder="Seu e-mail" required>
+                <input type="tel" placeholder="Telefone">
+                <textarea placeholder="Mensagem" rows="4" required></textarea>
+                <button type="submit" class="btn btn-primary">Enviar Mensagem</button>
+            </form>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2026 Tax Master V3. Todos os direitos reservados.</p>
+            <p>Consultoria e Recuperação de Impostos</p>
+        </div>
+    </footer>
 </body>
 </html>
