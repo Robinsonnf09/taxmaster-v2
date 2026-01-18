@@ -1,29 +1,16 @@
-﻿# Dependências
+﻿# Dependencies
 node_modules/
-dist/
-build/
 
-# Arquivos sensíveis
+# Environment
 .env
-.env.*
-*.key
-*.pem
-config/*.yaml
-config/*.yml
-email-service.js
+.env.local
 
 # Logs
-logs/
 *.log
 
 # IDE
 .vscode/
 .idea/
 
-# Temporários
-tmp/
-backup_*/
-
-# Sistema
+# OS
 .DS_Store
-Thumbs.db
