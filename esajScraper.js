@@ -1,63 +1,15 @@
-﻿// esajScraper.js - Sistema com Validação e Logs Detalhados
+﻿// esajScraper.js - Integração API CNJ + DEPRE + ESAJ
 const axios = require('axios');
-const cheerio = require('cheerio');
+const { buscarEEnriquecer } = require('./depre-esaj-scraper');
 
 const CNJ_API_URL = process.env.CNJ_API_URL || 'https://api-publica.datajud.cnj.jus.br';
 const CNJ_API_KEY = process.env.CNJ_API_KEY || 'cDZHYzlZa0JadVREZDJCendQbXY6SkJlTzNjLV9TRENyQk1RdnFKZGRQdw==';
-
-// 🔍 VALIDADOR: Verifica se número de processo é válido (padrão CNJ)
-function validarNumeroProcessoCNJ(numero) {
-  if (!numero) return { valido: false, motivo: 'Número vazio' };
-  
-  // Formato CNJ: NNNNNNN-DD.AAAA.J.TR.OOOO (20 dígitos)
-  const regex = /^\d{7}-?\d{2}\.?\d{4}\.?\d\.?\d{2}\.?\d{4}$/;
-  
-  if (!regex.test(numero.replace(/\s/g, ''))) {
-    return { valido: false, motivo: 'Formato inválido (deve ser padrão CNJ)' };
-  }
-  
-  // Extrair componentes
-  const limpo = numero.replace(/\D/g, '');
-  const ano = parseInt(limpo.substring(9, 13));
-  const segmento = limpo.substring(13, 14);
-  const tribunal = limpo.substring(14, 16);
-  
-  // Validar ano (entre 1988 e ano atual + 1)
-  const anoAtual = new Date().getFullYear();
-  if (ano < 1988 || ano > anoAtual + 1) {
-    return { valido: false, motivo: `Ano inválido: ${ano}` };
-  }
-  
-  // Validar segmento (8 = Justiça Estadual)
-  if (segmento !== '8') {
-    return { valido: false, motivo: 'Não é Justiça Estadual' };
-  }
-  
-  // Validar tribunal (26 = TJ-SP)
-  if (tribunal !== '26') {
-    return { valido: false, motivo: 'Não é TJ-SP' };
-  }
-  
-  return { valido: true, motivo: 'Válido (padrão CNJ)' };
-}
-
-// 🏷️ MARCADOR DE ORIGEM DOS DADOS
-function marcarOrigem(processo, fonte) {
-  return {
-    ...processo,
-    fonteOriginal: fonte,
-    tipoFonte: fonte.includes('API CNJ') ? '🟢 OFICIAL' : 
-                fonte.includes('DEPRE') ? '🟢 OFICIAL' : 
-                fonte.includes('ESAJ') ? '🟢 OFICIAL' : '🟡 ESTIMADO',
-    validacaoCNJ: validarNumeroProcessoCNJ(processo.numero)
-  };
-}
 
 async function buscarProcessosESAJ(params) {
   const { valorMin, valorMax, natureza, anoLoa, status, quantidade = 30 } = params;
 
   console.log('\n╔═══════════════════════════════════════════════════════╗');
-  console.log('║  🔍 BUSCA 100% REAL - SISTEMA COM VALIDAÇÃO         ║');
+  console.log('║  🔍 BUSCA HÍBRIDA: API CNJ + DEPRE + ESAJ           ║');
   console.log('╚═══════════════════════════════════════════════════════╝\n');
   
   console.log('📋 FILTROS SOLICITADOS:');
@@ -72,6 +24,7 @@ async function buscarProcessosESAJ(params) {
     apiCNJ: 0,
     depre: 0,
     esaj: 0,
+    enriquecidos: 0,
     validosAPI: 0,
     validosDEPRE: 0,
     invalidosDescartados: 0
@@ -89,18 +42,21 @@ async function buscarProcessosESAJ(params) {
     
     console.log(`   📊 Processos retornados: ${dadosAPI.length}`);
     
-    // Validar cada processo
-    for (const processo of dadosAPI) {
+    dadosAPI.forEach(processo => {
       const validacao = validarNumeroProcessoCNJ(processo.numero);
       
       if (validacao.valido) {
-        processosReais.push(marcarOrigem(processo, '✅ API CNJ DataJud (OFICIAL)'));
+        processosReais.push({
+          ...processo,
+          fonteOriginal: '✅ API CNJ DataJud (OFICIAL)',
+          tipoFonte: '🟢 OFICIAL'
+        });
         estatisticas.validosAPI++;
       } else {
-        console.log(`   ⚠️ Processo inválido descartado: ${processo.numero} - ${validacao.motivo}`);
+        console.log(`   ⚠️ Processo inválido descartado: ${processo.numero}`);
         estatisticas.invalidosDescartados++;
       }
-    }
+    });
     
     estatisticas.apiCNJ = dadosAPI.length;
     
@@ -112,36 +68,42 @@ async function buscarProcessosESAJ(params) {
   }
 
   // ============================================
-  // ETAPA 2: WEB SCRAPING PORTAL DEPRE
+  // ETAPA 2: WEB SCRAPING DEPRE + ESAJ
   // ============================================
   if (processosReais.length < quantidade) {
     try {
       console.log('╔═══════════════════════════════════════════════════════╗');
-      console.log('║  🌐 ETAPA 2: Portal DEPRE TJ-SP (Fonte Oficial)     ║');
+      console.log('║  🌐 ETAPA 2: Web Scraping DEPRE + ESAJ              ║');
       console.log('╚═══════════════════════════════════════════════════════╝\n');
       
-      const dadosDEPRE = await scrapeDEPRE(quantidade - processosReais.length, params);
+      const qtdNecessaria = quantidade - processosReais.length;
+      const dadosDEPRE = await buscarEEnriquecer(qtdNecessaria, params);
       
-      console.log(`   📊 Processos retornados: ${dadosDEPRE.length}`);
+      console.log(`   📊 Processos do DEPRE: ${dadosDEPRE.length}`);
       
-      for (const processo of dadosDEPRE) {
+      dadosDEPRE.forEach(processo => {
         const validacao = validarNumeroProcessoCNJ(processo.numero);
         
         if (validacao.valido) {
-          processosReais.push(marcarOrigem(processo, '✅ Portal DEPRE TJ-SP (OFICIAL)'));
+          processosReais.push(processo);
           estatisticas.validosDEPRE++;
+          
+          if (processo.fontesUtilizadas && processo.fontesUtilizadas.includes('ESAJ')) {
+            estatisticas.enriquecidos++;
+          }
         } else {
-          console.log(`   ⚠️ Processo inválido descartado: ${processo.numero} - ${validacao.motivo}`);
+          console.log(`   ⚠️ Processo DEPRE inválido: ${processo.numero}`);
           estatisticas.invalidosDescartados++;
         }
-      }
+      });
       
       estatisticas.depre = dadosDEPRE.length;
       
-      console.log(`   ✅ Processos válidos: ${estatisticas.validosDEPRE}\n`);
+      console.log(`   ✅ Processos válidos do DEPRE: ${estatisticas.validosDEPRE}`);
+      console.log(`   ✅ Enriquecidos com ESAJ: ${estatisticas.enriquecidos}\n`);
       
     } catch (error) {
-      console.log(`   ❌ Erro no DEPRE: ${error.message}\n`);
+      console.log(`   ❌ Erro no scraping DEPRE/ESAJ: ${error.message}\n`);
     }
   }
 
@@ -155,44 +117,12 @@ async function buscarProcessosESAJ(params) {
   console.log(`   📊 Processos antes dos filtros: ${processosReais.length}`);
   
   const filtrados = processosReais.filter(p => {
-    let motivos = [];
-    
-    // Filtro de valor
-    if (valorMin && p.valor > 0 && p.valor < valorMin) {
-      motivos.push(`valor < R$ ${valorMin.toLocaleString()}`);
-      return false;
-    }
-    if (valorMax && p.valor > 0 && p.valor > valorMax) {
-      motivos.push(`valor > R$ ${valorMax.toLocaleString()}`);
-      return false;
-    }
-    
-    // Filtro de natureza
-    if (natureza && natureza !== 'Todas' && p.natureza !== natureza) {
-      motivos.push(`natureza=${p.natureza} (esperado ${natureza})`);
-      return false;
-    }
-    
-    // Filtro de LOA
-    if (anoLoa && anoLoa !== 'Todos' && parseInt(anoLoa) !== p.anoLOA) {
-      motivos.push(`LOA=${p.anoLOA} (esperado ${anoLoa})`);
-      return false;
-    }
-    
-    // Filtro de status
-    if (status === 'Pendente' && p.status !== 'Pendente') {
-      motivos.push(`status=${p.status} (esperado Pendente)`);
-      return false;
-    }
-    if (status && status !== 'Todos' && status !== 'Pendente' && p.status !== status) {
-      motivos.push(`status=${p.status} (esperado ${status})`);
-      return false;
-    }
-    
-    if (motivos.length > 0) {
-      console.log(`   ⛔ Filtrado: ${p.numero} - ${motivos.join(', ')}`);
-    }
-    
+    if (valorMin && p.valor > 0 && p.valor < valorMin) return false;
+    if (valorMax && p.valor > 0 && p.valor > valorMax) return false;
+    if (natureza && natureza !== 'Todas' && p.natureza !== natureza) return false;
+    if (anoLoa && anoLoa !== 'Todos' && parseInt(anoLoa) !== p.anoLOA) return false;
+    if (status === 'Pendente' && p.status !== 'Pendente') return false;
+    if (status && status !== 'Todos' && status !== 'Pendente' && p.status !== status) return false;
     return true;
   });
 
@@ -202,36 +132,31 @@ async function buscarProcessosESAJ(params) {
   console.log(`   📤 Retornando: ${resultado.length}\n`);
 
   // ============================================
-  // RESULTADO FINAL COM ESTATÍSTICAS
+  // ESTATÍSTICAS FINAIS
   // ============================================
   console.log('╔═══════════════════════════════════════════════════════╗');
   console.log('║  📊 ESTATÍSTICAS FINAIS                               ║');
   console.log('╚═══════════════════════════════════════════════════════╝\n');
   console.log(`   🟢 API CNJ: ${estatisticas.apiCNJ} processos (${estatisticas.validosAPI} válidos)`);
   console.log(`   🟢 Portal DEPRE: ${estatisticas.depre} processos (${estatisticas.validosDEPRE} válidos)`);
-  console.log(`   🟢 Portal ESAJ: ${estatisticas.esaj} processos`);
+  console.log(`   🟢 Enriquecidos ESAJ: ${estatisticas.enriquecidos} processos`);
   console.log(`   ❌ Descartados (inválidos): ${estatisticas.invalidosDescartados}`);
   console.log(`   📊 Total válido: ${processosReais.length}`);
   console.log(`   🔍 Após filtros: ${filtrados.length}`);
   console.log(`   ✅ RETORNADOS: ${resultado.length}\n`);
   
-  if (resultado.length === 0) {
-    console.log('   ⚠️ NENHUM PROCESSO ENCONTRADO');
-    console.log('   💡 Sugestões:');
-    console.log('      • Relaxe os filtros de valor');
-    console.log('      • Remova filtro de natureza');
-    console.log('      • Remova filtro de LOA\n');
-  } else {
+  if (resultado.length > 0) {
     console.log(`   🎉 ${resultado.length} PROCESSOS REAIS RETORNADOS!\n`);
     
-    // Mostrar resumo dos processos
-    console.log('   📋 RESUMO DOS PROCESSOS:');
     const porFonte = resultado.reduce((acc, p) => {
-      acc[p.tipoFonte] = (acc[p.tipoFonte] || 0) + 1;
+      const fonte = p.fontesUtilizadas ? p.fontesUtilizadas.join('+') : 'API CNJ';
+      acc[fonte] = (acc[fonte] || 0) + 1;
       return acc;
     }, {});
-    Object.entries(porFonte).forEach(([tipo, qtd]) => {
-      console.log(`      ${tipo}: ${qtd} processos`);
+    
+    console.log('   📋 RESUMO POR FONTE:');
+    Object.entries(porFonte).forEach(([fonte, qtd]) => {
+      console.log(`      ${fonte}: ${qtd} processos`);
     });
     console.log('');
   }
@@ -243,7 +168,7 @@ async function buscarProcessosESAJ(params) {
       fontes: {
         apiCNJ: estatisticas.validosAPI,
         depre: estatisticas.validosDEPRE,
-        esaj: estatisticas.esaj
+        esajEnriquecidos: estatisticas.enriquecidos
       },
       validacao: {
         validos: estatisticas.validosAPI + estatisticas.validosDEPRE,
@@ -254,14 +179,12 @@ async function buscarProcessosESAJ(params) {
         aposFiltros: filtrados.length,
         retornados: resultado.length
       },
-      garantia: '✅ SOMENTE DADOS REAIS E VALIDADOS'
+      garantia: '✅ DADOS REAIS (API CNJ + DEPRE + ESAJ)'
     }
   };
 }
 
-// ============================================
-// BUSCAR NA API CNJ
-// ============================================
+// Funções auxiliares (mantidas do código anterior)
 async function buscarAPICNJ(quantidade) {
   const query = {
     size: quantidade,
@@ -285,9 +208,35 @@ async function buscarAPICNJ(quantidade) {
   return hits.map(hit => processarDadosAPI(hit._source));
 }
 
-// ============================================
-// PROCESSAR DADOS DA API
-// ============================================
+function validarNumeroProcessoCNJ(numero) {
+  if (!numero) return { valido: false, motivo: 'Número vazio' };
+  
+  const regex = /^\d{7}-?\d{2}\.?\d{4}\.?\d\.?\d{2}\.?\d{4}$/;
+  if (!regex.test(numero.replace(/\s/g, ''))) {
+    return { valido: false, motivo: 'Formato inválido' };
+  }
+  
+  const limpo = numero.replace(/\D/g, '');
+  const ano = parseInt(limpo.substring(9, 13));
+  const segmento = limpo.substring(13, 14);
+  const tribunal = limpo.substring(14, 16);
+  
+  const anoAtual = new Date().getFullYear();
+  if (ano < 1988 || ano > anoAtual + 1) {
+    return { valido: false, motivo: `Ano inválido: ${ano}` };
+  }
+  
+  if (segmento !== '8') {
+    return { valido: false, motivo: 'Não é Justiça Estadual' };
+  }
+  
+  if (tribunal !== '26') {
+    return { valido: false, motivo: 'Não é TJ-SP' };
+  }
+  
+  return { valido: true };
+}
+
 function processarDadosAPI(p) {
   const numero = p.numeroProcesso || '';
   const anoProcesso = extrairAno(numero);
@@ -307,59 +256,6 @@ function processarDadosAPI(p) {
     status: determinarStatus(p.movimentos)
   };
 }
-
-// ============================================
-// WEB SCRAPING PORTAL DEPRE
-// ============================================
-async function scrapeDEPRE(quantidade, filtros) {
-  const processos = [];
-  
-  try {
-    const url = 'https://www.tjsp.jus.br/Depre/Pesquisas/PesquisaPublica';
-    
-    const response = await axios.get(url, {
-      headers: {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
-      },
-      timeout: 15000
-    });
-
-    const $ = cheerio.load(response.data);
-    
-    $('table tbody tr').each((index, element) => {
-      if (processos.length >= quantidade) return false;
-      
-      const cols = $(element).find('td');
-      
-      if (cols.length >= 5) {
-        processos.push({
-          numero: $(cols[0]).text().trim(),
-          tribunal: 'TJ-SP',
-          credor: $(cols[1]).text().trim() || 'Não informado',
-          valor: parseValor($(cols[2]).text().trim()),
-          natureza: $(cols[3]).text().trim() || 'Comum',
-          anoLOA: parseInt($(cols[4]).text().trim()) || new Date().getFullYear() + 1,
-          classe: 'Precatório',
-          assunto: 'Requisição de Pagamento',
-          dataDistribuicao: new Date().toISOString().split('T')[0],
-          comarca: 'São Paulo',
-          vara: 'Não informado',
-          status: 'Pendente'
-        });
-      }
-    });
-    
-    return processos;
-    
-  } catch (error) {
-    console.log(`   ⚠️ Portal DEPRE inacessível: ${error.message}`);
-    return [];
-  }
-}
-
-// ============================================
-// FUNÇÕES AUXILIARES
-// ============================================
 
 function extrairAno(numero) {
   if (!numero || numero.length < 13) return new Date().getFullYear();
@@ -423,12 +319,6 @@ function formatarData(dataStr) {
     return `${dataStr.substring(0,4)}-${dataStr.substring(4,6)}-${dataStr.substring(6,8)}`;
   }
   return dataStr.split('T')[0];
-}
-
-function parseValor(valorStr) {
-  if (!valorStr) return 0;
-  const limpo = valorStr.replace(/[^\d,]/g, '').replace(',', '.');
-  return parseFloat(limpo) || 0;
 }
 
 module.exports = { buscarProcessosESAJ };
