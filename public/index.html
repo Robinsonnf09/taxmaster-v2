@@ -3,116 +3,247 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tax Master V3 - Login</title>
+    <title>Tax Master V3 - Enterprise Edition</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
+        
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
+            padding: 20px;
         }
+        
         .container {
             background: white;
             border-radius: 20px;
-            padding: 50px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            padding: 60px 50px;
+            box-shadow: 0 30px 80px rgba(0,0,0,0.3);
             width: 100%;
-            max-width: 450px;
+            max-width: 480px;
+            animation: slideUp 0.6s ease;
         }
+        
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .logo {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .logo-icon {
+            font-size: 4em;
+            margin-bottom: 10px;
+        }
+        
         h1 {
             color: #667eea;
             font-size: 2.5em;
             margin-bottom: 10px;
             text-align: center;
+            font-weight: 700;
         }
-        p {
+        
+        .subtitle {
             color: #666;
             text-align: center;
-            margin-bottom: 30px;
+            margin-bottom: 10px;
+            font-size: 1.1em;
         }
+        
+        .badges {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+        }
+        
+        .badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            padding: 8px 18px;
+            border-radius: 25px;
+            font-size: 0.85em;
+            font-weight: 600;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+        }
+        
         .form-group {
             margin-bottom: 25px;
         }
+        
         label {
             display: block;
             color: #333;
-            font-weight: bold;
-            margin-bottom: 8px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            font-size: 0.95em;
         }
+        
+        .input-wrapper {
+            position: relative;
+        }
+        
+        .input-icon {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 1.2em;
+            color: #999;
+        }
+        
         input {
             width: 100%;
-            padding: 15px;
+            padding: 16px 16px 16px 50px;
             border: 2px solid #e0e0e0;
-            border-radius: 10px;
+            border-radius: 12px;
             font-size: 1em;
-            transition: border 0.3s;
+            transition: all 0.3s;
+            background: #f9fafb;
         }
+        
         input:focus {
             outline: none;
             border-color: #667eea;
+            background: white;
+            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
         }
+        
         button {
             width: 100%;
-            padding: 15px;
+            padding: 16px;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
             border: none;
-            border-radius: 10px;
+            border-radius: 12px;
             font-size: 1.1em;
-            font-weight: bold;
+            font-weight: 700;
             cursor: pointer;
-            transition: transform 0.2s;
+            transition: all 0.3s;
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
         }
+        
         button:hover {
             transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.5);
         }
+        
+        button:active {
+            transform: translateY(0);
+        }
+        
+        button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
         .message {
-            margin-top: 15px;
-            padding: 12px;
-            border-radius: 8px;
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 10px;
             text-align: center;
             display: none;
+            animation: fadeIn 0.3s;
         }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
         .message.error {
             background: #fee;
             color: #c33;
             border: 1px solid #fcc;
         }
-        .badge {
-            display: inline-block;
-            background: #10b981;
-            color: white;
-            padding: 5px 15px;
-            border-radius: 20px;
+        
+        .message.success {
+            background: #efe;
+            color: #3c3;
+            border: 1px solid #cfc;
+        }
+        
+        .info-text {
+            text-align: center;
+            color: #999;
             font-size: 0.85em;
-            margin-top: 10px;
+            margin-top: 25px;
+            padding-top: 25px;
+            border-top: 1px solid #eee;
+        }
+        
+        .loading-spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 0.8s linear infinite;
+            margin-right: 10px;
+            vertical-align: middle;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        @media (max-width: 600px) {
+            .container { padding: 40px 30px; }
+            h1 { font-size: 2em; }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>📊 Tax Master V3</h1>
-        <p>Sistema de Gestão de Precatórios</p>
-        <span class="badge">🟢 Dados Oficiais CNJ</span>
+        <div class="logo">
+            <div class="logo-icon">📊</div>
+            <h1>Tax Master V3</h1>
+            <p class="subtitle">Enterprise Edition</p>
+            <div class="badges">
+                <span class="badge">🟢 Dados Oficiais CNJ</span>
+                <span class="badge">🔒 Seguro</span>
+            </div>
+        </div>
         
-        <form id="loginForm" style="margin-top: 30px;">
+        <form id="loginForm">
             <div class="form-group">
-                <label for="usuario">Usuário</label>
-                <input type="text" id="usuario" name="usuario" required value="admin">
+                <label for="usuario">👤 Usuário</label>
+                <div class="input-wrapper">
+                    <span class="input-icon">👤</span>
+                    <input type="text" id="usuario" name="usuario" placeholder="Digite seu usuário" required autocomplete="username" value="admin">
+                </div>
             </div>
             
             <div class="form-group">
-                <label for="senha">Senha</label>
-                <input type="password" id="senha" name="senha" required value="admin123">
+                <label for="senha">🔒 Senha</label>
+                <div class="input-wrapper">
+                    <span class="input-icon">🔒</span>
+                    <input type="password" id="senha" name="senha" placeholder="Digite sua senha" required autocomplete="current-password" value="admin123">
+                </div>
             </div>
             
-            <button type="submit">Entrar</button>
+            <button type="submit" id="btnLogin">
+                <span id="btnText">Entrar no Sistema</span>
+            </button>
             
             <div class="message" id="message"></div>
         </form>
+        
+        <p class="info-text">
+            Sistema de Gestão de Precatórios e Requisições<br>
+            © 2026 Tax Master V3 - Todos os direitos reservados
+        </p>
     </div>
 
     <script>
@@ -122,6 +253,13 @@
             const usuario = document.getElementById('usuario').value;
             const senha = document.getElementById('senha').value;
             const message = document.getElementById('message');
+            const btnLogin = document.getElementById('btnLogin');
+            const btnText = document.getElementById('btnText');
+            
+            // Loading state
+            btnLogin.disabled = true;
+            btnText.innerHTML = '<span class="loading-spinner"></span>Autenticando...';
+            message.style.display = 'none';
             
             try {
                 const response = await fetch('/api/auth/login', {
@@ -133,18 +271,33 @@
                 const data = await response.json();
                 
                 if (data.success) {
-                    window.location.href = data.redirect;
-                } else {
-                    message.textContent = data.message || 'Erro ao fazer login';
-                    message.className = 'message error';
+                    message.textContent = '✅ Login bem-sucedido! Redirecionando...';
+                    message.className = 'message success';
                     message.style.display = 'block';
+                    
+                    // Salvar token se fornecido
+                    if (data.token) {
+                        localStorage.setItem('token', data.token);
+                    }
+                    
+                    setTimeout(() => {
+                        window.location.href = data.redirect || '/processos';
+                    }, 1000);
+                } else {
+                    throw new Error(data.message || 'Erro ao fazer login');
                 }
             } catch (error) {
-                message.textContent = 'Erro ao conectar com o servidor';
+                message.textContent = '❌ ' + error.message;
                 message.className = 'message error';
                 message.style.display = 'block';
+                
+                btnLogin.disabled = false;
+                btnText.textContent = 'Entrar no Sistema';
             }
         });
+        
+        // Auto-focus no primeiro campo
+        document.getElementById('usuario').focus();
     </script>
 </body>
 </html>

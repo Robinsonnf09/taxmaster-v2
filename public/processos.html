@@ -3,130 +3,356 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tax Master V3 - Processos</title>
+    <title>Processos - Tax Master V3</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
+        
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: #f5f5f5;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: #f5f7fa;
+            color: #333;
         }
+        
         .header {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
-            padding: 20px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding: 25px 30px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
         }
-        .header h1 { font-size: 2em; }
-        .header p { margin-top: 5px; opacity: 0.9; }
-        .container {
-            max-width: 1400px;
-            margin: 30px auto;
-            padding: 0 20px;
-        }
-        .filters {
-            background: white;
-            padding: 25px;
-            border-radius: 15px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            margin-bottom: 25px;
-        }
-        .filters h3 {
-            color: #667eea;
-            margin-bottom: 20px;
-        }
-        .filter-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        
+        .header-content {
+            max-width: 1600px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
             gap: 15px;
-            margin-bottom: 20px;
         }
-        .filter-group label {
-            display: block;
-            color: #333;
-            font-weight: bold;
-            margin-bottom: 5px;
-            font-size: 0.9em;
+        
+        .header h1 {
+            font-size: 2em;
+            font-weight: 700;
         }
-        .filter-group input, .filter-group select {
-            width: 100%;
-            padding: 10px;
-            border: 2px solid #e0e0e0;
-            border-radius: 8px;
-            font-size: 1em;
+        
+        .header p {
+            opacity: 0.95;
+            margin-top: 5px;
         }
+        
+        .header-actions {
+            display: flex;
+            gap: 12px;
+        }
+        
         .btn {
-            padding: 12px 30px;
+            padding: 12px 24px;
             border: none;
-            border-radius: 8px;
+            border-radius: 10px;
             font-size: 1em;
-            font-weight: bold;
+            font-weight: 600;
             cursor: pointer;
             transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
         }
+        
         .btn-primary {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: white;
+            color: #667eea;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255,255,255,0.3);
+        }
+        
+        .btn-secondary {
+            background: rgba(255,255,255,0.2);
+            color: white;
+            border: 2px solid rgba(255,255,255,0.4);
+        }
+        
+        .btn-secondary:hover {
+            background: rgba(255,255,255,0.3);
+        }
+        
+        .btn-success {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
             color: white;
         }
-        .btn-primary:hover { transform: translateY(-2px); }
+        
+        .btn-info {
+            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+            color: white;
+        }
+        
+        .container {
+            max-width: 1600px;
+            margin: 30px auto;
+            padding: 0 30px;
+        }
+        
+        .filters {
+            background: white;
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+            margin-bottom: 25px;
+        }
+        
+        .filters h3 {
+            color: #667eea;
+            margin-bottom: 25px;
+            font-size: 1.3em;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .filter-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+        
+        .filter-group label {
+            display: block;
+            color: #555;
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 0.9em;
+        }
+        
+        .filter-group input,
+        .filter-group select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e5e7eb;
+            border-radius: 10px;
+            font-size: 1em;
+            transition: all 0.3s;
+            background: #f9fafb;
+        }
+        
+        .filter-group input:focus,
+        .filter-group select:focus {
+            outline: none;
+            border-color: #667eea;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        
+        .filter-actions {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        
+        .stats-bar {
+            background: linear-gradient(135deg, #f0f4ff 0%, #e8eeff 100%);
+            padding: 20px 30px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        
+        .stat-item {
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-size: 2em;
+            font-weight: 700;
+            color: #667eea;
+            display: block;
+        }
+        
+        .stat-label {
+            color: #666;
+            font-size: 0.9em;
+            margin-top: 5px;
+        }
+        
         .table-container {
             background: white;
-            border-radius: 15px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            border-radius: 16px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
             overflow: hidden;
         }
+        
+        .table-header {
+            padding: 20px 30px;
+            background: #f9fafb;
+            border-bottom: 2px solid #e5e7eb;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .table-header h3 {
+            color: #333;
+            font-size: 1.2em;
+        }
+        
+        .table-wrapper {
+            overflow-x: auto;
+        }
+        
         table {
             width: 100%;
             border-collapse: collapse;
         }
+        
         th {
             background: #667eea;
             color: white;
-            padding: 15px;
+            padding: 16px;
             text-align: left;
-            font-weight: bold;
+            font-weight: 600;
+            font-size: 0.95em;
+            white-space: nowrap;
         }
+        
         td {
-            padding: 15px;
-            border-bottom: 1px solid #e0e0e0;
+            padding: 16px;
+            border-bottom: 1px solid #e5e7eb;
         }
-        tr:hover { background: #f9f9f9; }
+        
+        tr:hover {
+            background: #f9fafb;
+        }
+        
+        tr:last-child td {
+            border-bottom: none;
+        }
+        
         .badge {
             display: inline-block;
-            padding: 5px 12px;
+            padding: 6px 14px;
             border-radius: 20px;
             font-size: 0.85em;
-            font-weight: bold;
+            font-weight: 600;
         }
-        .badge-oficial { background: #10b981; color: white; }
+        
+        .badge-oficial {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+        }
+        
+        .badge-status-pendente {
+            background: #fef3c7;
+            color: #92400e;
+        }
+        
+        .badge-status-pago {
+            background: #d1fae5;
+            color: #065f46;
+        }
+        
         .loading {
             text-align: center;
-            padding: 50px;
+            padding: 60px;
             color: #666;
+        }
+        
+        .loading-spinner {
+            display: inline-block;
+            width: 50px;
+            height: 50px;
+            border: 5px solid #f3f4f6;
+            border-radius: 50%;
+            border-top-color: #667eea;
+            animation: spin 1s linear infinite;
+            margin-bottom: 20px;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #999;
+        }
+        
+        .empty-state-icon {
+            font-size: 4em;
+            margin-bottom: 20px;
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .btn-icon {
+            padding: 8px 12px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 1.1em;
+            background: #f3f4f6;
+        }
+        
+        .btn-icon:hover {
+            background: #e5e7eb;
+            transform: scale(1.1);
+        }
+        
+        .btn-favorite.active {
+            background: #fef3c7;
+            color: #f59e0b;
+        }
+        
+        @media (max-width: 768px) {
+            .container { padding: 0 15px; }
+            .filter-grid { grid-template-columns: 1fr; }
+            .stats-bar { flex-direction: column; }
         }
     </style>
 </head>
 <body>
     <div class="header">
-        <h1>📊 Tax Master V3</h1>
-        <p>Sistema de Gestão de Precatórios - TJ-SP</p>
+        <div class="header-content">
+            <div>
+                <h1>📊 Tax Master V3</h1>
+                <p>Sistema de Gestão de Precatórios - Enterprise Edition</p>
+            </div>
+            <div class="header-actions">
+                <a href="/dashboard" class="btn btn-primary">📈 Dashboard</a>
+                <button class="btn btn-secondary" onclick="logout()">🚪 Sair</button>
+            </div>
+        </div>
     </div>
 
     <div class="container">
         <div class="filters">
-            <h3>🔍 Filtros de Busca</h3>
+            <h3>🔍 Filtros Avançados de Busca</h3>
             <div class="filter-grid">
                 <div class="filter-group">
-                    <label>Valor Mínimo (R$)</label>
-                    <input type="number" id="valorMin" placeholder="Ex: 10000">
+                    <label>💰 Valor Mínimo (R$)</label>
+                    <input type="number" id="valorMin" placeholder="Ex: 10000" min="0">
                 </div>
                 <div class="filter-group">
-                    <label>Valor Máximo (R$)</label>
-                    <input type="number" id="valorMax" placeholder="Ex: 500000">
+                    <label>💰 Valor Máximo (R$)</label>
+                    <input type="number" id="valorMax" placeholder="Ex: 500000" min="0">
                 </div>
                 <div class="filter-group">
-                    <label>Natureza</label>
+                    <label>📑 Natureza</label>
                     <select id="natureza">
-                        <option value="Todas">Todas</option>
+                        <option value="Todas">Todas as Naturezas</option>
                         <option value="Alimentar">Alimentar</option>
                         <option value="Tributária">Tributária</option>
                         <option value="Previdenciária">Previdenciária</option>
@@ -134,7 +360,17 @@
                     </select>
                 </div>
                 <div class="filter-group">
-                    <label>Status</label>
+                    <label>📆 Ano LOA</label>
+                    <select id="anoLoa">
+                        <option value="Todos">Todos os Anos</option>
+                        <option value="2024">2024</option>
+                        <option value="2025">2025</option>
+                        <option value="2026">2026</option>
+                        <option value="2027">2027</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label>📊 Status</label>
                     <select id="status">
                         <option value="Todos">Todos</option>
                         <option value="Pendente">Pendente</option>
@@ -142,28 +378,68 @@
                         <option value="Em Análise">Em Análise</option>
                     </select>
                 </div>
+                <div class="filter-group">
+                    <label>🔢 Quantidade</label>
+                    <input type="number" id="quantidade" value="30" min="1" max="100">
+                </div>
             </div>
-            <button class="btn btn-primary" onclick="buscar()">🔍 Buscar no TJ-SP</button>
+            <div class="filter-actions">
+                <button class="btn btn-primary" onclick="buscar()">🔍 Buscar Processos</button>
+                <button class="btn btn-success" onclick="exportarExcel()">📥 Exportar Excel</button>
+                <button class="btn btn-info" onclick="exportarPDF()">📄 Exportar PDF</button>
+            </div>
+        </div>
+
+        <div class="stats-bar" id="statsBar" style="display: none;">
+            <div class="stat-item">
+                <span class="stat-value" id="statTotal">0</span>
+                <span class="stat-label">Total de Processos</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-value" id="statValor">R$ 0</span>
+                <span class="stat-label">Valor Total</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-value" id="statPendentes">0</span>
+                <span class="stat-label">Pendentes</span>
+            </div>
         </div>
 
         <div class="table-container">
-            <div id="loading" class="loading" style="display: none;">
-                ⏳ Buscando processos reais da API CNJ...
+            <div class="table-header">
+                <h3 id="tableTitle">Lista de Processos</h3>
+                <span id="resultCount"></span>
             </div>
-            <table id="tabelaProcessos" style="display: none;">
-                <thead>
-                    <tr>
-                        <th>Número do Processo</th>
-                        <th>Credor</th>
-                        <th>Valor (R$)</th>
-                        <th>Natureza</th>
-                        <th>Ano LOA</th>
-                        <th>Status</th>
-                        <th>Fonte</th>
-                    </tr>
-                </thead>
-                <tbody id="tbody"></tbody>
-            </table>
+            
+            <div id="loading" class="loading" style="display: none;">
+                <div class="loading-spinner"></div>
+                <p>⏳ Buscando processos reais da API CNJ DataJud...</p>
+            </div>
+            
+            <div id="emptyState" class="empty-state">
+                <div class="empty-state-icon">🔍</div>
+                <h3>Nenhum processo encontrado</h3>
+                <p>Clique em "Buscar Processos" para iniciar</p>
+            </div>
+            
+            <div class="table-wrapper">
+                <table id="tabelaProcessos" style="display: none;">
+                    <thead>
+                        <tr>
+                            <th>Ações</th>
+                            <th>Número do Processo</th>
+                            <th>Credor</th>
+                            <th>Valor (R$)</th>
+                            <th>Natureza</th>
+                            <th>Ano LOA</th>
+                            <th>Status</th>
+                            <th>Tribunal</th>
+                            <th>Fonte</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tbody"></tbody>
+                </table>
+            </div>
         </div>
     </div>
 
@@ -171,16 +447,22 @@
         async function buscar() {
             const loading = document.getElementById('loading');
             const tabela = document.getElementById('tabelaProcessos');
+            const emptyState = document.getElementById('emptyState');
             const tbody = document.getElementById('tbody');
+            const statsBar = document.getElementById('statsBar');
 
             loading.style.display = 'block';
             tabela.style.display = 'none';
+            emptyState.style.display = 'none';
+            statsBar.style.display = 'none';
 
             const params = new URLSearchParams({
                 valorMin: document.getElementById('valorMin').value || '',
                 valorMax: document.getElementById('valorMax').value || '',
                 natureza: document.getElementById('natureza').value,
-                status: document.getElementById('status').value
+                anoLoa: document.getElementById('anoLoa').value,
+                status: document.getElementById('status').value,
+                quantidade: document.getElementById('quantidade').value
             });
 
             try {
@@ -189,30 +471,85 @@
 
                 tbody.innerHTML = '';
 
-                data.processos.forEach(p => {
-                    const tr = document.createElement('tr');
-                    tr.innerHTML = `
-                        <td>${p.numero}</td>
-                        <td>${p.credor}</td>
-                        <td>R$ ${(p.valor || 0).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</td>
-                        <td>${p.natureza}</td>
-                        <td>${p.anoLOA}</td>
-                        <td>${p.status}</td>
-                        <td><span class="badge badge-oficial">🟢 OFICIAL</span></td>
-                    `;
-                    tbody.appendChild(tr);
-                });
+                if (data.processos && data.processos.length > 0) {
+                    data.processos.forEach(p => {
+                        const tr = document.createElement('tr');
+                        tr.innerHTML = `
+                            <td>
+                                <div class="action-buttons">
+                                    <button class="btn-icon btn-favorite" onclick="toggleFavorito('${p.numero}')" title="Favoritar">⭐</button>
+                                    <button class="btn-icon" onclick="verDetalhes('${p.numero}')" title="Ver Detalhes">👁️</button>
+                                </div>
+                            </td>
+                            <td><strong>${p.numero}</strong></td>
+                            <td>${p.credor}</td>
+                            <td><strong>R$ ${(p.valor || 0).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</strong></td>
+                            <td>${p.natureza}</td>
+                            <td>${p.anoLOA}</td>
+                            <td><span class="badge badge-status-${p.status.toLowerCase().replace(' ', '-')}">${p.status}</span></td>
+                            <td>${p.tribunal}</td>
+                            <td><span class="badge badge-oficial">🟢 OFICIAL</span></td>
+                        `;
+                        tbody.appendChild(tr);
+                    });
 
-                loading.style.display = 'none';
-                tabela.style.display = 'table';
+                    // Atualizar stats
+                    if (data.analytics) {
+                        document.getElementById('statTotal').textContent = data.analytics.total;
+                        document.getElementById('statValor').textContent = 'R$ ' + data.analytics.valorTotal.toLocaleString('pt-BR', { minimumFractionDigits: 2 });
+                        document.getElementById('statPendentes').textContent = data.analytics.porStatus?.Pendente || 0;
+                        statsBar.style.display = 'flex';
+                    }
+
+                    document.getElementById('resultCount').textContent = `${data.processos.length} processos encontrados`;
+                    
+                    loading.style.display = 'none';
+                    tabela.style.display = 'table';
+                } else {
+                    loading.style.display = 'none';
+                    emptyState.style.display = 'block';
+                }
 
             } catch (error) {
-                loading.innerHTML = '❌ Erro ao buscar processos';
+                loading.innerHTML = '<p style="color: #ef4444;">❌ Erro ao buscar processos: ' + error.message + '</p>';
             }
         }
 
-        // Buscar ao carregar
-        buscar();
+        function toggleFavorito(numero) {
+            alert('Funcionalidade de favoritos em desenvolvimento!');
+        }
+
+        function verDetalhes(numero) {
+            alert('Detalhes do processo: ' + numero);
+        }
+
+        async function exportarExcel() {
+            try {
+                window.location.href = '/api/exportar/excel';
+            } catch (error) {
+                alert('Erro ao exportar Excel: ' + error.message);
+            }
+        }
+
+        async function exportarPDF() {
+            try {
+                window.location.href = '/api/exportar/pdf';
+            } catch (error) {
+                alert('Erro ao exportar PDF: ' + error.message);
+            }
+        }
+
+        function logout() {
+            if (confirm('Deseja realmente sair?')) {
+                fetch('/api/auth/logout', { method: 'POST' })
+                    .then(() => window.location.href = '/');
+            }
+        }
+
+        // Buscar automaticamente ao carregar
+        window.addEventListener('load', () => {
+            buscar();
+        });
     </script>
 </body>
 </html>
