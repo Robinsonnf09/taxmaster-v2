@@ -1,10 +1,8 @@
-﻿// server.js - Versão CORRIGIDA
+﻿// server.js - Versão Limpa e Funcional
 const express = require('express');
 const session = require('express-session');
 const path = require('path');
 const { buscarProcessosESAJ } = require('./esajScraper');
-const ExcelJS = require('exceljs');
-const PDFDocument = require('pdfkit');
 
 const app = express();
 const PORT = process.env.PORT || 8080;
@@ -28,12 +26,11 @@ function requireAuth(req, res, next) {
   res.redirect('/');
 }
 
-// Base de dados em memória
+// Cache de processos
 let processosCache = [];
-let historicoBuscas = [];  // ✅ CORRIGIDO - SEM ESPAÇO!
 
 // ============================================
-// ROTAS DE AUTENTICAÇÃO
+// AUTENTICAÇÃO
 // ============================================
 
 app.post('/api/auth/login', (req, res) => {
@@ -53,7 +50,7 @@ app.post('/api/auth/logout', (req, res) => {
 });
 
 // ============================================
-// ROTAS DE BUSCA
+// BUSCA
 // ============================================
 
 app.get('/api/buscar-tjsp', requireAuth, async (req, res) => {
@@ -72,19 +69,11 @@ app.get('/api/buscar-tjsp', requireAuth, async (req, res) => {
     console.log(`   Natureza: ${params.natureza}`);
 
     const resultado = await buscarProcessosESAJ(params);
-    
     processosCache = resultado.processos;
-    
-    historicoBuscas.push({
-      data: new Date(),
-      filtros: params,
-      resultados: resultado.processos.length
-    });
-
     res.json(resultado);
     
   } catch (error) {
-    console.error(`❌ Erro na busca: ${error.message}`);
+    console.error(`❌ Erro: ${error.message}`);
     res.status(500).json({ 
       processos: [], 
       stats: { erro: error.message } 
@@ -93,23 +82,10 @@ app.get('/api/buscar-tjsp', requireAuth, async (req, res) => {
 });
 
 // ============================================
-// ROTA DE DASHBOARD STATS
+// DASHBOARD
 // ============================================
 
 app.get('/api/dashboard-stats', requireAuth, (req, res) => {
-  if (processosCache.length === 0) {
-    return res.json({
-      totalProcessos: 0,
-      valorTotal: 0,
-      pendentes: 0,
-      pagos: 0,
-      porNatureza: {},
-      porLOA: {},
-      valorPorNatureza: {},
-      porStatus: {}
-    });
-  }
-
   const stats = {
     totalProcessos: processosCache.length,
     valorTotal: processosCache.reduce((sum, p) => sum + (p.valor || 0), 0),
@@ -132,185 +108,7 @@ app.get('/api/dashboard-stats', requireAuth, (req, res) => {
 });
 
 // ============================================
-// EXPORTAÇÃO EXCEL
-// ============================================
-
-app.get('/api/exportar/excel', requireAuth, async (req, res) => {
-  try {
-    const workbook = new ExcelJS.Workbook();
-    const worksheet = workbook.addWorksheet('Processos');
-
-    worksheet.columns = [
-      { header: 'Número do Processo', key: 'numero', width: 30 },
-      { header: 'Tribunal', key: 'tribunal', width: 15 },
-      { header: 'Credor', key: 'credor', width: 35 },
-      { header: 'Valor (R$)', key: 'valor', width: 15 },
-      { header: 'Natureza', key: 'natureza', width: 20 },
-      { header: 'Ano LOA', key: 'anoLOA', width: 12 },
-      { header: 'Status', key: 'status', width: 15 },
-      { header: 'Classe', key: 'classe', width: 30 },
-      { header: 'Vara', key: 'vara', width: 35 },
-      { header: 'Data Distribuição', key: 'dataDistribuicao', width: 18 },
-      { header: 'Fonte', key: 'fonte', width: 30 }
-    ];
-
-    worksheet.getRow(1).font = { bold: true, color: { argb: 'FFFFFFFF' } };
-    worksheet.getRow(1).fill = {
-      type: 'pattern',
-      pattern: 'solid',
-      fgColor: { argb: 'FF667eea' }
-    };
-
-    processosCache.forEach(p => {
-      worksheet.addRow({
-        numero: p.numero,
-        tribunal: p.tribunal,
-        credor: p.credor,
-        valor: p.valor,
-        natureza: p.natureza,
-        anoLOA: p.anoLOA,
-        status: p.status,
-        classe: p.classe,
-        vara: p.vara,
-        dataDistribuicao: p.dataDistribuicao,
-        fonte: p.fonteOriginal || p.fonte
-      });
-    });
-
-    worksheet.getColumn('valor').numFmt = 'R$ #,##0.00';
-
-    res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-    res.setHeader('Content-Disposition', `attachment; filename=processos_${new Date().toISOString().split('T')[0]}.xlsx`);
-
-    await workbook.xlsx.write(res);
-    res.end();
-
-  } catch (error) {
-    console.error('Erro ao gerar Excel:', error);
-    res.status(500).json({ error: 'Erro ao gerar Excel' });
-  }
-});
-
-// ============================================
-// EXPORTAÇÃO PDF
-// ============================================
-
-app.get('/api/exportar/pdf', requireAuth, (req, res) => {
-  try {
-    const doc = new PDFDocument({ margin: 50, size: 'A4' });
-    
-    res.setHeader('Content-Type', 'application/pdf');
-    res.setHeader('Content-Disposition', `attachment; filename=relatorio_${new Date().toISOString().split('T')[0]}.pdf`);
-    
-    doc.pipe(res);
-
-    doc.fontSize(20).text('Tax Master V3', { align: 'center' });
-    doc.fontSize(14).text('Relatório de Processos', { align: 'center' });
-    doc.moveDown();
-    doc.fontSize(10).text(`Gerado em: ${new Date().toLocaleString('pt-BR')}`, { align: 'center' });
-    doc.moveDown(2);
-
-    doc.fontSize(14).text('Resumo Executivo', { underline: true });
-    doc.moveDown();
-    doc.fontSize(10);
-    doc.text(`Total de Processos: ${processosCache.length}`);
-    doc.text(`Valor Total: R$ ${processosCache.reduce((sum, p) => sum + (p.valor || 0), 0).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`);
-    doc.moveDown(2);
-
-    doc.fontSize(14).text('Lista de Processos', { underline: true });
-    doc.moveDown();
-    
-    processosCache.slice(0, 20).forEach((p, index) => {
-      doc.fontSize(10);
-      doc.text(`${index + 1}. ${p.numero}`, { continued: true });
-      doc.text(` - R$ ${(p.valor || 0).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`);
-      doc.fontSize(8).text(`   Credor: ${p.credor} | Natureza: ${p.natureza} | Status: ${p.status}`);
-      doc.moveDown(0.5);
-    });
-
-    doc.end();
-
-  } catch (error) {
-    console.error('Erro ao gerar PDF:', error);
-    res.status(500).json({ error: 'Erro ao gerar PDF' });
-  }
-});
-
-// ============================================
-// RELATÓRIO EXECUTIVO
-// ============================================
-
-app.get('/api/relatorio/executivo', requireAuth, (req, res) => {
-  try {
-    const doc = new PDFDocument({ margin: 50, size: 'A4' });
-    
-    res.setHeader('Content-Type', 'application/pdf');
-    res.setHeader('Content-Disposition', `attachment; filename=relatorio_executivo_${new Date().toISOString().split('T')[0]}.pdf`);
-    
-    doc.pipe(res);
-
-    doc.fontSize(24).text('RELATÓRIO EXECUTIVO', { align: 'center' });
-    doc.moveDown();
-    doc.fontSize(18).text('Tax Master V3', { align: 'center' });
-    doc.moveDown();
-    doc.fontSize(12).text(`Período: ${new Date().toLocaleDateString('pt-BR')}`, { align: 'center' });
-    doc.moveDown(5);
-
-    const stats = {
-      total: processosCache.length,
-      valorTotal: processosCache.reduce((sum, p) => sum + (p.valor || 0), 0),
-      pendentes: processosCache.filter(p => p.status === 'Pendente').length,
-      pagos: processosCache.filter(p => p.status === 'Pago').length
-    };
-
-    doc.fontSize(16).text('ESTATÍSTICAS GERAIS', { underline: true });
-    doc.moveDown();
-    doc.fontSize(12);
-    doc.text(`Total de Processos: ${stats.total}`);
-    doc.text(`Valor Total: R$ ${stats.valorTotal.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`);
-    doc.text(`Processos Pendentes: ${stats.pendentes}`);
-    doc.text(`Processos Pagos: ${stats.pagos}`);
-    doc.moveDown(2);
-
-    doc.fontSize(16).text('DISTRIBUIÇÃO POR NATUREZA', { underline: true });
-    doc.moveDown();
-    doc.fontSize(12);
-    
-    const porNatureza = {};
-    processosCache.forEach(p => {
-      porNatureza[p.natureza] = (porNatureza[p.natureza] || 0) + 1;
-    });
-    
-    Object.entries(porNatureza).forEach(([natureza, qtd]) => {
-      doc.text(`${natureza}: ${qtd} processos`);
-    });
-    
-    doc.moveDown(2);
-
-    doc.fontSize(16).text('TOP 10 PROCESSOS DE MAIOR VALOR', { underline: true });
-    doc.moveDown();
-    doc.fontSize(10);
-    
-    const top10 = [...processosCache]
-      .sort((a, b) => (b.valor || 0) - (a.valor || 0))
-      .slice(0, 10);
-    
-    top10.forEach((p, index) => {
-      doc.text(`${index + 1}. ${p.numero}`);
-      doc.text(`   Valor: R$ ${(p.valor || 0).toLocaleString('pt-BR', { minimumFractionDigits: 2 })} | Credor: ${p.credor}`);
-      doc.moveDown(0.5);
-    });
-
-    doc.end();
-
-  } catch (error) {
-    console.error('Erro ao gerar relatório:', error);
-    res.status(500).json({ error: 'Erro ao gerar relatório' });
-  }
-});
-
-// ============================================
-// ROTAS DE PÁGINAS
+// PÁGINAS
 // ============================================
 
 app.get('/', (req, res) => {
@@ -326,7 +124,7 @@ app.get('/dashboard', requireAuth, (req, res) => {
 });
 
 // ============================================
-// INICIAR SERVIDOR
+// INICIAR
 // ============================================
 
 app.listen(PORT, () => {

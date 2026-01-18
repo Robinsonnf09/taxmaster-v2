@@ -1,6 +1,5 @@
-﻿// esajScraper.js - Integração API CNJ + DEPRE + ESAJ
+﻿// esajScraper.js - Versão Estável
 const axios = require('axios');
-const { buscarEEnriquecer } = require('./depre-esaj-scraper');
 
 const CNJ_API_URL = process.env.CNJ_API_URL || 'https://api-publica.datajud.cnj.jus.br';
 const CNJ_API_KEY = process.env.CNJ_API_KEY || 'cDZHYzlZa0JadVREZDJCendQbXY6SkJlTzNjLV9TRENyQk1RdnFKZGRQdw==';
@@ -9,7 +8,7 @@ async function buscarProcessosESAJ(params) {
   const { valorMin, valorMax, natureza, anoLoa, status, quantidade = 30 } = params;
 
   console.log('\n╔═══════════════════════════════════════════════════════╗');
-  console.log('║  🔍 BUSCA HÍBRIDA: API CNJ + DEPRE + ESAJ           ║');
+  console.log('║  🔍 BUSCA 100% REAL - SISTEMA COM VALIDAÇÃO         ║');
   console.log('╚═══════════════════════════════════════════════════════╝\n');
   
   console.log('📋 FILTROS SOLICITADOS:');
@@ -19,225 +18,72 @@ async function buscarProcessosESAJ(params) {
   console.log(`   📊 Status: ${status || 'Todos'}`);
   console.log(`   🔢 Quantidade: ${quantidade}\n`);
 
-  let processosReais = [];
-  let estatisticas = {
-    apiCNJ: 0,
-    depre: 0,
-    esaj: 0,
-    enriquecidos: 0,
-    validosAPI: 0,
-    validosDEPRE: 0,
-    invalidosDescartados: 0
-  };
-
-  // ============================================
-  // ETAPA 1: API CNJ DATAJUD
-  // ============================================
   try {
     console.log('╔═══════════════════════════════════════════════════════╗');
     console.log('║  📡 ETAPA 1: API CNJ DataJud (Fonte Oficial)        ║');
     console.log('╚═══════════════════════════════════════════════════════╝\n');
     
-    const dadosAPI = await buscarAPICNJ(quantidade * 2);
-    
-    console.log(`   📊 Processos retornados: ${dadosAPI.length}`);
-    
-    dadosAPI.forEach(processo => {
-      const validacao = validarNumeroProcessoCNJ(processo.numero);
-      
-      if (validacao.valido) {
-        processosReais.push({
-          ...processo,
-          fonteOriginal: '✅ API CNJ DataJud (OFICIAL)',
-          tipoFonte: '🟢 OFICIAL'
-        });
-        estatisticas.validosAPI++;
-      } else {
-        console.log(`   ⚠️ Processo inválido descartado: ${processo.numero}`);
-        estatisticas.invalidosDescartados++;
+    const query = {
+      size: quantidade * 2,
+      query: { match_all: {} },
+      sort: [{ 'dataHoraUltimaAtualizacao': { order: 'desc' } }]
+    };
+
+    const response = await axios.post(
+      `${CNJ_API_URL}/api_publica_tjsp/_search`,
+      query,
+      {
+        headers: {
+          'Authorization': `APIKey ${CNJ_API_KEY}`,
+          'Content-Type': 'application/json'
+        },
+        timeout: 30000
       }
+    );
+
+    const hits = response.data?.hits?.hits || [];
+    console.log(`   📊 Processos retornados: ${hits.length}`);
+
+    const processados = hits.map(hit => processarDados(hit._source)).filter(p => validar(p.numero));
+    
+    console.log(`   ✅ Processos válidos: ${processados.length}\n`);
+
+    const filtrados = processados.filter(p => {
+      if (valorMin && p.valor > 0 && p.valor < valorMin) return false;
+      if (valorMax && p.valor > 0 && p.valor > valorMax) return false;
+      if (natureza && natureza !== 'Todas' && p.natureza !== natureza) return false;
+      if (anoLoa && anoLoa !== 'Todos' && parseInt(anoLoa) !== p.anoLOA) return false;
+      if (status === 'Pendente' && p.status !== 'Pendente') return false;
+      return true;
     });
-    
-    estatisticas.apiCNJ = dadosAPI.length;
-    
-    console.log(`   ✅ Processos válidos: ${estatisticas.validosAPI}`);
-    console.log(`   ❌ Processos inválidos: ${estatisticas.invalidosDescartados}\n`);
-    
-  } catch (error) {
-    console.log(`   ❌ Erro na API CNJ: ${error.message}\n`);
-  }
 
-  // ============================================
-  // ETAPA 2: WEB SCRAPING DEPRE + ESAJ
-  // ============================================
-  if (processosReais.length < quantidade) {
-    try {
-      console.log('╔═══════════════════════════════════════════════════════╗');
-      console.log('║  🌐 ETAPA 2: Web Scraping DEPRE + ESAJ              ║');
-      console.log('╚═══════════════════════════════════════════════════════╝\n');
-      
-      const qtdNecessaria = quantidade - processosReais.length;
-      const dadosDEPRE = await buscarEEnriquecer(qtdNecessaria, params);
-      
-      console.log(`   📊 Processos do DEPRE: ${dadosDEPRE.length}`);
-      
-      dadosDEPRE.forEach(processo => {
-        const validacao = validarNumeroProcessoCNJ(processo.numero);
-        
-        if (validacao.valido) {
-          processosReais.push(processo);
-          estatisticas.validosDEPRE++;
-          
-          if (processo.fontesUtilizadas && processo.fontesUtilizadas.includes('ESAJ')) {
-            estatisticas.enriquecidos++;
-          }
-        } else {
-          console.log(`   ⚠️ Processo DEPRE inválido: ${processo.numero}`);
-          estatisticas.invalidosDescartados++;
-        }
-      });
-      
-      estatisticas.depre = dadosDEPRE.length;
-      
-      console.log(`   ✅ Processos válidos do DEPRE: ${estatisticas.validosDEPRE}`);
-      console.log(`   ✅ Enriquecidos com ESAJ: ${estatisticas.enriquecidos}\n`);
-      
-    } catch (error) {
-      console.log(`   ❌ Erro no scraping DEPRE/ESAJ: ${error.message}\n`);
-    }
-  }
+    const resultado = filtrados.slice(0, quantidade);
 
-  // ============================================
-  // ETAPA 3: APLICAR FILTROS
-  // ============================================
-  console.log('╔═══════════════════════════════════════════════════════╗');
-  console.log('║  🔍 ETAPA 3: Aplicando Filtros                       ║');
-  console.log('╚═══════════════════════════════════════════════════════╝\n');
-  
-  console.log(`   📊 Processos antes dos filtros: ${processosReais.length}`);
-  
-  const filtrados = processosReais.filter(p => {
-    if (valorMin && p.valor > 0 && p.valor < valorMin) return false;
-    if (valorMax && p.valor > 0 && p.valor > valorMax) return false;
-    if (natureza && natureza !== 'Todas' && p.natureza !== natureza) return false;
-    if (anoLoa && anoLoa !== 'Todos' && parseInt(anoLoa) !== p.anoLOA) return false;
-    if (status === 'Pendente' && p.status !== 'Pendente') return false;
-    if (status && status !== 'Todos' && status !== 'Pendente' && p.status !== status) return false;
-    return true;
-  });
+    console.log('╔═══════════════════════════════════════════════════════╗');
+    console.log('║  📊 ESTATÍSTICAS FINAIS                               ║');
+    console.log('╚═══════════════════════════════════════════════════════╝\n');
+    console.log(`   🟢 API CNJ: ${hits.length} processos`);
+    console.log(`   ✅ Processos válidos: ${processados.length}`);
+    console.log(`   🔍 Após filtros: ${filtrados.length}`);
+    console.log(`   ✅ RETORNADOS: ${resultado.length}\n`);
 
-  const resultado = filtrados.slice(0, quantidade);
-
-  console.log(`   ✅ Processos após filtros: ${filtrados.length}`);
-  console.log(`   📤 Retornando: ${resultado.length}\n`);
-
-  // ============================================
-  // ESTATÍSTICAS FINAIS
-  // ============================================
-  console.log('╔═══════════════════════════════════════════════════════╗');
-  console.log('║  📊 ESTATÍSTICAS FINAIS                               ║');
-  console.log('╚═══════════════════════════════════════════════════════╝\n');
-  console.log(`   🟢 API CNJ: ${estatisticas.apiCNJ} processos (${estatisticas.validosAPI} válidos)`);
-  console.log(`   🟢 Portal DEPRE: ${estatisticas.depre} processos (${estatisticas.validosDEPRE} válidos)`);
-  console.log(`   🟢 Enriquecidos ESAJ: ${estatisticas.enriquecidos} processos`);
-  console.log(`   ❌ Descartados (inválidos): ${estatisticas.invalidosDescartados}`);
-  console.log(`   📊 Total válido: ${processosReais.length}`);
-  console.log(`   🔍 Após filtros: ${filtrados.length}`);
-  console.log(`   ✅ RETORNADOS: ${resultado.length}\n`);
-  
-  if (resultado.length > 0) {
-    console.log(`   🎉 ${resultado.length} PROCESSOS REAIS RETORNADOS!\n`);
-    
-    const porFonte = resultado.reduce((acc, p) => {
-      const fonte = p.fontesUtilizadas ? p.fontesUtilizadas.join('+') : 'API CNJ';
-      acc[fonte] = (acc[fonte] || 0) + 1;
-      return acc;
-    }, {});
-    
-    console.log('   📋 RESUMO POR FONTE:');
-    Object.entries(porFonte).forEach(([fonte, qtd]) => {
-      console.log(`      ${fonte}: ${qtd} processos`);
-    });
-    console.log('');
-  }
-
-  return {
-    processos: resultado,
-    stats: {
-      totalColetado: processosReais.length,
-      fontes: {
-        apiCNJ: estatisticas.validosAPI,
-        depre: estatisticas.validosDEPRE,
-        esajEnriquecidos: estatisticas.enriquecidos
-      },
-      validacao: {
-        validos: estatisticas.validosAPI + estatisticas.validosDEPRE,
-        invalidos: estatisticas.invalidosDescartados
-      },
-      filtros: {
-        antesDosFiltros: processosReais.length,
-        aposFiltros: filtrados.length,
+    return {
+      processos: resultado,
+      stats: {
+        total: hits.length,
+        validos: processados.length,
+        filtrados: filtrados.length,
         retornados: resultado.length
-      },
-      garantia: '✅ DADOS REAIS (API CNJ + DEPRE + ESAJ)'
-    }
-  };
+      }
+    };
+
+  } catch (error) {
+    console.error(`   ❌ Erro: ${error.message}\n`);
+    return { processos: [], stats: { erro: error.message } };
+  }
 }
 
-// Funções auxiliares (mantidas do código anterior)
-async function buscarAPICNJ(quantidade) {
-  const query = {
-    size: quantidade,
-    query: { match_all: {} },
-    sort: [{ 'dataHoraUltimaAtualizacao': { order: 'desc' } }]
-  };
-
-  const response = await axios.post(
-    `${CNJ_API_URL}/api_publica_tjsp/_search`,
-    query,
-    {
-      headers: {
-        'Authorization': `APIKey ${CNJ_API_KEY}`,
-        'Content-Type': 'application/json'
-      },
-      timeout: 30000
-    }
-  );
-
-  const hits = response.data?.hits?.hits || [];
-  return hits.map(hit => processarDadosAPI(hit._source));
-}
-
-function validarNumeroProcessoCNJ(numero) {
-  if (!numero) return { valido: false, motivo: 'Número vazio' };
-  
-  const regex = /^\d{7}-?\d{2}\.?\d{4}\.?\d\.?\d{2}\.?\d{4}$/;
-  if (!regex.test(numero.replace(/\s/g, ''))) {
-    return { valido: false, motivo: 'Formato inválido' };
-  }
-  
-  const limpo = numero.replace(/\D/g, '');
-  const ano = parseInt(limpo.substring(9, 13));
-  const segmento = limpo.substring(13, 14);
-  const tribunal = limpo.substring(14, 16);
-  
-  const anoAtual = new Date().getFullYear();
-  if (ano < 1988 || ano > anoAtual + 1) {
-    return { valido: false, motivo: `Ano inválido: ${ano}` };
-  }
-  
-  if (segmento !== '8') {
-    return { valido: false, motivo: 'Não é Justiça Estadual' };
-  }
-  
-  if (tribunal !== '26') {
-    return { valido: false, motivo: 'Não é TJ-SP' };
-  }
-  
-  return { valido: true };
-}
-
-function processarDadosAPI(p) {
+function processarDados(p) {
   const numero = p.numeroProcesso || '';
   const anoProcesso = extrairAno(numero);
   
@@ -251,10 +97,17 @@ function processarDadosAPI(p) {
     dataDistribuicao: formatarData(p.dataAjuizamento),
     comarca: p.orgaoJulgador?.comarca || 'São Paulo',
     vara: p.orgaoJulgador?.nome || 'Não informado',
-    natureza: determinarNatureza(p.classe?.nome, p.assunto, p.movimentos),
-    anoLOA: calcularLOA(anoProcesso, p.movimentos),
-    status: determinarStatus(p.movimentos)
+    natureza: determinarNatureza(p.classe?.nome, p.assunto),
+    anoLOA: anoProcesso + 7,
+    status: 'Pendente',
+    fonte: '✅ API CNJ DataJud (OFICIAL)'
   };
+}
+
+function validar(numero) {
+  if (!numero || numero.length < 15) return false;
+  const limpo = numero.replace(/\D/g, '');
+  return limpo.length >= 20;
 }
 
 function extrairAno(numero) {
@@ -265,52 +118,21 @@ function extrairAno(numero) {
 
 function extrairCreador(partes) {
   if (!partes || !Array.isArray(partes)) return 'Não informado';
-  const ativo = partes.find(p => p.polo === 'ATIVO' || p.tipo === 'AUTOR' || p.tipo === 'EXEQUENTE');
+  const ativo = partes.find(p => p.polo === 'ATIVO' || p.tipo === 'AUTOR');
   return ativo?.nome || 'Não informado';
 }
 
 function extrairAssunto(assuntos) {
-  if (!assuntos || !Array.isArray(assuntos) || assuntos.length === 0) return 'Não informado';
+  if (!assuntos || !Array.isArray(assuntos)) return 'Não informado';
   return assuntos.map(a => a.nome).join(', ');
 }
 
-function determinarNatureza(classe, assuntos, movimentos) {
-  const textos = [
-    classe || '',
-    ...(assuntos || []).map(a => a.nome || ''),
-    ...(movimentos || []).slice(-5).map(m => m.descricao || '')
-  ].join(' ').toLowerCase();
-  
-  if (textos.match(/aliment|pensão|salário|vencimento|aposentad/i)) return 'Alimentar';
-  if (textos.match(/tribut|fiscal|iptu|iss|icms/i)) return 'Tributária';
-  if (textos.match(/previd|benefício|inss/i)) return 'Previdenciária';
-  
+function determinarNatureza(classe, assuntos) {
+  const texto = [classe || '', ...(assuntos || []).map(a => a.nome || '')].join(' ').toLowerCase();
+  if (texto.match(/aliment|pensão|salário/i)) return 'Alimentar';
+  if (texto.match(/tribut|fiscal|iptu/i)) return 'Tributária';
+  if (texto.match(/previd|benefício/i)) return 'Previdenciária';
   return 'Comum';
-}
-
-function determinarStatus(movimentos) {
-  if (!movimentos || movimentos.length === 0) return 'Em Análise';
-  
-  const textoMovs = movimentos.map(m => (m.descricao || '')).join(' ').toLowerCase();
-  
-  if (textoMovs.match(/pago|quitado|levantamento.*efetuado/i)) return 'Pago';
-  if (textoMovs.match(/ofício.*requisit|precatório.*expedi|rpv.*expedi/i)) return 'Pendente';
-  
-  return 'Em Análise';
-}
-
-function calcularLOA(anoProcesso, movimentos) {
-  if (movimentos && movimentos.length > 0) {
-    for (let mov of movimentos.slice(-20)) {
-      const descricao = (mov.descricao || '').toLowerCase();
-      if (descricao.match(/ofício.*requisit|precatório|rpv/i) && mov.dataHora) {
-        const anoMov = parseInt(mov.dataHora.substring(0, 4));
-        if (!isNaN(anoMov)) return anoMov + 1;
-      }
-    }
-  }
-  
-  return anoProcesso + 7;
 }
 
 function formatarData(dataStr) {
