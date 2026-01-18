@@ -1,4 +1,4 @@
-﻿// server.js - Sistema Completo com Todas as Funcionalidades
+﻿// server.js - Versão CORRIGIDA
 const express = require('express');
 const session = require('express-session');
 const path = require('path');
@@ -28,9 +28,9 @@ function requireAuth(req, res, next) {
   res.redirect('/');
 }
 
-// Base de dados em memória (temporário)
+// Base de dados em memória
 let processosCache = [];
-let historicoB uscas = [];
+let historicoBuscas = [];  // ✅ CORRIGIDO - SEM ESPAÇO!
 
 // ============================================
 // ROTAS DE AUTENTICAÇÃO
@@ -73,11 +73,9 @@ app.get('/api/buscar-tjsp', requireAuth, async (req, res) => {
 
     const resultado = await buscarProcessosESAJ(params);
     
-    // Armazenar em cache
     processosCache = resultado.processos;
     
-    // Registrar no histórico
-    historicoB uscas.push({
+    historicoBuscas.push({
       data: new Date(),
       filtros: params,
       resultados: resultado.processos.length
@@ -123,7 +121,6 @@ app.get('/api/dashboard-stats', requireAuth, (req, res) => {
     porStatus: {}
   };
 
-  // Agrupar por natureza
   processosCache.forEach(p => {
     stats.porNatureza[p.natureza] = (stats.porNatureza[p.natureza] || 0) + 1;
     stats.valorPorNatureza[p.natureza] = (stats.valorPorNatureza[p.natureza] || 0) + (p.valor || 0);
@@ -143,7 +140,6 @@ app.get('/api/exportar/excel', requireAuth, async (req, res) => {
     const workbook = new ExcelJS.Workbook();
     const worksheet = workbook.addWorksheet('Processos');
 
-    // Definir colunas
     worksheet.columns = [
       { header: 'Número do Processo', key: 'numero', width: 30 },
       { header: 'Tribunal', key: 'tribunal', width: 15 },
@@ -158,7 +154,6 @@ app.get('/api/exportar/excel', requireAuth, async (req, res) => {
       { header: 'Fonte', key: 'fonte', width: 30 }
     ];
 
-    // Estilizar cabeçalho
     worksheet.getRow(1).font = { bold: true, color: { argb: 'FFFFFFFF' } };
     worksheet.getRow(1).fill = {
       type: 'pattern',
@@ -166,7 +161,6 @@ app.get('/api/exportar/excel', requireAuth, async (req, res) => {
       fgColor: { argb: 'FF667eea' }
     };
 
-    // Adicionar dados
     processosCache.forEach(p => {
       worksheet.addRow({
         numero: p.numero,
@@ -183,10 +177,8 @@ app.get('/api/exportar/excel', requireAuth, async (req, res) => {
       });
     });
 
-    // Formatação de valores
     worksheet.getColumn('valor').numFmt = 'R$ #,##0.00';
 
-    // Configurar resposta
     res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
     res.setHeader('Content-Disposition', `attachment; filename=processos_${new Date().toISOString().split('T')[0]}.xlsx`);
 
@@ -212,14 +204,12 @@ app.get('/api/exportar/pdf', requireAuth, (req, res) => {
     
     doc.pipe(res);
 
-    // Cabeçalho
     doc.fontSize(20).text('Tax Master V3', { align: 'center' });
     doc.fontSize(14).text('Relatório de Processos', { align: 'center' });
     doc.moveDown();
     doc.fontSize(10).text(`Gerado em: ${new Date().toLocaleString('pt-BR')}`, { align: 'center' });
     doc.moveDown(2);
 
-    // Resumo
     doc.fontSize(14).text('Resumo Executivo', { underline: true });
     doc.moveDown();
     doc.fontSize(10);
@@ -227,7 +217,6 @@ app.get('/api/exportar/pdf', requireAuth, (req, res) => {
     doc.text(`Valor Total: R$ ${processosCache.reduce((sum, p) => sum + (p.valor || 0), 0).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`);
     doc.moveDown(2);
 
-    // Lista de processos
     doc.fontSize(14).text('Lista de Processos', { underline: true });
     doc.moveDown();
     
@@ -260,7 +249,6 @@ app.get('/api/relatorio/executivo', requireAuth, (req, res) => {
     
     doc.pipe(res);
 
-    // Capa
     doc.fontSize(24).text('RELATÓRIO EXECUTIVO', { align: 'center' });
     doc.moveDown();
     doc.fontSize(18).text('Tax Master V3', { align: 'center' });
@@ -268,7 +256,6 @@ app.get('/api/relatorio/executivo', requireAuth, (req, res) => {
     doc.fontSize(12).text(`Período: ${new Date().toLocaleDateString('pt-BR')}`, { align: 'center' });
     doc.moveDown(5);
 
-    // Estatísticas
     const stats = {
       total: processosCache.length,
       valorTotal: processosCache.reduce((sum, p) => sum + (p.valor || 0), 0),
@@ -285,7 +272,6 @@ app.get('/api/relatorio/executivo', requireAuth, (req, res) => {
     doc.text(`Processos Pagos: ${stats.pagos}`);
     doc.moveDown(2);
 
-    // Por Natureza
     doc.fontSize(16).text('DISTRIBUIÇÃO POR NATUREZA', { underline: true });
     doc.moveDown();
     doc.fontSize(12);
@@ -301,7 +287,6 @@ app.get('/api/relatorio/executivo', requireAuth, (req, res) => {
     
     doc.moveDown(2);
 
-    // Processos de Maior Valor
     doc.fontSize(16).text('TOP 10 PROCESSOS DE MAIOR VALOR', { underline: true });
     doc.moveDown();
     doc.fontSize(10);
