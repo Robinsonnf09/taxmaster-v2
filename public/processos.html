@@ -1,0 +1,218 @@
+﻿<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tax Master V3 - Processos</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f5f5;
+        }
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .header h1 { font-size: 2em; }
+        .header p { margin-top: 5px; opacity: 0.9; }
+        .container {
+            max-width: 1400px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+        .filters {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 25px;
+        }
+        .filters h3 {
+            color: #667eea;
+            margin-bottom: 20px;
+        }
+        .filter-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        .filter-group label {
+            display: block;
+            color: #333;
+            font-weight: bold;
+            margin-bottom: 5px;
+            font-size: 0.9em;
+        }
+        .filter-group input, .filter-group select {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1em;
+        }
+        .btn {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        .btn-primary:hover { transform: translateY(-2px); }
+        .table-container {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th {
+            background: #667eea;
+            color: white;
+            padding: 15px;
+            text-align: left;
+            font-weight: bold;
+        }
+        td {
+            padding: 15px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        tr:hover { background: #f9f9f9; }
+        .badge {
+            display: inline-block;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: bold;
+        }
+        .badge-oficial { background: #10b981; color: white; }
+        .loading {
+            text-align: center;
+            padding: 50px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>📊 Tax Master V3</h1>
+        <p>Sistema de Gestão de Precatórios - TJ-SP</p>
+    </div>
+
+    <div class="container">
+        <div class="filters">
+            <h3>🔍 Filtros de Busca</h3>
+            <div class="filter-grid">
+                <div class="filter-group">
+                    <label>Valor Mínimo (R$)</label>
+                    <input type="number" id="valorMin" placeholder="Ex: 10000">
+                </div>
+                <div class="filter-group">
+                    <label>Valor Máximo (R$)</label>
+                    <input type="number" id="valorMax" placeholder="Ex: 500000">
+                </div>
+                <div class="filter-group">
+                    <label>Natureza</label>
+                    <select id="natureza">
+                        <option value="Todas">Todas</option>
+                        <option value="Alimentar">Alimentar</option>
+                        <option value="Tributária">Tributária</option>
+                        <option value="Previdenciária">Previdenciária</option>
+                        <option value="Comum">Comum</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label>Status</label>
+                    <select id="status">
+                        <option value="Todos">Todos</option>
+                        <option value="Pendente">Pendente</option>
+                        <option value="Pago">Pago</option>
+                        <option value="Em Análise">Em Análise</option>
+                    </select>
+                </div>
+            </div>
+            <button class="btn btn-primary" onclick="buscar()">🔍 Buscar no TJ-SP</button>
+        </div>
+
+        <div class="table-container">
+            <div id="loading" class="loading" style="display: none;">
+                ⏳ Buscando processos reais da API CNJ...
+            </div>
+            <table id="tabelaProcessos" style="display: none;">
+                <thead>
+                    <tr>
+                        <th>Número do Processo</th>
+                        <th>Credor</th>
+                        <th>Valor (R$)</th>
+                        <th>Natureza</th>
+                        <th>Ano LOA</th>
+                        <th>Status</th>
+                        <th>Fonte</th>
+                    </tr>
+                </thead>
+                <tbody id="tbody"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        async function buscar() {
+            const loading = document.getElementById('loading');
+            const tabela = document.getElementById('tabelaProcessos');
+            const tbody = document.getElementById('tbody');
+
+            loading.style.display = 'block';
+            tabela.style.display = 'none';
+
+            const params = new URLSearchParams({
+                valorMin: document.getElementById('valorMin').value || '',
+                valorMax: document.getElementById('valorMax').value || '',
+                natureza: document.getElementById('natureza').value,
+                status: document.getElementById('status').value
+            });
+
+            try {
+                const response = await fetch(`/api/buscar-tjsp?${params}`);
+                const data = await response.json();
+
+                tbody.innerHTML = '';
+
+                data.processos.forEach(p => {
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td>${p.numero}</td>
+                        <td>${p.credor}</td>
+                        <td>R$ ${(p.valor || 0).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</td>
+                        <td>${p.natureza}</td>
+                        <td>${p.anoLOA}</td>
+                        <td>${p.status}</td>
+                        <td><span class="badge badge-oficial">🟢 OFICIAL</span></td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+
+                loading.style.display = 'none';
+                tabela.style.display = 'table';
+
+            } catch (error) {
+                loading.innerHTML = '❌ Erro ao buscar processos';
+            }
+        }
+
+        // Buscar ao carregar
+        buscar();
+    </script>
+</body>
+</html>
