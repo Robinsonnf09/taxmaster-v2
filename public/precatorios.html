@@ -1,0 +1,173 @@
+﻿<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Precatórios - Tax Master V3</title>
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body class="dashboard-body">
+    <nav class="navbar">
+        <div class="container">
+            <div class="nav-brand">💼 Tax Master V3</div>
+            <div class="nav-menu">
+                <a href="/">Home</a>
+                <a href="/dashboard-financeiro.html">Dashboard</a>
+                <a href="/precatorios.html" class="active">Precatórios</a>
+                <a href="/oportunidades.html">Oportunidades</a>
+                <span class="user-info" id="userInfo">👤</span>
+            </div>
+        </div>
+    </nav>
+
+    <div class="dashboard-container">
+        <main class="main-content" style="margin-left: 0;">
+            <div class="section-header">
+                <h1>⚖️ Gestão de Precatórios</h1>
+                <button class="btn btn-primary" onclick="abrirModalPrecatorio()">+ Novo Precatório</button>
+            </div>
+
+            <div class="filter-bar">
+                <input type="text" id="searchPrecatorios" placeholder="🔍 Buscar por número ou beneficiário...">
+                <select id="filterTribunal">
+                    <option value="">Todos os tribunais</option>
+                    <option value="TJBA">TJBA - Bahia</option>
+                    <option value="TJSP">TJSP - São Paulo</option>
+                    <option value="TJRJ">TJRJ - Rio de Janeiro</option>
+                    <option value="TRF1">TRF1 - Federal 1ª Região</option>
+                </select>
+                <select id="filterStatus">
+                    <option value="">Todos os status</option>
+                    <option value="em_formacao">Em Formação</option>
+                    <option value="formado">Formado</option>
+                    <option value="em_pagamento">Em Pagamento</option>
+                    <option value="pago">Pago</option>
+                    <option value="vendido">Vendido</option>
+                </select>
+            </div>
+
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Nº Processo</th>
+                        <th>Tribunal</th>
+                        <th>Beneficiário</th>
+                        <th>Natureza</th>
+                        <th>Valor Corrigido</th>
+                        <th>Status</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody id="precatoriosBody">
+                    <tr>
+                        <td colspan="7" style="text-align: center; padding: 3rem;">
+                            <p style="color: var(--gray-700); font-size: 1.1rem;">
+                                🔐 Faça login para visualizar seus precatórios
+                            </p>
+                            <a href="/login.html" class="btn btn-primary" style="margin-top: 1rem;">Fazer Login</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </main>
+    </div>
+
+    <!-- MODAL PRECATÓRIO -->
+    <div id="modalPrecatorio" class="modal">
+        <div class="modal-content" style="max-width: 800px;">
+            <div class="modal-header">
+                <h2>⚖️ Novo Precatório</h2>
+                <span class="close" onclick="fecharModalPrecatorio()">&times;</span>
+            </div>
+            <form id="formPrecatorio" onsubmit="salvarPrecatorio(event)">
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                    <div class="form-group">
+                        <label>Número do Processo *</label>
+                        <input type="text" id="numero_processo" placeholder="0000000-00.0000.0.00.0000" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Tribunal *</label>
+                        <select id="tribunal" required>
+                            <option value="">Selecione...</option>
+                            <option value="TJBA">TJBA - Bahia</option>
+                            <option value="TJSP">TJSP - São Paulo</option>
+                            <option value="TJRJ">TJRJ - Rio de Janeiro</option>
+                            <option value="TRF1">TRF1 - Federal 1ª Região</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Ente Devedor *</label>
+                    <input type="text" id="ente_devedor" placeholder="Ex: Estado da Bahia" required>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                    <div class="form-group">
+                        <label>Natureza *</label>
+                        <select id="natureza" required>
+                            <option value="">Selecione...</option>
+                            <option value="alimentar">Alimentar</option>
+                            <option value="comum">Comum</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Status *</label>
+                        <select id="status" required>
+                            <option value="em_formacao">Em Formação</option>
+                            <option value="formado">Formado</option>
+                            <option value="em_pagamento">Em Pagamento</option>
+                            <option value="pago">Pago</option>
+                            <option value="vendido">Vendido</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Beneficiário *</label>
+                    <input type="text" id="beneficiario" placeholder="Nome completo" required>
+                </div>
+
+                <div class="form-group">
+                    <label>CPF/CNPJ *</label>
+                    <input type="text" id="cpf_cnpj" placeholder="000.000.000-00" required>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                    <div class="form-group">
+                        <label>Valor Principal (R$) *</label>
+                        <input type="number" id="valor_principal" step="0.01" placeholder="0,00" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Valor Corrigido (R$) *</label>
+                        <input type="number" id="valor_corrigido" step="0.01" placeholder="0,00" required>
+                    </div>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                    <div class="form-group">
+                        <label>Data Base *</label>
+                        <input type="date" id="data_base" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Data de Formação</label>
+                        <input type="date" id="data_formacao">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Observações</label>
+                    <textarea id="observacoes" rows="3" placeholder="Informações adicionais..."></textarea>
+                </div>
+
+                <div class="modal-buttons">
+                    <button type="button" class="btn btn-secondary" onclick="fecharModalPrecatorio()">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Salvar Precatório</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="/js/precatorios.js"></script>
+</body>
+</html>
