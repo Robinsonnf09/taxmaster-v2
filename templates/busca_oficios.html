@@ -1,0 +1,278 @@
+﻿<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Busca Automatizada de Ofícios - Tax Master</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container { max-width: 1000px; margin: 0 auto; }
+        .card {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            margin-bottom: 20px;
+        }
+        h1 { color: #667eea; margin-bottom: 10px; }
+        h2 { color: #667eea; margin-bottom: 20px; font-size: 1.5em; }
+        .step {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            border-left: 4px solid #667eea;
+        }
+        .step h3 { color: #333; margin-bottom: 15px; }
+        input[type="file"], input[type="password"] {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+        button {
+            background: #667eea;
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: bold;
+        }
+        button:hover { background: #5568d3; }
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        .status {
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 10px;
+            display: none;
+        }
+        .status.success { background: #d4edda; color: #155724; display: block; }
+        .status.error { background: #f8d7da; color: #721c24; display: block; }
+        .status.info { background: #d1ecf1; color: #0c5460; display: block; }
+        .progress {
+            width: 100%;
+            height: 30px;
+            background: #f0f0f0;
+            border-radius: 15px;
+            overflow: hidden;
+            margin: 20px 0;
+            display: none;
+        }
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            width: 0%;
+            transition: width 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="card">
+            <h1>🔍 Busca Automatizada de Ofícios Requisitórios</h1>
+            <p>Consulta em lote nos tribunais usando Certificado A3</p>
+        </div>
+
+        <div class="card">
+            <div class="step">
+                <h3>📜 Passo 1: Upload do Certificado Digital A3</h3>
+                <input type="file" id="certificado" accept=".pfx,.p12">
+                <input type="password" id="senha_cert" placeholder="Senha do certificado">
+                <button onclick="uploadCertificado()">Carregar Certificado</button>
+                <div id="status-cert" class="status"></div>
+            </div>
+
+            <div class="step">
+                <h3>📊 Passo 2: Upload da Planilha de Processos</h3>
+                <p style="margin-bottom: 10px;">Colunas obrigatórias: <strong>numero_processo, tribunal</strong></p>
+                <input type="file" id="planilha" accept=".xlsx,.xls,.csv">
+                <button onclick="uploadPlanilha()" id="btn-planilha" disabled>Enviar Planilha</button>
+                <div id="status-planilha" class="status"></div>
+            </div>
+
+            <div class="step">
+                <h3>🚀 Passo 3: Iniciar Busca Automatizada</h3>
+                <button onclick="iniciarBusca()" id="btn-busca" disabled>Iniciar Busca nos Tribunais</button>
+                <div id="status-busca" class="status"></div>
+                
+                <div class="progress" id="progress-container">
+                    <div class="progress-bar" id="progress-bar">0%</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let planilhaPath = null;
+
+        async function uploadCertificado() {
+            const fileInput = document.getElementById('certificado');
+            const senhaInput = document.getElementById('senha_cert');
+            const statusDiv = document.getElementById('status-cert');
+
+            if (!fileInput.files[0]) {
+                statusDiv.className = 'status error';
+                statusDiv.textContent = 'Selecione um arquivo de certificado';
+                return;
+            }
+
+            if (!senhaInput.value) {
+                statusDiv.className = 'status error';
+                statusDiv.textContent = 'Digite a senha do certificado';
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('certificado', fileInput.files[0]);
+            formData.append('senha', senhaInput.value);
+
+            statusDiv.className = 'status info';
+            statusDiv.textContent = 'Carregando certificado...';
+
+            try {
+                const response = await fetch('/automacao/busca-oficios/api/upload-certificado', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const result = await response.json();
+
+                if (result.sucesso) {
+                    statusDiv.className = 'status success';
+                    statusDiv.innerHTML = `
+                        ✅ Certificado carregado!<br>
+                        Nome: ${result.dados.nome}<br>
+                        CPF/CNPJ: ${result.dados.cpf_cnpj}<br>
+                        Validade: ${result.dados.validade_fim}
+                    `;
+                    document.getElementById('btn-planilha').disabled = false;
+                } else {
+                    statusDiv.className = 'status error';
+                    statusDiv.textContent = '❌ ' + result.erro;
+                }
+            } catch (error) {
+                statusDiv.className = 'status error';
+                statusDiv.textContent = '❌ Erro: ' + error.message;
+            }
+        }
+
+        async function uploadPlanilha() {
+            const fileInput = document.getElementById('planilha');
+            const statusDiv = document.getElementById('status-planilha');
+
+            if (!fileInput.files[0]) {
+                statusDiv.className = 'status error';
+                statusDiv.textContent = 'Selecione uma planilha';
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('planilha', fileInput.files[0]);
+
+            statusDiv.className = 'status info';
+            statusDiv.textContent = 'Processando planilha...';
+
+            try {
+                const response = await fetch('/automacao/busca-oficios/api/upload-planilha', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const result = await response.json();
+
+                if (result.sucesso) {
+                    planilhaPath = result.arquivo_salvo;
+                    statusDiv.className = 'status success';
+                    statusDiv.innerHTML = `
+                        ✅ Planilha carregada!<br>
+                        Total de processos: ${result.total_processos}<br>
+                        Colunas: ${result.colunas.join(', ')}
+                    `;
+                    document.getElementById('btn-busca').disabled = false;
+                } else {
+                    statusDiv.className = 'status error';
+                    statusDiv.textContent = '❌ ' + result.erro;
+                }
+            } catch (error) {
+                statusDiv.className = 'status error';
+                statusDiv.textContent = '❌ Erro: ' + error.message;
+            }
+        }
+
+        async function iniciarBusca() {
+            const statusDiv = document.getElementById('status-busca');
+            const progressContainer = document.getElementById('progress-container');
+            const progressBar = document.getElementById('progress-bar');
+
+            if (!planilhaPath) {
+                statusDiv.className = 'status error';
+                statusDiv.textContent = 'Faça upload da planilha primeiro';
+                return;
+            }
+
+            statusDiv.className = 'status info';
+            statusDiv.textContent = '🔍 Iniciando busca automatizada...';
+            progressContainer.style.display = 'block';
+            document.getElementById('btn-busca').disabled = true;
+
+            try {
+                const response = await fetch('/automacao/busca-oficios/api/iniciar-busca', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ planilha_path: planilhaPath })
+                });
+
+                const result = await response.json();
+
+                if (result.sucesso) {
+                    statusDiv.className = 'status success';
+                    statusDiv.innerHTML = `
+                        ✅ Busca iniciada!<br>
+                        Total de processos: ${result.total_processos}<br>
+                        A busca está sendo executada em segundo plano...
+                    `;
+
+                    // Simular progresso (em produção, usar WebSocket ou polling)
+                    let progress = 0;
+                    const interval = setInterval(() => {
+                        progress += 5;
+                        progressBar.style.width = progress + '%';
+                        progressBar.textContent = progress + '%';
+
+                        if (progress >= 100) {
+                            clearInterval(interval);
+                            statusDiv.className = 'status success';
+                            statusDiv.textContent = '✅ Busca concluída! Verifique o relatório gerado.';
+                        }
+                    }, 1000);
+                } else {
+                    statusDiv.className = 'status error';
+                    statusDiv.textContent = '❌ ' + result.erro;
+                    document.getElementById('btn-busca').disabled = false;
+                }
+            } catch (error) {
+                statusDiv.className = 'status error';
+                statusDiv.textContent = '❌ Erro: ' + error.message;
+                document.getElementById('btn-busca').disabled = false;
+            }
+        }
+    </script>
+</body>
+</html>
