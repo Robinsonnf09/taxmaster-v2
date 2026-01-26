@@ -152,3 +152,11 @@ class TribunalIntegration:
         """Fecha navegador"""
         if self.driver:
             self.driver.quit()
+
+# Importar scrapers reais
+try:
+    from scraper_trf1_real import ScraperTRF1Real
+    SCRAPER_REAL_DISPONIVEL = True
+except ImportError:
+    SCRAPER_REAL_DISPONIVEL = False
+
