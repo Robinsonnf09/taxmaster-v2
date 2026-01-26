@@ -1,0 +1,54 @@
+﻿<!-- Adicionar na página busca_oficios.html -->
+
+<div class="step">
+    <h3>🔐 Passo 1A: Token A3 USB (Alternativa)</h3>
+    <p>Se seu certificado está em TOKEN USB, clique abaixo:</p>
+    
+    <div style="background: #fff3cd; padding: 15px; border-radius: 8px; margin: 10px 0;">
+        <strong>📋 Antes de continuar:</strong><br>
+        ✅ Conecte o token USB no computador<br>
+        ✅ Instale o middleware do fabricante<br>
+        ✅ Tenha o PIN em mãos
+    </div>
+    
+    <button onclick="detectarToken()">Detectar Token A3</button>
+    <div id="status-token" class="status"></div>
+</div>
+
+<script>
+async function detectarToken() {
+    const statusDiv = document.getElementById('status-token');
+    
+    statusDiv.className = 'status info';
+    statusDiv.textContent = '🔍 Detectando token...';
+    
+    try {
+        const response = await fetch('/automacao/busca-oficios/api/detectar-token', {
+            method: 'POST'
+        });
+        
+        const result = await response.json();
+        
+        if (result.sucesso) {
+            statusDiv.className = 'status success';
+            statusDiv.innerHTML = `
+                ✅ Token detectado!<br>
+                Middleware: ${result.middleware}<br>
+                Fabricante: ${result.fabricante}
+            `;
+            document.getElementById('btn-planilha').disabled = false;
+        } else {
+            statusDiv.className = 'status error';
+            statusDiv.innerHTML = `
+                ❌ ${result.erro}<br><br>
+                <strong>Instale o middleware:</strong><br>
+                - SafeNet: <a href="https://safenet.gemalto.com/" target="_blank">Download</a><br>
+                - Certisign: <a href="https://www.certisign.com.br/" target="_blank">Download</a>
+            `;
+        }
+    } catch (error) {
+        statusDiv.className = 'status error';
+        statusDiv.textContent = '❌ Erro: ' + error.message;
+    }
+}
+</script>
