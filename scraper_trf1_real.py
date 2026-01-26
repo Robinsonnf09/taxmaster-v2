@@ -1,6 +1,5 @@
 ﻿"""
-Scraper REAL para TRF1 - Consulta Pública PJe
-Busca e baixa ofícios requisitórios de verdade
+Scraper REAL para TRF1 - COM WEBDRIVER-MANAGER
 """
 
 from selenium import webdriver
@@ -8,9 +7,10 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.chrome.service import Service
+from webdriver_manager.chrome import ChromeDriverManager
 import time
 import os
-import requests
 
 class ScraperTRF1Real:
     def __init__(self):
@@ -18,22 +18,31 @@ class ScraperTRF1Real:
         self.driver = None
     
     def iniciar_navegador(self):
-        """Inicia Chrome com configurações otimizadas"""
+        """Inicia Chrome com ChromeDriver automático"""
         chrome_options = Options()
         chrome_options.add_argument('--start-maximized')
         chrome_options.add_argument('--disable-blink-features=AutomationControlled')
+        chrome_options.add_argument('--disable-gpu')
+        chrome_options.add_argument('--no-sandbox')
         chrome_options.add_experimental_option("excludeSwitches", ["enable-automation"])
         chrome_options.add_experimental_option('useAutomationExtension', False)
         
         # Download automático
+        pasta_download = os.path.join(os.getcwd(), "oficios_baixados")
+        os.makedirs(pasta_download, exist_ok=True)
+        
         prefs = {
-            "download.default_directory": os.path.join(os.getcwd(), "oficios_baixados"),
+            "download.default_directory": pasta_download,
             "download.prompt_for_download": False,
             "plugins.always_open_pdf_externally": True
         }
         chrome_options.add_experimental_option("prefs", prefs)
         
-        self.driver = webdriver.Chrome(options=chrome_options)
+        # Usar webdriver-manager para instalar ChromeDriver automaticamente
+        service = Service(ChromeDriverManager().install())
+        self.driver = webdriver.Chrome(service=service, options=chrome_options)
+        
+        print("✅ Chrome iniciado com sucesso!")
         return self.driver
     
     def buscar_processo_real(self, numero_processo):
@@ -42,43 +51,56 @@ class ScraperTRF1Real:
             if not self.driver:
                 self.iniciar_navegador()
             
-            print(f"\n🔍 Buscando processo real: {numero_processo}")
+            print(f"\n🔍 Buscando processo: {numero_processo}")
             
             # Acessar consulta pública
             self.driver.get(self.base_url)
-            time.sleep(2)
+            time.sleep(3)
             
             # Limpar número do processo
             numero_limpo = numero_processo.replace('.', '').replace('-', '').replace('/', '')
             
-            # Preencher campo de busca
-            wait = WebDriverWait(self.driver, 10)
+            if len(numero_limpo) != 20:
+                return {
+                    'sucesso': False,
+                    'erro': f'Número de processo inválido. Esperado 20 dígitos, recebido {len(numero_limpo)}'
+                }
             
-            # Campo: Número do Processo
+            # Preencher campo de busca
+            wait = WebDriverWait(self.driver, 15)
+            
+            print("📝 Preenchendo campos...")
+            
+            # Número sequencial (7 dígitos)
             campo_numero = wait.until(
                 EC.presence_of_element_located((By.ID, "fPP:numeroProcesso:numeroSequencial"))
             )
             campo_numero.clear()
-            campo_numero.send_keys(numero_limpo[:7])  # Primeiros 7 dígitos
+            campo_numero.send_keys(numero_limpo[0:7])
             
-            # Digito verificador
+            # Dígito verificador (2 dígitos)
             campo_digito = self.driver.find_element(By.ID, "fPP:numeroProcesso:digitoVerificador")
+            campo_digito.clear()
             campo_digito.send_keys(numero_limpo[7:9])
             
-            # Ano
+            # Ano (4 dígitos)
             campo_ano = self.driver.find_element(By.ID, "fPP:numeroProcesso:ano")
+            campo_ano.clear()
             campo_ano.send_keys(numero_limpo[9:13])
             
-            # Segmento
+            # Segmento (1 dígito)
             campo_segmento = self.driver.find_element(By.ID, "fPP:numeroProcesso:segmento")
+            campo_segmento.clear()
             campo_segmento.send_keys(numero_limpo[13:14])
             
-            # Tribunal
+            # Tribunal (4 dígitos)
             campo_tribunal = self.driver.find_element(By.ID, "fPP:numeroProcesso:tribunal")
+            campo_tribunal.clear()
             campo_tribunal.send_keys(numero_limpo[14:18])
             
-            # Origem
+            # Origem (4 dígitos)
             campo_origem = self.driver.find_element(By.ID, "fPP:numeroProcesso:origem")
+            campo_origem.clear()
             campo_origem.send_keys(numero_limpo[18:22])
             
             print("✅ Campos preenchidos")
@@ -87,7 +109,8 @@ class ScraperTRF1Real:
             btn_pesquisar = self.driver.find_element(By.ID, "fPP:searchProcessos")
             btn_pesquisar.click()
             
-            time.sleep(3)
+            print("⏳ Aguardando resultado...")
+            time.sleep(4)
             
             # Verificar se encontrou
             try:
@@ -96,7 +119,7 @@ class ScraperTRF1Real:
                 )
                 print("✅ Processo encontrado!")
                 
-                # Clicar no processo para ver detalhes
+                # Clicar no processo
                 resultado.click()
                 time.sleep(2)
                 
@@ -106,8 +129,8 @@ class ScraperTRF1Real:
                     'mensagem': 'Processo encontrado no PJe'
                 }
                 
-            except:
-                print("❌ Processo não encontrado")
+            except Exception as e:
+                print(f"❌ Processo não encontrado: {str(e)}")
                 return {
                     'sucesso': False,
                     'encontrado': False,
@@ -115,135 +138,37 @@ class ScraperTRF1Real:
                 }
         
         except Exception as e:
-            print(f"❌ Erro: {str(e)}")
+            print(f"❌ Erro na busca: {str(e)}")
             return {
                 'sucesso': False,
                 'erro': str(e)
             }
     
-    def buscar_oficio_na_pagina(self):
-        """Procura ofício requisitório nos documentos"""
-        try:
-            print("\n📄 Buscando ofício requisitório...")
-            
-            wait = WebDriverWait(self.driver, 10)
-            
-            # Ir para aba de documentos
-            try:
-                aba_docs = wait.until(
-                    EC.element_to_be_clickable((By.PARTIAL_LINK_TEXT, "Documentos"))
-                )
-                aba_docs.click()
-                time.sleep(2)
-            except:
-                print("⚠️  Não encontrou aba de documentos")
-            
-            # Procurar por "Ofício Requisitório" ou "Requisição de Pagamento"
-            documentos = self.driver.find_elements(By.CLASS_NAME, "documento-link")
-            
-            for doc in documentos:
-                texto = doc.text.lower()
-                if 'ofício' in texto or 'requisitório' in texto or 'requisição' in texto:
-                    print(f"✅ Ofício encontrado: {doc.text}")
-                    return {
-                        'sucesso': True,
-                        'encontrado': True,
-                        'documento': doc.text,
-                        'elemento': doc
-                    }
-            
-            print("❌ Ofício requisitório não encontrado nos documentos")
-            return {
-                'sucesso': False,
-                'encontrado': False,
-                'mensagem': 'Ofício não encontrado'
-            }
-        
-        except Exception as e:
-            print(f"❌ Erro ao buscar ofício: {str(e)}")
-            return {
-                'sucesso': False,
-                'erro': str(e)
-            }
-    
-    def baixar_oficio(self, elemento_documento, numero_processo):
-        """Baixa o ofício requisitório"""
-        try:
-            print("\n⬇️  Baixando ofício...")
-            
-            # Clicar no documento
-            elemento_documento.click()
-            time.sleep(3)
-            
-            # Aguardar download
-            pasta_download = os.path.join(os.getcwd(), "oficios_baixados")
-            os.makedirs(pasta_download, exist_ok=True)
-            
-            # Aguardar arquivo aparecer na pasta
-            for i in range(10):
-                arquivos = os.listdir(pasta_download)
-                if arquivos:
-                    arquivo_baixado = arquivos[-1]  # Último arquivo
-                    print(f"✅ Ofício baixado: {arquivo_baixado}")
-                    
-                    # Renomear com número do processo
-                    novo_nome = f"oficio_{numero_processo.replace('/', '_')}.pdf"
-                    caminho_antigo = os.path.join(pasta_download, arquivo_baixado)
-                    caminho_novo = os.path.join(pasta_download, novo_nome)
-                    
-                    os.rename(caminho_antigo, caminho_novo)
-                    
-                    return {
-                        'sucesso': True,
-                        'arquivo': caminho_novo
-                    }
-                
-                time.sleep(1)
-            
-            return {
-                'sucesso': False,
-                'erro': 'Timeout ao aguardar download'
-            }
-        
-        except Exception as e:
-            return {
-                'sucesso': False,
-                'erro': str(e)
-            }
-    
-    def executar_busca_completa(self, numero_processo):
-        """Execução completa: buscar processo + ofício + baixar"""
-        try:
-            # 1. Buscar processo
-            resultado_busca = self.buscar_processo_real(numero_processo)
-            
-            if not resultado_busca.get('encontrado'):
-                return resultado_busca
-            
-            # 2. Buscar ofício
-            resultado_oficio = self.buscar_oficio_na_pagina()
-            
-            if not resultado_oficio.get('encontrado'):
-                return resultado_oficio
-            
-            # 3. Baixar ofício
-            resultado_download = self.baixar_oficio(
-                resultado_oficio['elemento'],
-                numero_processo
-            )
-            
-            return resultado_download
-        
-        finally:
-            if self.driver:
-                self.driver.quit()
+    def fechar(self):
+        if self.driver:
+            self.driver.quit()
+            print("🔒 Navegador fechado")
 
 # Teste
 if __name__ == "__main__":
+    print("🚀 TESTE DO SCRAPER TRF1")
+    print("="*60)
+    
     scraper = ScraperTRF1Real()
     
-    # Processo de exemplo (use um processo real público)
-    numero = "0000000-00.0000.4.01.0000"  # SUBSTITUA por processo real
+    # IMPORTANTE: Use um processo REAL e PÚBLICO do TRF1
+    # Formato: 0000000-00.0000.4.01.0000
+    numero = "0000000-00.0000.4.01.0000"  # ⚠️ SUBSTITUA!
     
-    resultado = scraper.executar_busca_completa(numero)
-    print(f"\n📊 Resultado final: {resultado}")
+    print(f"⚠️  ATENÇÃO: Usando número fictício: {numero}")
+    print("⚠️  Para testar de verdade, substitua por processo REAL!")
+    print("="*60)
+    
+    try:
+        resultado = scraper.buscar_processo_real(numero)
+        print(f"\n📊 RESULTADO:")
+        print(f"   Sucesso: {resultado.get('sucesso')}")
+        print(f"   Encontrado: {resultado.get('encontrado', 'N/A')}")
+        print(f"   Mensagem: {resultado.get('mensagem', resultado.get('erro', 'N/A'))}")
+    finally:
+        scraper.fechar()
