@@ -1,0 +1,28 @@
+[
+  {
+    "id": 1,
+    "nome": "Admin Tax Master",
+    "email": "admin@taxmaster.com",
+    "senha": "$2b$10$62lc9FuCnwpSQ2.AcArrEeSTb3kQVTgy/pU33ycydGriuUuK3Go2O",
+    "tipo": "admin",
+    "especialidades": [
+      "Contábil",
+      "Tributária"
+    ],
+    "telefone": "+5511999999999",
+    "createdAt": "2026-01-20T03:55:02.533Z"
+  },
+  {
+    "nome": "Robinson Tax Master",
+    "email": "robinson@taxmaster.com",
+    "senha": "$2b$10$/9gqUMePQAW6fTB3GSR/2Ow5ycuSMWLGyxlvgF34CemUpKUy0QCMm",
+    "tipo": "perito",
+    "especialidades": [
+      "Cont�bil",
+      "Tribut�ria"
+    ],
+    "telefone": "+5511987654321",
+    "id": 2,
+    "createdAt": "2026-01-20T03:57:37.131Z"
+  }
+]

@@ -1,0 +1,12 @@
+[
+  {
+    "processo": "0001234-56.2024.8.26.0100",
+    "tribunal": "TJ-SP",
+    "especialidade": "Cont�bil",
+    "valorCausa": 50000,
+    "usuarioId": 2,
+    "status": "pendente",
+    "id": 1,
+    "createdAt": "2026-01-20T03:58:45.829Z"
+  }
+]

@@ -1,0 +1,424 @@
+﻿<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Busca Automática de Ofícios - Tax Master</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            margin-bottom: 30px;
+        }
+        
+        .header h1 {
+            color: #667eea;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .header p {
+            color: #666;
+            font-size: 1.1em;
+        }
+        
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+        
+        .card {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        
+        .card h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+            font-size: 1.8em;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .upload-area {
+            border: 3px dashed #667eea;
+            border-radius: 10px;
+            padding: 40px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .upload-area:hover {
+            background: #f0f4ff;
+            border-color: #5568d3;
+        }
+        
+        .upload-area.dragover {
+            background: #e8f0ff;
+            border-color: #4451c0;
+        }
+        
+        .upload-icon {
+            font-size: 4em;
+            margin-bottom: 15px;
+        }
+        
+        input[type="file"] {
+            display: none;
+        }
+        
+        .btn {
+            background: #667eea;
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+            margin-top: 20px;
+            font-weight: bold;
+        }
+        
+        .btn:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+        }
+        
+        .btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .progress-container {
+            display: none;
+            margin-top: 20px;
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 30px;
+            background: #e0e0e0;
+            border-radius: 15px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            width: 0%;
+            transition: width 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+        
+        .results-container {
+            margin-top: 30px;
+            display: none;
+        }
+        
+        .result-item {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .result-item.success {
+            border-left: 4px solid #10b981;
+        }
+        
+        .result-item.error {
+            border-left: 4px solid #ef4444;
+        }
+        
+        .status-badge {
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: bold;
+        }
+        
+        .status-success {
+            background: #10b981;
+            color: white;
+        }
+        
+        .status-error {
+            background: #ef4444;
+            color: white;
+        }
+        
+        .info-box {
+            background: #f0f4ff;
+            border-left: 4px solid #667eea;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .stat-card {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+        
+        .stat-number {
+            font-size: 2.5em;
+            font-weight: bold;
+            color: #667eea;
+        }
+        
+        .stat-label {
+            color: #666;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔍 Busca Automática de Ofícios Requisitórios</h1>
+            <p>Importe sua lista de precatórios e busque automaticamente os ofícios nos tribunais</p>
+        </div>
+        
+        <div class="main-content">
+            <!-- Upload de Lista -->
+            <div class="card">
+                <h2>📋 1. Importar Lista de Precatórios</h2>
+                
+                <div class="info-box">
+                    <strong>📄 Formatos aceitos:</strong> Excel (.xlsx, .xls) ou CSV<br>
+                    <strong>✅ Colunas obrigatórias:</strong> numero_processo<br>
+                    <strong>📊 Colunas opcionais:</strong> tribunal, numero_precatorio, valor, natureza
+                </div>
+                
+                <div class="upload-area" id="uploadArea">
+                    <div class="upload-icon">📤</div>
+                    <h3>Arraste o arquivo aqui</h3>
+                    <p>ou clique para selecionar</p>
+                    <input type="file" id="fileInput" accept=".xlsx,.xls,.csv">
+                </div>
+                
+                <div id="fileInfo" style="margin-top: 15px; display: none;">
+                    <strong>Arquivo selecionado:</strong> <span id="fileName"></span><br>
+                    <strong>Total de processos:</strong> <span id="totalProcessos"></span>
+                </div>
+                
+                <button class="btn" id="btnIniciarBusca" disabled>🚀 Iniciar Busca Automática</button>
+                
+                <div class="progress-container" id="progressContainer">
+                    <h3 style="margin-bottom: 10px;">Progresso da Busca</h3>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progressFill">0%</div>
+                    </div>
+                    <p style="margin-top: 10px; text-align: center;" id="progressText">Preparando...</p>
+                </div>
+            </div>
+            
+            <!-- Resultados -->
+            <div class="card">
+                <h2>📊 2. Resultados</h2>
+                
+                <div class="stats">
+                    <div class="stat-card">
+                        <div class="stat-number" id="statTotal">0</div>
+                        <div class="stat-label">Total</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="statSucesso" style="color: #10b981;">0</div>
+                        <div class="stat-label">Encontrados</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="statErro" style="color: #ef4444;">0</div>
+                        <div class="stat-label">Erros</div>
+                    </div>
+                </div>
+                
+                <div class="results-container" id="resultsContainer">
+                    <h3 style="margin: 20px 0 10px;">Detalhes:</h3>
+                    <div id="resultsList"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        const uploadArea = document.getElementById('uploadArea');
+        const fileInput = document.getElementById('fileInput');
+        const btnIniciarBusca = document.getElementById('btnIniciarBusca');
+        const progressContainer = document.getElementById('progressContainer');
+        const resultsContainer = document.getElementById('resultsContainer');
+        
+        let uploadedFile = null;
+        let uploadedFilePath = null;
+        
+        // Upload de arquivo
+        uploadArea.addEventListener('click', () => fileInput.click());
+        
+        uploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadArea.classList.add('dragover');
+        });
+        
+        uploadArea.addEventListener('dragleave', () => {
+            uploadArea.classList.remove('dragover');
+        });
+        
+        uploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadArea.classList.remove('dragover');
+            
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                handleFile(files[0]);
+            }
+        });
+        
+        fileInput.addEventListener('change', (e) => {
+            if (e.target.files.length > 0) {
+                handleFile(e.target.files[0]);
+            }
+        });
+        
+        async function handleFile(file) {
+            uploadedFile = file;
+            
+            const formData = new FormData();
+            formData.append('arquivo', file);
+            
+            try {
+                const response = await fetch('/automacao/busca-oficios/api/upload-lista', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                const data = await response.json();
+                
+                if (data.sucesso) {
+                    document.getElementById('fileName').textContent = file.name;
+                    document.getElementById('totalProcessos').textContent = data.total;
+                    document.getElementById('fileInfo').style.display = 'block';
+                    btnIniciarBusca.disabled = false;
+                    uploadedFilePath = data.filepath;
+                    
+                    alert(`✅ Arquivo importado com sucesso!\n${data.total} processos encontrados.`);
+                } else {
+                    alert('❌ Erro: ' + data.erro);
+                }
+            } catch (error) {
+                alert('❌ Erro ao enviar arquivo: ' + error.message);
+            }
+        }
+        
+        btnIniciarBusca.addEventListener('click', async () => {
+            if (!uploadedFilePath) {
+                alert('Por favor, importe uma lista primeiro!');
+                return;
+            }
+            
+            btnIniciarBusca.disabled = true;
+            progressContainer.style.display = 'block';
+            
+            try {
+                const response = await fetch('/automacao/busca-oficios/api/iniciar-busca', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({
+                        filepath: uploadedFilePath
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (data.sucesso) {
+                    // Atualizar estatísticas
+                    document.getElementById('statTotal').textContent = data.total;
+                    document.getElementById('statSucesso').textContent = data.encontrados;
+                    document.getElementById('statErro').textContent = data.total - data.encontrados;
+                    
+                    // Mostrar resultados
+                    resultsContainer.style.display = 'block';
+                    const resultsList = document.getElementById('resultsList');
+                    resultsList.innerHTML = '';
+                    
+                    data.resultados.forEach(resultado => {
+                        const item = document.createElement('div');
+                        item.className = `result-item ${resultado.sucesso ? 'success' : 'error'}`;
+                        
+                        item.innerHTML = `
+                            <div>
+                                <strong>${resultado.numero_processo}</strong><br>
+                                <small>${resultado.tribunal || 'TJ-BA'}</small>
+                            </div>
+                            <span class="status-badge status-${resultado.sucesso ? 'success' : 'error'}">
+                                ${resultado.sucesso ? '✅ Encontrado' : '❌ Não encontrado'}
+                            </span>
+                        `;
+                        
+                        resultsList.appendChild(item);
+                    });
+                    
+                    document.getElementById('progressFill').style.width = '100%';
+                    document.getElementById('progressFill').textContent = '100%';
+                    document.getElementById('progressText').textContent = 'Busca concluída!';
+                    
+                    alert(`✅ Busca concluída!\n${data.encontrados} ofícios encontrados de ${data.total} processos.`);
+                } else {
+                    alert('❌ Erro: ' + data.erro);
+                }
+            } catch (error) {
+                alert('❌ Erro na busca: ' + error.message);
+            } finally {
+                btnIniciarBusca.disabled = false;
+            }
+        });
+    </script>
+</body>
+</html>

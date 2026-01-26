@@ -1,0 +1,150 @@
+﻿<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de Honorários - Sistema Perícia</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #fff;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container { max-width: 800px; margin: 0 auto; }
+        .card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        h1 { margin-bottom: 30px; }
+        .input-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+        input, select {
+            width: 100%;
+            padding: 12px;
+            border-radius: 8px;
+            border: none;
+            background: rgba(255, 255, 255, 0.2);
+            color: #fff;
+            font-size: 16px;
+        }
+        input::placeholder { color: rgba(255, 255, 255, 0.6); }
+        .btn {
+            background: linear-gradient(45deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 16px;
+            transition: transform 0.2s;
+            width: 100%;
+        }
+        .btn:hover { transform: scale(1.02); }
+        .resultado {
+            background: linear-gradient(45deg, #4facfe 0%, #00f2fe 100%);
+            padding: 30px;
+            border-radius: 15px;
+            margin-top: 30px;
+            text-align: center;
+        }
+        .valor-final {
+            font-size: 3em;
+            font-weight: bold;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="card">
+            <h1><i class="fas fa-calculator"></i> Calculadora de Honorários Periciais</h1>
+            
+            <div class="input-group">
+                <label><i class="fas fa-gavel"></i> Valor da Causa (R$)</label>
+                <input type="number" id="valorCausa" placeholder="Ex: 250000" value="250000">
+            </div>
+            
+            <div class="input-group">
+                <label><i class="fas fa-clock"></i> Horas Estimadas</label>
+                <input type="number" id="horasEstimadas" placeholder="Ex: 40" value="40">
+            </div>
+            
+            <div class="input-group">
+                <label><i class="fas fa-layer-group"></i> Complexidade</label>
+                <select id="complexidade">
+                    <option value="1">Baixa (1x)</option>
+                    <option value="1.5" selected>Média (1.5x)</option>
+                    <option value="2">Alta (2x)</option>
+                    <option value="3">Muito Alta (3x)</option>
+                </select>
+            </div>
+            
+            <div class="input-group">
+                <label><i class="fas fa-user-tie"></i> Experiência do Perito</label>
+                <select id="experiencia">
+                    <option value="300">Iniciante (R$ 300/hora)</option>
+                    <option value="450" selected>Intermediário (R$ 450/hora)</option>
+                    <option value="600">Experiente (R$ 600/hora)</option>
+                    <option value="800">Expert (R$ 800/hora)</option>
+                </select>
+            </div>
+            
+            <button class="btn" onclick="calcular()">
+                <i class="fas fa-calculator"></i> Calcular Honorários
+            </button>
+        </div>
+        
+        <div id="resultado" style="display: none;" class="resultado">
+            <h2>💰 Honorários Recomendados</h2>
+            <div class="valor-final" id="valorFinal">R$ 0,00</div>
+            <p id="detalhes"></p>
+        </div>
+    </div>
+    
+    <script>
+        function calcular() {
+            const valorCausa = parseFloat(document.getElementById('valorCausa').value);
+            const horas = parseFloat(document.getElementById('horasEstimadas').value);
+            const complexidade = parseFloat(document.getElementById('complexidade').value);
+            const valorHora = parseFloat(document.getElementById('experiencia').value);
+            
+            // Cálculo: (horas × valor/hora × complexidade)
+            const honorarios = horas * valorHora * complexidade;
+            
+            // Mínimo 1% do valor da causa
+            const minimo = valorCausa * 0.01;
+            const valorFinal = Math.max(honorarios, minimo);
+            
+            document.getElementById('valorFinal').textContent = 
+                'R$ ' + valorFinal.toLocaleString('pt-BR', {minimumFractionDigits: 2});
+            
+            document.getElementById('detalhes').innerHTML = `
+                <strong>${horas}h</strong> × 
+                <strong>R$ ${valorHora}</strong>/hora × 
+                <strong>${complexidade}x</strong> complexidade<br>
+                <small>Mínimo legal: R$ ${minimo.toLocaleString('pt-BR', {minimumFractionDigits: 2})} (1% do valor da causa)</small>
+            `;
+            
+            document.getElementById('resultado').style.display = 'block';
+        }
+        
+        // Calcular ao carregar
+        calcular();
+    </script>
+</body>
+</html>

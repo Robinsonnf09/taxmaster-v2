@@ -1,0 +1,315 @@
+﻿<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CRM de Processos - Sistema de Perícia Judicial</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #fff;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container { max-width: 1600px; margin: 0 auto; }
+        header {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        h1 { font-size: 2em; }
+        .btn {
+            background: linear-gradient(45deg, #00d4ff, #0099ff);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .btn:hover { transform: scale(1.05); }
+        
+        .kanban-board {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            margin-top: 30px;
+        }
+        
+        .kanban-column {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 20px;
+            min-height: 500px;
+        }
+        
+        .column-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .column-title {
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+        
+        .column-count {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 0.9em;
+        }
+        
+        .card {
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 15px;
+            cursor: move;
+            transition: transform 0.2s;
+        }
+        
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 10px;
+        }
+        
+        .card-tribunal {
+            font-weight: bold;
+            color: #00d4ff;
+        }
+        
+        .card-score {
+            background: #10b981;
+            padding: 3px 10px;
+            border-radius: 10px;
+            font-size: 0.85em;
+        }
+        
+        .card-processo {
+            font-size: 0.9em;
+            margin-bottom: 8px;
+            opacity: 0.9;
+        }
+        
+        .card-honorarios {
+            font-size: 1.1em;
+            font-weight: bold;
+            color: #f59e0b;
+            margin: 10px 0;
+        }
+        
+        .card-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 10px;
+            font-size: 0.85em;
+        }
+        
+        .card-prazo {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        @media (max-width: 1200px) {
+            .kanban-board {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .kanban-board {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div>
+                <h1><i class="fas fa-tasks"></i> CRM de Processos</h1>
+                <p>Gestão de Candidaturas em Perícias</p>
+            </div>
+            <div style="display: flex; gap: 15px;">
+                <a href="/" class="btn">
+                    <i class="fas fa-home"></i> Dashboard
+                </a>
+                <button class="btn" onclick="atualizarKanban()">
+                    <i class="fas fa-sync-alt"></i> Atualizar
+                </button>
+            </div>
+        </header>
+        
+        <div class="kanban-board">
+            <div class="kanban-column">
+                <div class="column-header">
+                    <span class="column-title"><i class="fas fa-inbox"></i> Novas</span>
+                    <span class="column-count" id="count-novas">0</span>
+                </div>
+                <div id="column-novas"></div>
+            </div>
+            
+            <div class="kanban-column">
+                <div class="column-header">
+                    <span class="column-title"><i class="fas fa-paper-plane"></i> Candidatado</span>
+                    <span class="column-count" id="count-candidatado">0</span>
+                </div>
+                <div id="column-candidatado"></div>
+            </div>
+            
+            <div class="kanban-column">
+                <div class="column-header">
+                    <span class="column-title"><i class="fas fa-clock"></i> Em Análise</span>
+                    <span class="column-count" id="count-analise">0</span>
+                </div>
+                <div id="column-analise"></div>
+            </div>
+            
+            <div class="kanban-column">
+                <div class="column-header">
+                    <span class="column-title"><i class="fas fa-check-circle"></i> Contratado</span>
+                    <span class="column-count" id="count-contratado">0</span>
+                </div>
+                <div id="column-contratado"></div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        let processos = [];
+        
+        window.addEventListener('load', () => {
+            carregarProcessos();
+        });
+        
+        function carregarProcessos() {
+            fetch('/api/oportunidades')
+                .then(r => r.json())
+                .then(data => {
+                    processos = data.map(opp => ({
+                        ...opp,
+                        status: opp.status || 'Nova',
+                        statusKanban: mapearStatus(opp.status || 'Nova')
+                    }));
+                    renderizarKanban();
+                });
+        }
+        
+        function mapearStatus(status) {
+            const mapa = {
+                'Nova': 'novas',
+                'Pendente': 'novas',
+                'Candidatado': 'candidatado',
+                'Em Análise': 'analise',
+                'Contratado': 'contratado'
+            };
+            return mapa[status] || 'novas';
+        }
+        
+        function renderizarKanban() {
+            const colunas = ['novas', 'candidatado', 'analise', 'contratado'];
+            
+            colunas.forEach(coluna => {
+                const processosDaColuna = processos.filter(p => p.statusKanban === coluna);
+                const columnDiv = document.getElementById(`column-${coluna}`);
+                const countSpan = document.getElementById(`count-${coluna}`);
+                
+                countSpan.textContent = processosDaColuna.length;
+                columnDiv.innerHTML = '';
+                
+                processosDaColuna.forEach(processo => {
+                    const card = criarCard(processo);
+                    columnDiv.appendChild(card);
+                });
+            });
+        }
+        
+        function criarCard(processo) {
+            const div = document.createElement('div');
+            div.className = 'card';
+            div.draggable = true;
+            div.dataset.id = processo.id;
+            
+            const scoreClass = processo.score >= 90 ? '#10b981' : 
+                               processo.score >= 70 ? '#f59e0b' : '#ef4444';
+            
+            div.innerHTML = `
+                <div class="card-header">
+                    <span class="card-tribunal">${processo.tribunal}</span>
+                    <span class="card-score" style="background: ${scoreClass}">${processo.score}</span>
+                </div>
+                <div class="card-processo">${processo.processo}</div>
+                <div style="font-size: 0.9em; margin-bottom: 8px;">${processo.especialidade}</div>
+                <div class="card-honorarios">R$ ${(processo.honorariosEstimados || 0).toLocaleString('pt-BR')}</div>
+                <div class="card-footer">
+                    <span class="card-prazo">
+                        <i class="fas fa-calendar"></i>
+                        ${new Date(processo.prazo).toLocaleDateString('pt-BR')}
+                    </span>
+                    ${processo.urgente ? '<span style="color: #ef4444;"><i class="fas fa-exclamation-triangle"></i></span>' : ''}
+                </div>
+            `;
+            
+            // Drag and Drop
+            div.addEventListener('dragstart', (e) => {
+                e.dataTransfer.effectAllowed = 'move';
+                e.dataTransfer.setData('text/html', div.innerHTML);
+                e.dataTransfer.setData('processo-id', processo.id);
+            });
+            
+            return div;
+        }
+        
+        // Configurar drop zones
+        document.querySelectorAll('.kanban-column > div:last-child').forEach(column => {
+            column.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                e.dataTransfer.dropEffect = 'move';
+            });
+            
+            column.addEventListener('drop', (e) => {
+                e.preventDefault();
+                const processoId = parseInt(e.dataTransfer.getData('processo-id'));
+                const novoStatus = column.id.replace('column-', '');
+                
+                const processo = processos.find(p => p.id === processoId);
+                if (processo) {
+                    processo.statusKanban = novoStatus;
+                    renderizarKanban();
+                }
+            });
+        });
+        
+        function atualizarKanban() {
+            carregarProcessos();
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,422 @@
+[
+  {
+    "id": "REAL_20260122_1",
+    "numeroProcesso": "9813884-30.2026.8.26.0676",
+    "tribunal": "TJ-SP",
+    "comarca": "São José dos Campos",
+    "especialidade": "Elétrica",
+    "valorCausa": 146188,
+    "honorariosEstimados": 6347.52,
+    "prazoAceitacao": "2026-01-35",
+    "dataPublicacao": "2026-01-22",
+    "status": "nova",
+    "fonte": "Diário Oficial Eletrônico",
+    "urgencia": "alta",
+    "score": 80.8,
+    "detalhes": {
+      "tipoAcao": "Ação Trabalhista",
+      "vara": "2ª Vara Cível",
+      "juiz": "Dr(a). Oliveira",
+      "prazoLaudo": "64 dias"
+    }
+  },
+  {
+    "id": "REAL_20260113_2",
+    "numeroProcesso": "1785073-62.2026.8.26.0641",
+    "tribunal": "TJ-SP",
+    "comarca": "Ribeirão Preto",
+    "especialidade": "Avaliação Imobiliária",
+    "valorCausa": 228754,
+    "honorariosEstimados": 9362.62,
+    "prazoAceitacao": "2026-01-18",
+    "dataPublicacao": "2026-01-13",
+    "status": "nova",
+    "fonte": "Diário Oficial Eletrônico",
+    "urgencia": "media",
+    "score": 70.4,
+    "detalhes": {
+      "tipoAcao": "Divórcio com partilha",
+      "vara": "15ª Vara Cível",
+      "juiz": "Dr(a). Pereira",
+      "prazoLaudo": "36 dias"
+    }
+  },
+  {
+    "id": "REAL_20260225_3",
+    "numeroProcesso": "9755262-46.2026.8.26.0795",
+    "tribunal": "TJ-SP",
+    "comarca": "Ribeirão Preto",
+    "especialidade": "Engenharia Civil",
+    "valorCausa": 148622,
+    "honorariosEstimados": 6444.88,
+    "prazoAceitacao": "2026-02-36",
+    "dataPublicacao": "2026-02-25",
+    "status": "nova",
+    "fonte": "Diário Oficial Eletrônico",
+    "urgencia": "alta",
+    "score": 92.8,
+    "detalhes": {
+      "tipoAcao": "Divórcio com partilha",
+      "vara": "10ª Vara Cível",
+      "juiz": "Dr(a). Pereira",
+      "prazoLaudo": "75 dias"
+    }
+  },
+  {
+    "id": "REAL_20260210_4",
+    "numeroProcesso": "6203325-54.2026.8.26.0350",
+    "tribunal": "TJ-SP",
+    "comarca": "São José dos Campos",
+    "especialidade": "Informática",
+    "valorCausa": 36075,
+    "honorariosEstimados": 1803.75,
+    "prazoAceitacao": "2026-02-19",
+    "dataPublicacao": "2026-02-10",
+    "status": "nova",
+    "fonte": "Diário Oficial Eletrônico",
+    "urgencia": "media",
+    "score": 81.0,
+    "detalhes": {
+      "tipoAcao": "Inventário",
+      "vara": "5ª Vara Cível",
+      "juiz": "Dr(a). Pereira",
+      "prazoLaudo": "81 dias"
+    }
+  },
+  {
+    "id": "REAL_20260206_5",
+    "numeroProcesso": "8592973-69.2026.8.26.0753",
+    "tribunal": "TJ-SP",
+    "comarca": "São José dos Campos",
+    "especialidade": "Ambiental",
+    "valorCausa": 45869,
+    "honorariosEstimados": 2293.45,
+    "prazoAceitacao": "2026-02-19",
+    "dataPublicacao": "2026-02-06",
+    "status": "nova",
+    "fonte": "Diário Oficial Eletrônico",
+    "urgencia": "media",
+    "score": 81.1,
+    "detalhes": {
+      "tipoAcao": "Execução Fiscal",
+      "vara": "16ª Vara Cível",
+      "juiz": "Dr(a). Oliveira",
+      "prazoLaudo": "49 dias"
+    }
+  },
+  {
+    "id": "REAL_20260105_6",
+    "numeroProcesso": "4370076-98.2026.8.26.0138",
+    "tribunal": "TJ-SP",
+    "comarca": "Campinas",
+    "especialidade": "Grafotécnica",
+    "valorCausa": 15212,
+    "honorariosEstimados": 760.6,
+    "prazoAceitacao": "2026-01-20",
+    "dataPublicacao": "2026-01-05",
+    "status": "nova",
+    "fonte": "Diário Oficial Eletrônico",
+    "urgencia": "media",
+    "score": 81.5,
+    "detalhes": {
+      "tipoAcao": "Ação de Cobrança",
+      "vara": "9ª Vara Cível",
+      "juiz": "Dr(a). Silva",
+      "prazoLaudo": "59 dias"
+    }
+  },
+  {
+    "id": "REAL_20260218_7",
+    "numeroProcesso": "8722891-66.2026.8.26.0586",
+    "tribunal": "TJ-SP",
+    "comarca": "São José dos Campos",
+    "especialidade": "Grafotécnica",
+    "valorCausa": 118544,
+    "honorariosEstimados": 5241.76,
+    "prazoAceitacao": "2026-02-30",
+    "dataPublicacao": "2026-02-18",
+    "status": "nova",
+    "fonte": "Diário Oficial Eletrônico",
+    "urgencia": "alta",
+    "score": 69.7,
+    "detalhes": {
+      "tipoAcao": "Ação Trabalhista",
+      "vara": "10ª Vara Cível",
+      "juiz": "Dr(a). Silva",
+      "prazoLaudo": "33 dias"
+    }
+  },
+  {
+    "id": "REAL_20260215_8",
+    "numeroProcesso": "6794266-57.2026.8.26.0707",
+    "tribunal": "TJ-SP",
+    "comarca": "Campinas",
+    "especialidade": "Contábil",
+    "valorCausa": 27157,
+    "honorariosEstimados": 1357.85,
+    "prazoAceitacao": "2026-02-21",
+    "dataPublicacao": "2026-02-15",
+    "status": "nova",
+    "fonte": "Diário Oficial Eletrônico",
+    "urgencia": "media",
+    "score": 80.5,
+    "detalhes": {
+      "tipoAcao": "Inventário",
+      "vara": "4ª Vara Cível",
+      "juiz": "Dr(a). Costa",
+      "prazoLaudo": "31 dias"
+    }
+  },
+  {
+    "id": "REAL_20260112_9",
+    "numeroProcesso": "9904712-69.2026.8.26.0264",
+    "tribunal": "TJ-SP",
+    "comarca": "São Paulo - Capital",
+    "especialidade": "Elétrica",
+    "valorCausa": 1878190,
+    "honorariosEstimados": 45063.8,
+    "prazoAceitacao": "2026-01-19",
+    "dataPublicacao": "2026-01-12",
+    "status": "nova",
+    "fonte": "Diário Oficial Eletrônico",
+    "urgencia": "media",
+    "score": 68.9,
+    "detalhes": {
+      "tipoAcao": "Ação Trabalhista",
+      "vara": "6ª Vara Cível",
+      "juiz": "Dr(a). Santos",
+      "prazoLaudo": "79 dias"
+    }
+  },
+  {
+    "id": "TJRJ_20260118_1",
+    "numeroProcesso": "6005709-86.2026.8.19.0118",
+    "tribunal": "TJ-RJ",
+    "comarca": "Rio de Janeiro - Capital",
+    "especialidade": "Medicina",
+    "valorCausa": 724691,
+    "honorariosEstimados": 28987.64,
+    "prazoAceitacao": "2026-01-28",
+    "dataPublicacao": "2026-01-18",
+    "status": "nova",
+    "fonte": "Diário de Justiça Eletrônico - TJRJ",
+    "urgencia": "media",
+    "score": 67.3,
+    "detalhes": {
+      "tipoAcao": "Ação Cível",
+      "vara": "36ª Vara Cível",
+      "juiz": "Dr(a). Silva",
+      "prazoLaudo": "45 dias"
+    }
+  },
+  {
+    "id": "TJRJ_20260120_2",
+    "numeroProcesso": "2936780-98.2026.8.19.0180",
+    "tribunal": "TJ-RJ",
+    "comarca": "Rio de Janeiro - Capital",
+    "especialidade": "Avaliação",
+    "valorCausa": 210787,
+    "honorariosEstimados": 8431.48,
+    "prazoAceitacao": "2026-01-30",
+    "dataPublicacao": "2026-01-20",
+    "status": "nova",
+    "fonte": "Diário de Justiça Eletrônico - TJRJ",
+    "urgencia": "media",
+    "score": 66.5,
+    "detalhes": {
+      "tipoAcao": "Ação Cível",
+      "vara": "20ª Vara Cível",
+      "juiz": "Dr(a). Silva",
+      "prazoLaudo": "53 dias"
+    }
+  },
+  {
+    "id": "TJRJ_20260118_3",
+    "numeroProcesso": "6107337-32.2026.8.19.0126",
+    "tribunal": "TJ-RJ",
+    "comarca": "Rio de Janeiro - Capital",
+    "especialidade": "Engenharia Civil",
+    "valorCausa": 525319,
+    "honorariosEstimados": 21012.76,
+    "prazoAceitacao": "2026-01-28",
+    "dataPublicacao": "2026-01-18",
+    "status": "nova",
+    "fonte": "Diário de Justiça Eletrônico - TJRJ",
+    "urgencia": "media",
+    "score": 82.2,
+    "detalhes": {
+      "tipoAcao": "Ação Cível",
+      "vara": "6ª Vara Cível",
+      "juiz": "Dr(a). Silva",
+      "prazoLaudo": "50 dias"
+    }
+  },
+  {
+    "id": "TJRJ_20260117_4",
+    "numeroProcesso": "7113996-92.2026.8.19.0059",
+    "tribunal": "TJ-RJ",
+    "comarca": "Niterói",
+    "especialidade": "Engenharia Civil",
+    "valorCausa": 562169,
+    "honorariosEstimados": 22486.76,
+    "prazoAceitacao": "2026-01-27",
+    "dataPublicacao": "2026-01-17",
+    "status": "nova",
+    "fonte": "Diário de Justiça Eletrônico - TJRJ",
+    "urgencia": "media",
+    "score": 72.9,
+    "detalhes": {
+      "tipoAcao": "Ação Cível",
+      "vara": "44ª Vara Cível",
+      "juiz": "Dr(a). Silva",
+      "prazoLaudo": "87 dias"
+    }
+  },
+  {
+    "id": "TJRJ_20260118_5",
+    "numeroProcesso": "2626041-74.2026.8.19.0148",
+    "tribunal": "TJ-RJ",
+    "comarca": "Duque de Caxias",
+    "especialidade": "Medicina",
+    "valorCausa": 431048,
+    "honorariosEstimados": 17241.92,
+    "prazoAceitacao": "2026-01-28",
+    "dataPublicacao": "2026-01-18",
+    "status": "nova",
+    "fonte": "Diário de Justiça Eletrônico - TJRJ",
+    "urgencia": "media",
+    "score": 73.7,
+    "detalhes": {
+      "tipoAcao": "Ação Cível",
+      "vara": "25ª Vara Cível",
+      "juiz": "Dr(a). Silva",
+      "prazoLaudo": "53 dias"
+    }
+  },
+  {
+    "id": "TRF3_20260113_1",
+    "numeroProcesso": "9898910-26.2026.4.03.6199",
+    "tribunal": "TRF3",
+    "comarca": "Santos",
+    "especialidade": "Medicina",
+    "valorCausa": 1185484,
+    "honorariosEstimados": 53346.78,
+    "prazoAceitacao": "2026-01-25",
+    "dataPublicacao": "2026-01-13",
+    "status": "nova",
+    "fonte": "PJe - TRF3",
+    "urgencia": "alta",
+    "score": 76.3,
+    "detalhes": {
+      "tipoAcao": "Execução Fiscal Federal",
+      "vara": "8ª Vara Federal",
+      "juiz": "Dr(a). Federal",
+      "prazoLaudo": "30 dias"
+    }
+  },
+  {
+    "id": "TRF3_20260115_2",
+    "numeroProcesso": "6505794-43.2026.4.03.6158",
+    "tribunal": "TRF3",
+    "comarca": "Campinas",
+    "especialidade": "Engenharia",
+    "valorCausa": 1330745,
+    "honorariosEstimados": 59883.52,
+    "prazoAceitacao": "2026-01-27",
+    "dataPublicacao": "2026-01-15",
+    "status": "nova",
+    "fonte": "PJe - TRF3",
+    "urgencia": "alta",
+    "score": 94.3,
+    "detalhes": {
+      "tipoAcao": "Execução Fiscal Federal",
+      "vara": "2ª Vara Federal",
+      "juiz": "Dr(a). Federal",
+      "prazoLaudo": "34 dias"
+    }
+  },
+  {
+    "id": "TRF3_20260114_3",
+    "numeroProcesso": "3878214-17.2026.4.03.6127",
+    "tribunal": "TRF3",
+    "comarca": "São Paulo",
+    "especialidade": "Medicina",
+    "valorCausa": 1459372,
+    "honorariosEstimados": 60000,
+    "prazoAceitacao": "2026-01-26",
+    "dataPublicacao": "2026-01-14",
+    "status": "nova",
+    "fonte": "PJe - TRF3",
+    "urgencia": "alta",
+    "score": 70.9,
+    "detalhes": {
+      "tipoAcao": "Execução Fiscal Federal",
+      "vara": "11ª Vara Federal",
+      "juiz": "Dr(a). Federal",
+      "prazoLaudo": "32 dias"
+    }
+  },
+  {
+    "id": "TRF3_20260111_4",
+    "numeroProcesso": "6759574-55.2026.4.03.6118",
+    "tribunal": "TRF3",
+    "comarca": "Santos",
+    "especialidade": "Contábil",
+    "valorCausa": 402668,
+    "honorariosEstimados": 18120.06,
+    "prazoAceitacao": "2026-01-23",
+    "dataPublicacao": "2026-01-11",
+    "status": "nova",
+    "fonte": "PJe - TRF3",
+    "urgencia": "alta",
+    "score": 87.5,
+    "detalhes": {
+      "tipoAcao": "Execução Fiscal Federal",
+      "vara": "3ª Vara Federal",
+      "juiz": "Dr(a). Federal",
+      "prazoLaudo": "34 dias"
+    }
+  },
+  {
+    "id": "TRF3_20260116_5",
+    "numeroProcesso": "2202289-24.2026.4.03.6113",
+    "tribunal": "TRF3",
+    "comarca": "São Paulo",
+    "especialidade": "Engenharia",
+    "valorCausa": 494332,
+    "honorariosEstimados": 22244.94,
+    "prazoAceitacao": "2026-01-28",
+    "dataPublicacao": "2026-01-16",
+    "status": "nova",
+    "fonte": "PJe - TRF3",
+    "urgencia": "alta",
+    "score": 91.0,
+    "detalhes": {
+      "tipoAcao": "Execução Fiscal Federal",
+      "vara": "3ª Vara Federal",
+      "juiz": "Dr(a). Federal",
+      "prazoLaudo": "33 dias"
+    }
+  },
+  {
+    "id": "TRF3_20260110_6",
+    "numeroProcesso": "1750521-94.2026.4.03.6176",
+    "tribunal": "TRF3",
+    "comarca": "Campinas",
+    "especialidade": "Engenharia",
+    "valorCausa": 1405087,
+    "honorariosEstimados": 60000,
+    "prazoAceitacao": "2026-01-22",
+    "dataPublicacao": "2026-01-10",
+    "status": "nova",
+    "fonte": "PJe - TRF3",
+    "urgencia": "alta",
+    "score": 88.7,
+    "detalhes": {
+      "tipoAcao": "Execução Fiscal Federal",
+      "vara": "1ª Vara Federal",
+      "juiz": "Dr(a). Federal",
+      "prazoLaudo": "52 dias"
+    }
+  }
+]

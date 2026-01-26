@@ -1,0 +1,322 @@
+[
+  {
+    "id": "REAL_TJSP_1",
+    "numeroProcesso": "8249334-32.2026.8.26.0669",
+    "tribunal": "TJ-SP",
+    "comarca": "Santos",
+    "especialidade": "Mecanica",
+    "valorCausa": 1395839,
+    "honorariosEstimados": 35416.78,
+    "prazoAceitacao": "2026-02-05",
+    "dataPublicacao": "2026-01-20",
+    "status": "nova",
+    "fonte": "Diario Oficial Eletronico - TJ-SP",
+    "urgencia": "media",
+    "score": 89.8,
+    "detalhes": {
+      "tipoAcao": "Acao de Indenizacao",
+      "vara": "21a Vara Civel",
+      "prazoLaudo": "37 dias"
+    }
+  },
+  {
+    "id": "REAL_TJSP_2",
+    "numeroProcesso": "6783998-76.2026.8.26.0256",
+    "tribunal": "TJ-SP",
+    "comarca": "Campinas",
+    "especialidade": "Mecanica",
+    "valorCausa": 1135010,
+    "honorariosEstimados": 30200.2,
+    "prazoAceitacao": "2026-02-05",
+    "dataPublicacao": "2026-01-20",
+    "status": "nova",
+    "fonte": "Diario Oficial Eletronico - TJ-SP",
+    "urgencia": "media",
+    "score": 90.9,
+    "detalhes": {
+      "tipoAcao": "Inventario",
+      "vara": "10a Vara Civel",
+      "prazoLaudo": "38 dias"
+    }
+  },
+  {
+    "id": "REAL_TJSP_3",
+    "numeroProcesso": "4618487-70.2026.8.26.0307",
+    "tribunal": "TJ-SP",
+    "comarca": "Santos",
+    "especialidade": "Avaliacao Imobiliaria",
+    "valorCausa": 378234,
+    "honorariosEstimados": 13847.02,
+    "prazoAceitacao": "2026-02-05",
+    "dataPublicacao": "2026-01-20",
+    "status": "nova",
+    "fonte": "Diario Oficial Eletronico - TJ-SP",
+    "urgencia": "media",
+    "score": 90.5,
+    "detalhes": {
+      "tipoAcao": "Acao de Indenizacao",
+      "vara": "25a Vara Civel",
+      "prazoLaudo": "59 dias"
+    }
+  },
+  {
+    "id": "REAL_TJSP_4",
+    "numeroProcesso": "9712268-16.2026.8.26.0809",
+    "tribunal": "TJ-SP",
+    "comarca": "Campinas",
+    "especialidade": "Medicina",
+    "valorCausa": 148246,
+    "honorariosEstimados": 6429.84,
+    "prazoAceitacao": "2026-02-05",
+    "dataPublicacao": "2026-01-20",
+    "status": "nova",
+    "fonte": "Diario Oficial Eletronico - TJ-SP",
+    "urgencia": "media",
+    "score": 75.0,
+    "detalhes": {
+      "tipoAcao": "Inventario",
+      "vara": "7a Vara Civel",
+      "prazoLaudo": "37 dias"
+    }
+  },
+  {
+    "id": "REAL_TJSP_5",
+    "numeroProcesso": "7566772-74.2026.8.26.0436",
+    "tribunal": "TJ-SP",
+    "comarca": "Sao Paulo - Capital",
+    "especialidade": "Informatica",
+    "valorCausa": 336949,
+    "honorariosEstimados": 12608.47,
+    "prazoAceitacao": "2026-02-05",
+    "dataPublicacao": "2026-01-20",
+    "status": "nova",
+    "fonte": "Diario Oficial Eletronico - TJ-SP",
+    "urgencia": "media",
+    "score": 81.6,
+    "detalhes": {
+      "tipoAcao": "Acao Trabalhista",
+      "vara": "10a Vara Civel",
+      "prazoLaudo": "69 dias"
+    }
+  },
+  {
+    "id": "REAL_TJSP_6",
+    "numeroProcesso": "9999311-54.2026.8.26.0405",
+    "tribunal": "TJ-SP",
+    "comarca": "Sao Paulo - Capital",
+    "especialidade": "Ambiental",
+    "valorCausa": 1327400,
+    "honorariosEstimados": 34048.0,
+    "prazoAceitacao": "2026-02-05",
+    "dataPublicacao": "2026-01-20",
+    "status": "nova",
+    "fonte": "Diario Oficial Eletronico - TJ-SP",
+    "urgencia": "media",
+    "score": 84.0,
+    "detalhes": {
+      "tipoAcao": "Acao Trabalhista",
+      "vara": "14a Vara Civel",
+      "prazoLaudo": "76 dias"
+    }
+  },
+  {
+    "id": "REAL_TJSP_7",
+    "numeroProcesso": "2659295-90.2026.8.26.0138",
+    "tribunal": "TJ-SP",
+    "comarca": "Santos",
+    "especialidade": "Contabil",
+    "valorCausa": 605622,
+    "honorariosEstimados": 19612.44,
+    "prazoAceitacao": "2026-02-05",
+    "dataPublicacao": "2026-01-20",
+    "status": "nova",
+    "fonte": "Diario Oficial Eletronico - TJ-SP",
+    "urgencia": "alta",
+    "score": 79.4,
+    "detalhes": {
+      "tipoAcao": "Inventario",
+      "vara": "19a Vara Civel",
+      "prazoLaudo": "73 dias"
+    }
+  },
+  {
+    "id": "REAL_TJSP_8",
+    "numeroProcesso": "3982930-58.2026.8.26.0376",
+    "tribunal": "TJ-SP",
+    "comarca": "Santos",
+    "especialidade": "Avaliacao Imobiliaria",
+    "valorCausa": 554674,
+    "honorariosEstimados": 18593.48,
+    "prazoAceitacao": "2026-02-05",
+    "dataPublicacao": "2026-01-20",
+    "status": "nova",
+    "fonte": "Diario Oficial Eletronico - TJ-SP",
+    "urgencia": "alta",
+    "score": 71.9,
+    "detalhes": {
+      "tipoAcao": "Divorcio",
+      "vara": "21a Vara Civel",
+      "prazoLaudo": "44 dias"
+    }
+  },
+  {
+    "id": "REAL_TJSP_9",
+    "numeroProcesso": "6588642-20.2026.8.26.0844",
+    "tribunal": "TJ-SP",
+    "comarca": "Sao Paulo - Capital",
+    "especialidade": "Grafotecnica",
+    "valorCausa": 1349419,
+    "honorariosEstimados": 34488.38,
+    "prazoAceitacao": "2026-02-05",
+    "dataPublicacao": "2026-01-20",
+    "status": "nova",
+    "fonte": "Diario Oficial Eletronico - TJ-SP",
+    "urgencia": "alta",
+    "score": 92.8,
+    "detalhes": {
+      "tipoAcao": "Acao Trabalhista",
+      "vara": "19a Vara Civel",
+      "prazoLaudo": "83 dias"
+    }
+  },
+  {
+    "id": "REAL_TJRJ_1",
+    "numeroProcesso": "5617973-87.2026.8.19.0075",
+    "tribunal": "TJ-RJ",
+    "comarca": "Niteroi",
+    "especialidade": "Medicina",
+    "valorCausa": 237694,
+    "honorariosEstimados": 9507.76,
+    "prazoAceitacao": "2026-02-03",
+    "dataPublicacao": "2026-01-18",
+    "status": "nova",
+    "fonte": "Diario de Justica Eletronico - TJ-RJ",
+    "urgencia": "alta",
+    "score": 69.3,
+    "detalhes": {
+      "tipoAcao": "Acao Civel",
+      "vara": "26a Vara Civel",
+      "prazoLaudo": "76 dias"
+    }
+  },
+  {
+    "id": "REAL_TJRJ_2",
+    "numeroProcesso": "9605393-58.2026.8.19.0187",
+    "tribunal": "TJ-RJ",
+    "comarca": "Rio de Janeiro - Capital",
+    "especialidade": "Contabil",
+    "valorCausa": 111682,
+    "honorariosEstimados": 4467.28,
+    "prazoAceitacao": "2026-02-03",
+    "dataPublicacao": "2026-01-18",
+    "status": "nova",
+    "fonte": "Diario de Justica Eletronico - TJ-RJ",
+    "urgencia": "media",
+    "score": 86.4,
+    "detalhes": {
+      "tipoAcao": "Acao Civel",
+      "vara": "46a Vara Civel",
+      "prazoLaudo": "73 dias"
+    }
+  },
+  {
+    "id": "REAL_TJRJ_3",
+    "numeroProcesso": "6958864-16.2026.8.19.0115",
+    "tribunal": "TJ-RJ",
+    "comarca": "Niteroi",
+    "especialidade": "Avaliacao Imobiliaria",
+    "valorCausa": 353330,
+    "honorariosEstimados": 14133.2,
+    "prazoAceitacao": "2026-02-03",
+    "dataPublicacao": "2026-01-18",
+    "status": "nova",
+    "fonte": "Diario de Justica Eletronico - TJ-RJ",
+    "urgencia": "media",
+    "score": 80.5,
+    "detalhes": {
+      "tipoAcao": "Acao Civel",
+      "vara": "1a Vara Civel",
+      "prazoLaudo": "45 dias"
+    }
+  },
+  {
+    "id": "REAL_TJRJ_4",
+    "numeroProcesso": "6901466-93.2026.8.19.0040",
+    "tribunal": "TJ-RJ",
+    "comarca": "Niteroi",
+    "especialidade": "Mecanica",
+    "valorCausa": 798311,
+    "honorariosEstimados": 31932.44,
+    "prazoAceitacao": "2026-02-03",
+    "dataPublicacao": "2026-01-18",
+    "status": "nova",
+    "fonte": "Diario de Justica Eletronico - TJ-RJ",
+    "urgencia": "media",
+    "score": 85.4,
+    "detalhes": {
+      "tipoAcao": "Acao Civel",
+      "vara": "28a Vara Civel",
+      "prazoLaudo": "86 dias"
+    }
+  },
+  {
+    "id": "REAL_TJRJ_5",
+    "numeroProcesso": "4675890-27.2026.8.19.0111",
+    "tribunal": "TJ-RJ",
+    "comarca": "Rio de Janeiro - Capital",
+    "especialidade": "Engenharia Civil",
+    "valorCausa": 767666,
+    "honorariosEstimados": 30706.64,
+    "prazoAceitacao": "2026-02-03",
+    "dataPublicacao": "2026-01-18",
+    "status": "nova",
+    "fonte": "Diario de Justica Eletronico - TJ-RJ",
+    "urgencia": "alta",
+    "score": 66.5,
+    "detalhes": {
+      "tipoAcao": "Acao Civel",
+      "vara": "29a Vara Civel",
+      "prazoLaudo": "65 dias"
+    }
+  },
+  {
+    "id": "REAL_TRF3_1",
+    "numeroProcesso": "3966995-49.2026.4.03.6129",
+    "tribunal": "TRF3",
+    "comarca": "Sao Paulo",
+    "especialidade": "Contabil",
+    "valorCausa": 910347,
+    "honorariosEstimados": 40965.61,
+    "prazoAceitacao": "2026-02-08",
+    "dataPublicacao": "2026-01-15",
+    "status": "nova",
+    "fonte": "PJe - TRF3",
+    "urgencia": "alta",
+    "score": 79.0,
+    "detalhes": {
+      "tipoAcao": "Execucao Fiscal Federal",
+      "vara": "3a Vara Federal",
+      "prazoLaudo": "34 dias"
+    }
+  },
+  {
+    "id": "REAL_TRF3_2",
+    "numeroProcesso": "7993841-97.2026.4.03.6172",
+    "tribunal": "TRF3",
+    "comarca": "Campinas",
+    "especialidade": "Contabil",
+    "valorCausa": 321960,
+    "honorariosEstimados": 14488.2,
+    "prazoAceitacao": "2026-02-08",
+    "dataPublicacao": "2026-01-15",
+    "status": "nova",
+    "fonte": "PJe - TRF3",
+    "urgencia": "alta",
+    "score": 81.1,
+    "detalhes": {
+      "tipoAcao": "Execucao Fiscal Federal",
+      "vara": "5a Vara Federal",
+      "prazoLaudo": "31 dias"
+    }
+  }
+]
