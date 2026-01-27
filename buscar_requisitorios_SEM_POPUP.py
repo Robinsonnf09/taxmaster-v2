@@ -76,7 +76,7 @@ class BuscadorSemPopup:
         print("   💡 NÃO use certificado digital")
         print("="*70)
         
-        input("\n>>> ENTER após login <<<\n")
+        input("\n>>> ENTER após login &lt;&lt;&lt;\n")
         
         for cookie in self.driver.get_cookies():
             self.session.cookies.set(cookie['name'], cookie['value'])
