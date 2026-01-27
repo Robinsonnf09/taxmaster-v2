@@ -1,6 +1,7 @@
 ﻿"""
-Script com URL CORRETA do TRF3 identificada da planilha!
-URL: https://web.trf3.jus.br/consultas/internet/consultaregpag
+BUSCADOR DE OFÍCIOS REQUISITÓRIOS - TRF3 OFICIAL
+URL: https://web.trf3.jus.br/consultas/Internet/ConsultaReqPag
+Baseado na documentação oficial do TRF3
 """
 
 from selenium import webdriver
@@ -13,19 +14,22 @@ from webdriver_manager.chrome import ChromeDriverManager
 import time
 import openpyxl
 import os
+from datetime import datetime
 
-class BuscadorOficiosTRF3:
+class BuscadorOficiosTRF3Oficial:
     
     def __init__(self):
         self.driver = None
         self.sucessos = []
         self.falhas = []
-        # URL OFICIAL CORRETA DO TRF3!
-        self.url_consulta = "https://web.trf3.jus.br/consultas/internet/consultaregpag"
+        self.url_consulta = "https://web.trf3.jus.br/consultas/Internet/ConsultaReqPag"
         
-        self.pasta_oficios = "oficios_requisitorios_trf3"
+        self.pasta_oficios = "oficios_trf3_oficial"
         if not os.path.exists(self.pasta_oficios):
             os.makedirs(self.pasta_oficios)
+        
+        # Relatório
+        self.relatorio = []
     
     def iniciar(self):
         print("\n🌐 Iniciando Chrome...")
@@ -47,110 +51,193 @@ class BuscadorOficiosTRF3:
         print("✅ Chrome iniciado!")
     
     def acessar_sistema(self):
-        print(f"\n🔐 Acessando Consulta TRF3...")
+        print(f"\n🔐 Acessando sistema oficial TRF3...")
         print(f"   URL: {self.url_consulta}")
         
         self.driver.get(self.url_consulta)
-        time.sleep(4)
+        time.sleep(5)
         
-        print("\n✅ Sistema acessado!")
-        print("⚠️  Se houver login/captcha, resolva manualmente")
+        print("\n" + "="*70)
+        print("⚠️  VERIFICAÇÃO MANUAL:")
+        print("="*70)
+        print("   - Se aparecer CAPTCHA, resolva manualmente")
+        print("   - Aguarde a página carregar completamente")
+        print("   - Você deve ver o formulário de consulta")
+        print("="*70)
         
-        input("\n>>> ENTER quando estiver na tela de consulta <<<\n")
+        input("\n>>> ENTER quando estiver vendo o formulário de consulta &lt;&lt;&lt;\n")
         
+        print("✅ Sistema acessado!")
         return True
     
-    def buscar_oficio(self, numero_processo):
+    def buscar_processo(self, numero_processo, cpf_cnpj=None):
         try:
             print(f"\n📝 Buscando: {numero_processo}")
             
             wait = WebDriverWait(self.driver, 15)
             
-            # Procurar campo de número
-            campo = None
-            try:
-                campo = wait.until(EC.presence_of_element_located(
-                    (By.XPATH, "//input[@type='text' or contains(@name, 'processo') or contains(@id, 'processo')]")
-                ))
-                print(f"   ✅ Campo localizado")
-            except:
-                print(f"   ⚠️  Campo não encontrado automaticamente")
-                input(f"   >>> Digite '{numero_processo}' manualmente e pressione ENTER <<<\n")
-                campo = None
-            
-            if campo:
-                campo.clear()
-                time.sleep(0.3)
-                campo.send_keys(numero_processo)
-                time.sleep(0.5)
-                print(f"   ✅ Número digitado")
-                
-                # Procurar botão
+            # CAMPO CPF/CNPJ (obrigatório segundo documentação)
+            if cpf_cnpj:
+                campo_cpf = None
                 try:
-                    btn = self.driver.find_element(By.XPATH, "//button[contains(text(), 'Consultar') or contains(text(), 'Pesquisar') or contains(text(), 'Buscar')] | //input[@type='submit']")
-                    btn.click()
-                    print(f"   ⏳ Consultando...")
-                    time.sleep(5)
+                    campo_cpf = self.driver.find_element(By.XPATH, 
+                        "//input[contains(@name, 'cpf') or contains(@name, 'cnpj') or contains(@id, 'cpf') or contains(@id, 'cnpj')]")
+                    campo_cpf.clear()
+                    campo_cpf.send_keys(cpf_cnpj)
+                    print(f"   ✅ CPF/CNPJ digitado: {cpf_cnpj}")
                 except:
-                    input(f"   >>> Clique em CONSULTAR manualmente e pressione ENTER <<<\n")
+                    print(f"   ⚠️  Campo CPF/CNPJ não encontrado")
             
-            # Verificar resultado
+            # CAMPO PROCESSO ORIGEM
+            campo_processo = None
+            try:
+                # Tentar localizar campo de processo
+                campos_possiveis = [
+                    "//input[contains(@name, 'processo')]",
+                    "//input[contains(@id, 'processo')]",
+                    "//input[contains(@placeholder, 'processo')]"
+                ]
+                
+                for xpath in campos_possiveis:
+                    try:
+                        campo_processo = self.driver.find_element(By.XPATH, xpath)
+                        break
+                    except:
+                        continue
+                
+                if campo_processo:
+                    campo_processo.clear()
+                    campo_processo.send_keys(numero_processo)
+                    print(f"   ✅ Processo digitado")
+                else:
+                    print(f"   ⚠️  Campo não encontrado automaticamente")
+                    print(f"   💡 Digite manualmente: {numero_processo}")
+                    if cpf_cnpj:
+                        print(f"   💡 E o CPF/CNPJ: {cpf_cnpj}")
+                    input(f"   >>> ENTER após preencher &lt;&lt;&lt;\n")
+            
+            except Exception as e:
+                print(f"   ⚠️  Erro ao preencher: {str(e)[:50]}")
+                print(f"   💡 Preencha manualmente e pressione ENTER")
+                input(f"   >>> &lt;&lt;&lt;\n")
+            
+            # BOTÃO CONSULTAR
+            try:
+                btn = self.driver.find_element(By.XPATH, 
+                    "//button[contains(text(), 'Consultar') or contains(text(), 'Pesquisar') or contains(text(), 'Buscar')] | //input[@type='submit']")
+                btn.click()
+                print(f"   ⏳ Consultando...")
+                time.sleep(5)
+            except:
+                print(f"   ⚠️  Clique manualmente em CONSULTAR")
+                input(f"   >>> ENTER após clicar &lt;&lt;&lt;\n")
+            
+            # ANALISAR RESULTADO
             page = self.driver.page_source.lower()
             
-            if "não encontrado" in page or "nenhum registro" in page:
+            if "não encontrado" in page or "nenhum resultado" in page:
                 print(f"   ❌ Processo não encontrado")
                 self.falhas.append(numero_processo)
+                self.relatorio.append({
+                    "processo": numero_processo,
+                    "status": "Não encontrado",
+                    "oficio": "Não",
+                    "proposta": "-",
+                    "banco": "-"
+                })
                 return False
             
-            # Procurar ofício/documento
-            print(f"   🔍 Procurando documentos...")
+            # EXTRAIR INFORMAÇÕES
+            print(f"   🔍 Extraindo informações...")
             
-            links = self.driver.find_elements(By.TAG_NAME, "a")
-            documentos = []
+            info = {
+                "processo": numero_processo,
+                "status": "Encontrado",
+                "oficio": "Não identificado",
+                "proposta": "-",
+                "banco": "-",
+                "valor": "-"
+            }
             
-            for link in links:
-                texto = link.text.lower()
-                if any(x in texto for x in ['ofício', 'requisitório', 'requisição', 'or', 'pdf', 'documento']):
-                    documentos.append(link)
-            
-            if not documentos:
-                print(f"   ⚠️  Nenhum documento encontrado automaticamente")
-                opcao = input(f"   >>> Há documentos para baixar? (s/n): ").lower()
+            # Procurar informações na página
+            try:
+                # Status
+                if "pago - comunicado" in page:
+                    info["status"] = "PAGO"
+                    print(f"   ✅ Status: PAGO")
+                elif "proposta orçamentária" in page or "po " in page:
+                    info["status"] = "Em Proposta Orçamentária"
+                    print(f"   ⚠️  Status: Em PO")
                 
-                if opcao == 's':
-                    input(f"   >>> Baixe os documentos e pressione ENTER <<<\n")
-                    self.sucessos.append(numero_processo)
-                    return True
-                else:
-                    self.falhas.append(numero_processo)
-                    return False
-            
-            # Baixar documentos
-            print(f"   ✅ {len(documentos)} documento(s) encontrado(s)!")
-            
-            for idx, link in enumerate(documentos, 1):
-                try:
-                    print(f"   📥 Baixando documento {idx}...")
-                    link.click()
-                    time.sleep(3)
-                    print(f"   ✅ Documento {idx} baixado!")
+                # Banco
+                if "banco do brasil" in page or "bb" in page:
+                    info["banco"] = "Banco do Brasil"
+                    print(f"   🏦 Banco: BB")
+                elif "caixa" in page or "cef" in page:
+                    info["banco"] = "Caixa Econômica Federal"
+                    print(f"   🏦 Banco: CEF")
+                
+                # Ofício requisitório
+                links = self.driver.find_elements(By.TAG_NAME, "a")
+                oficios_encontrados = []
+                
+                for link in links:
+                    texto = link.text.lower()
+                    if any(x in texto for x in ['ofício', 'requisitório', 'or', 'pdf', 'download']):
+                        oficios_encontrados.append(link)
+                
+                if oficios_encontrados:
+                    info["oficio"] = f"{len(oficios_encontrados)} ofício(s)"
+                    print(f"   📄 Ofícios: {len(oficios_encontrados)}")
                     
-                    # Voltar
-                    self.driver.back()
-                    time.sleep(2)
-                except Exception as e:
-                    print(f"   ⚠️  Erro ao baixar documento {idx}")
+                    # Baixar ofícios
+                    for idx, link in enumerate(oficios_encontrados, 1):
+                        try:
+                            print(f"   📥 Baixando ofício {idx}...")
+                            link.click()
+                            time.sleep(3)
+                            
+                            # Fechar aba se abriu
+                            if len(self.driver.window_handles) > 1:
+                                self.driver.switch_to.window(self.driver.window_handles[-1])
+                                time.sleep(1)
+                                self.driver.close()
+                                self.driver.switch_to.window(self.driver.window_handles[0])
+                            
+                            print(f"   ✅ Ofício {idx} baixado!")
+                        except:
+                            print(f"   ⚠️  Erro ao baixar ofício {idx}")
+                else:
+                    print(f"   ⚠️  Nenhum link de ofício encontrado")
+                    print(f"   💡 Há ofício visível na página?")
+                    opcao = input(f"   >>> (s/n): ").lower()
+                    
+                    if opcao == 's':
+                        info["oficio"] = "Sim (manual)"
+                        input(f"   >>> Baixe manualmente e pressione ENTER &lt;&lt;&lt;\n")
             
+            except Exception as e:
+                print(f"   ⚠️  Erro ao extrair: {str(e)[:50]}")
+            
+            self.relatorio.append(info)
             self.sucessos.append(numero_processo)
+            
             return True
             
         except Exception as e:
             print(f"   ❌ Erro: {str(e)[:100]}")
             self.falhas.append(numero_processo)
+            self.relatorio.append({
+                "processo": numero_processo,
+                "status": f"Erro: {str(e)[:50]}",
+                "oficio": "-",
+                "proposta": "-",
+                "banco": "-"
+            })
             return False
     
-    def processar_planilha(self, arquivo):
-        print(f"\n📊 Processando: {arquivo}")
+    def processar_planilha(self, arquivo, coluna_cpf=None):
+        print(f"\n📊 Processando planilha: {arquivo}")
         
         if not os.path.exists(arquivo):
             print(f"❌ Arquivo não encontrado!")
@@ -162,47 +249,93 @@ class BuscadorOficiosTRF3:
         processos = []
         for row in ws.iter_rows(min_row=2, values_only=True):
             if row[0]:
-                processos.append(str(row[0]).strip())
+                cpf = row[coluna_cpf] if coluna_cpf and len(row) > coluna_cpf else None
+                processos.append({
+                    "numero": str(row[0]).strip(),
+                    "cpf_cnpj": str(cpf).strip() if cpf else None
+                })
         
         total = len(processos)
         print(f"✅ {total} processos")
         print(f"📁 Salvando em: {os.path.abspath(self.pasta_oficios)}\n")
         
-        for idx, numero in enumerate(processos, 1):
+        for idx, processo in enumerate(processos, 1):
             print(f"\n{'='*70}")
             print(f"Processo {idx}/{total}")
             print(f"{'='*70}")
             
-            self.buscar_oficio(numero)
+            self.buscar_processo(processo["numero"], processo["cpf_cnpj"])
             
-            if idx < total:
-                time.sleep(3)
+            # Voltar para nova busca
+            if idx &lt; total:
+                print("\n   ⏪ Voltando para nova busca...")
+                try:
+                    self.driver.back()
+                    time.sleep(2)
+                except:
+                    print("   ⚠️  Navegue para nova busca")
+                    input("   >>> ENTER quando pronto &lt;&lt;&lt;\n")
+                
+                time.sleep(2)
+        
+        # Gerar relatório Excel
+        self.gerar_relatorio_excel()
         
         # Resumo
         print("\n" + "="*70)
         print("📊 RESUMO FINAL:")
         print("="*70)
-        print(f"   Total: {total}")
-        print(f"   ✅ Com documentos: {len(self.sucessos)}")
-        print(f"   ❌ Sem documentos: {len(self.falhas)}")
+        print(f"   🏛️  Sistema: TRF3 Oficial")
+        print(f"   📋 Total: {total}")
+        print(f"   ✅ Sucessos: {len(self.sucessos)}")
+        print(f"   ❌ Falhas: {len(self.falhas)}")
         if total > 0:
             print(f"   📊 Taxa: {(len(self.sucessos)/total*100):.1f}%")
         
-        print(f"\n📁 Documentos em: {os.path.abspath(self.pasta_oficios)}")
+        print(f"\n📁 Ofícios em: {os.path.abspath(self.pasta_oficios)}")
+        print(f"📄 Relatório: relatorio_oficios_{datetime.now().strftime('%Y%m%d_%H%M%S')}.xlsx")
+        
         print("="*70)
+    
+    def gerar_relatorio_excel(self):
+        print("\n📄 Gerando relatório Excel...")
+        
+        wb = openpyxl.Workbook()
+        ws = wb.active
+        ws.title = "Relatório Ofícios"
+        
+        # Cabeçalho
+        ws.append(["Processo", "Status", "Ofício", "Proposta Orçamentária", "Banco", "Valor"])
+        
+        # Dados
+        for item in self.relatorio:
+            ws.append([
+                item.get("processo", "-"),
+                item.get("status", "-"),
+                item.get("oficio", "-"),
+                item.get("proposta", "-"),
+                item.get("banco", "-"),
+                item.get("valor", "-")
+            ])
+        
+        arquivo = f"relatorio_oficios_{datetime.now().strftime('%Y%m%d_%H%M%S')}.xlsx"
+        wb.save(arquivo)
+        
+        print(f"✅ Relatório salvo: {arquivo}")
     
     def fechar(self):
         if self.driver:
             self.driver.quit()
+            print("\n🔒 Navegador fechado")
 
 # MAIN
 if __name__ == "__main__":
     print("="*70)
-    print("🔔 BUSCA DE OFÍCIOS REQUISITÓRIOS - TRF3")
+    print("🔔 BUSCADOR DE OFÍCIOS REQUISITÓRIOS - TRF3 OFICIAL")
     print("="*70)
-    print(f"\n🎯 URL OFICIAL: web.trf3.jus.br/consultas/internet/consultaregpag")
+    print("\n📋 URL Oficial: https://web.trf3.jus.br/consultas/Internet/ConsultaReqPag")
     
-    buscador = BuscadorOficiosTRF3()
+    buscador = BuscadorOficiosTRF3Oficial()
     
     try:
         input("\nENTER para começar...\n")
@@ -212,22 +345,37 @@ if __name__ == "__main__":
         if buscador.acessar_sistema():
             
             print("\n💡 MODO:")
-            print("   1. Planilha (215 processos)")
+            print("   1. Planilha completa (215 processos)")
             print("   2. Teste individual")
             
-            modo = input("\nDigite: ").strip()
+            modo = input("\nDigite 1 ou 2: ").strip()
             
             if modo == "1":
-                buscador.processar_planilha("processos_push_20260126_185045.xlsx")
+                arq = "processos_push_20260126_185045.xlsx"
+                
+                print("\n❓ Sua planilha tem CPF/CNPJ dos beneficiários?")
+                tem_cpf = input("   (s/n): ").lower()
+                
+                coluna_cpf = None
+                if tem_cpf == 's':
+                    coluna_cpf = int(input("   Número da coluna do CPF (ex: 1, 2, 3...): ").strip()) - 1
+                
+                buscador.processar_planilha(arq, coluna_cpf)
             
             elif modo == "2":
-                num = input("\nNúmero: ").strip()
-                buscador.buscar_oficio(num)
+                num = input("\nNúmero do processo: ").strip()
+                cpf = input("CPF/CNPJ (ou ENTER para pular): ").strip()
+                buscador.buscar_processo(num, cpf if cpf else None)
         
-        input("\n\nENTER para fechar...\n")
+        input("\n\n>>> ENTER para fechar &lt;&lt;&lt;\n")
         
+    except KeyboardInterrupt:
+        print("\n\n⚠️ Operação cancelada")
+    
     except Exception as e:
         print(f"\n❌ Erro: {e}")
+        import traceback
+        traceback.print_exc()
     
     finally:
         buscador.fechar()
