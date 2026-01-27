@@ -65,7 +65,7 @@ class BuscadorOficiosTRF3Oficial:
         print("   - Você deve ver o formulário de consulta")
         print("="*70)
         
-        input("\n>>> ENTER quando estiver vendo o formulário de consulta &lt;&lt;&lt;\n")
+        input("\n>>> ENTER quando estiver vendo o formulário de consulta <<<\n")
         
         print("✅ Sistema acessado!")
         return True
@@ -114,12 +114,12 @@ class BuscadorOficiosTRF3Oficial:
                     print(f"   💡 Digite manualmente: {numero_processo}")
                     if cpf_cnpj:
                         print(f"   💡 E o CPF/CNPJ: {cpf_cnpj}")
-                    input(f"   >>> ENTER após preencher &lt;&lt;&lt;\n")
+                    input(f"   >>> ENTER após preencher <<<\n")
             
             except Exception as e:
                 print(f"   ⚠️  Erro ao preencher: {str(e)[:50]}")
                 print(f"   💡 Preencha manualmente e pressione ENTER")
-                input(f"   >>> &lt;&lt;&lt;\n")
+                input(f"   >>> <<<\n")
             
             # BOTÃO CONSULTAR
             try:
@@ -130,7 +130,7 @@ class BuscadorOficiosTRF3Oficial:
                 time.sleep(5)
             except:
                 print(f"   ⚠️  Clique manualmente em CONSULTAR")
-                input(f"   >>> ENTER após clicar &lt;&lt;&lt;\n")
+                input(f"   >>> ENTER após clicar <<<\n")
             
             # ANALISAR RESULTADO
             page = self.driver.page_source.lower()
@@ -214,7 +214,7 @@ class BuscadorOficiosTRF3Oficial:
                     
                     if opcao == 's':
                         info["oficio"] = "Sim (manual)"
-                        input(f"   >>> Baixe manualmente e pressione ENTER &lt;&lt;&lt;\n")
+                        input(f"   >>> Baixe manualmente e pressione ENTER <<<\n")
             
             except Exception as e:
                 print(f"   ⚠️  Erro ao extrair: {str(e)[:50]}")
@@ -267,14 +267,14 @@ class BuscadorOficiosTRF3Oficial:
             self.buscar_processo(processo["numero"], processo["cpf_cnpj"])
             
             # Voltar para nova busca
-            if idx &lt; total:
+            if idx < total:
                 print("\n   ⏪ Voltando para nova busca...")
                 try:
                     self.driver.back()
                     time.sleep(2)
                 except:
                     print("   ⚠️  Navegue para nova busca")
-                    input("   >>> ENTER quando pronto &lt;&lt;&lt;\n")
+                    input("   >>> ENTER quando pronto <<<\n")
                 
                 time.sleep(2)
         
@@ -367,7 +367,7 @@ if __name__ == "__main__":
                 cpf = input("CPF/CNPJ (ou ENTER para pular): ").strip()
                 buscador.buscar_processo(num, cpf if cpf else None)
         
-        input("\n\n>>> ENTER para fechar &lt;&lt;&lt;\n")
+        input("\n\n>>> ENTER para fechar <<<\n")
         
     except KeyboardInterrupt:
         print("\n\n⚠️ Operação cancelada")
@@ -381,3 +381,4 @@ if __name__ == "__main__":
         buscador.fechar()
     
     print("\n✅ CONCLUÍDO!")
+
