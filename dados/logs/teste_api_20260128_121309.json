@@ -1,0 +1,14 @@
+﻿[
+    {
+        "Tribunal":  "TJGO",
+        "Status":  "Conectado",
+        "TempoResposta":  "497.43ms",
+        "URL":  "https://api-publica.datajud.cnj.jus.br/api_publica_tjgo/_search"
+    },
+    {
+        "Tribunal":  "TJSP",
+        "Status":  "Conectado",
+        "TempoResposta":  "95.83ms",
+        "URL":  "https://api-publica.datajud.cnj.jus.br/api_publica_tjsp/_search"
+    }
+]

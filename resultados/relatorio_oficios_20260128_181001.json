@@ -1,0 +1,80 @@
+{
+  "timestamp": "20260128_181001",
+  "total_processos": 10,
+  "oficios_encontrados_total": 69,
+  "com_oficios": 10,
+  "sem_oficios": 0,
+  "com_erro": 0,
+  "resultados": [
+    {
+      "numero": "7009390-15.2009.8.26.0500",
+      "status": "encontrado",
+      "oficios": 7,
+      "screenshot": "debug_screenshots\\processo_1_7009390-15_2009_8_26_0500.png",
+      "html": "debug_screenshots\\html_1.html"
+    },
+    {
+      "numero": "7009727-04.2009.8.26.0500",
+      "status": "encontrado",
+      "oficios": 6,
+      "screenshot": "debug_screenshots\\processo_2_7009727-04_2009_8_26_0500.png",
+      "html": "debug_screenshots\\html_2.html"
+    },
+    {
+      "numero": "7009926-26.2009.8.26.0500",
+      "status": "encontrado",
+      "oficios": 6,
+      "screenshot": "debug_screenshots\\processo_3_7009926-26_2009_8_26_0500.png",
+      "html": "debug_screenshots\\html_3.html"
+    },
+    {
+      "numero": "7009927-11.2009.8.26.0500",
+      "status": "encontrado",
+      "oficios": 7,
+      "screenshot": "debug_screenshots\\processo_4_7009927-11_2009_8_26_0500.png",
+      "html": "debug_screenshots\\html_4.html"
+    },
+    {
+      "numero": "7010330-77.2009.8.26.0500",
+      "status": "encontrado",
+      "oficios": 8,
+      "screenshot": "debug_screenshots\\processo_5_7010330-77_2009_8_26_0500.png",
+      "html": "debug_screenshots\\html_5.html"
+    },
+    {
+      "numero": "7001962-69.2015.8.26.0500",
+      "status": "encontrado",
+      "oficios": 6,
+      "screenshot": "debug_screenshots\\processo_6_7001962-69_2015_8_26_0500.png",
+      "html": "debug_screenshots\\html_6.html"
+    },
+    {
+      "numero": "7001963-54.2015.8.26.0500",
+      "status": "encontrado",
+      "oficios": 9,
+      "screenshot": "debug_screenshots\\processo_7_7001963-54_2015_8_26_0500.png",
+      "html": "debug_screenshots\\html_7.html"
+    },
+    {
+      "numero": "7001974-83.2015.8.26.0500",
+      "status": "encontrado",
+      "oficios": 6,
+      "screenshot": "debug_screenshots\\processo_8_7001974-83_2015_8_26_0500.png",
+      "html": "debug_screenshots\\html_8.html"
+    },
+    {
+      "numero": "7001992-07.2015.8.26.0500",
+      "status": "encontrado",
+      "oficios": 8,
+      "screenshot": "debug_screenshots\\processo_9_7001992-07_2015_8_26_0500.png",
+      "html": "debug_screenshots\\html_9.html"
+    },
+    {
+      "numero": "7002001-66.2015.8.26.0500",
+      "status": "encontrado",
+      "oficios": 6,
+      "screenshot": "debug_screenshots\\processo_10_7002001-66_2015_8_26_0500.png",
+      "html": "debug_screenshots\\html_10.html"
+    }
+  ]
+}

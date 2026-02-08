@@ -1,0 +1,6 @@
+{
+  "numero": "SEU_NUMERO_REAL_AQUI",
+  "tribunal": "TJGO",
+  "erro": "Message: \nStacktrace:\nSymbols not available. Dumping unresolved backtrace:\n\t0xd08543\n\t0xd08584\n\t0xafb4e0\n\t0xb4594a\n\t0xb45beb\n\t0xb87bb2\n\t0xb68264\n\t0xb853a1\n\t0xb67fb6\n\t0xb396f9\n\t0xb3a4b4\n\t0xf5d034\n\t0xf582c9\n\t0xf76460\n\t0xd21a68\n\t0xd2988d\n\t0xd10df8\n\t0xd10fc2\n\t0xcfab3a\n\t0x758d5d49\n\t0x7734d5db\n\t0x7734d561\n",
+  "modo": "SCRAPING_ERRO"
+}

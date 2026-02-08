@@ -1,0 +1,630 @@
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="pt-br" xml:lang="pt-br"><!-- InstanceBegin template="/Templates/Servico.dwt" codeOutsideHTMLIsLocked="false" -->
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <link href="/sajcas/css/spw/spwConcatenado-4.3.3-14.css" rel="stylesheet" type="text/css"/>
+    <link rel="stylesheet" type="text/css" href="/sajcas/css/saj/saj-popup-modal.css"/>
+    <link rel="stylesheet" type="text/css" href="/sajcas/css/saj/certificados.css"/>
+    <link href="/sajcas/css/login.css" rel="stylesheet" type="text/css"/>
+    <link rel="stylesheet" type="text/css" href="/sajcas/css/saj/saj-popup-modal.css?n=432432"/>
+    <link href="/sajcas/css/jquery/ui/ui.core.css" rel="stylesheet" type="text/css"/>
+    <link href="/sajcas/css/jquery/ui/ui.tabs.css" rel="stylesheet" type="text/css"/>
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+	
+		
+
+
+
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1"/>
+<meta http-equiv="pragma" content="no-cache"/>
+<meta http-equiv="cache-control" content="no-cache"/>
+<meta http-equiv="expires" content="0"/>
+
+<link href="https://esaj.tjsp.jus.br/esaj-layout/tema/padrao/css/esajComum.css" rel="stylesheet" type="text/css" />
+<link href="https://esaj.tjsp.jus.br/esaj-layout/tema/padrao/css/esajLayout.css" rel="stylesheet" type="text/css" />
+<link href="https://esaj.tjsp.jus.br/esaj-layout/tema/padrao/clientes/SP/css/esajLayoutSP.css" rel="stylesheet" type="text/css" />
+
+<style type="text/css">
+<!--
+/* botao default means o mais claro, que seria o "botï¿½o principal" */
+.spwBotaoDefault, .spwBotaoDefault-o {
+	background-image: url(https://esaj.tjsp.jus.br/esaj-layout/tema/padrao/clientes/SP/imagens/layout/fundoBotaoDefault.gif);
+}
+/* o botao secundario, menos provavel de ser clicado, mais escuro */
+.spwBotao, .spwBotao-o {
+	background-image: url(https://esaj.tjsp.jus.br/esaj-layout/tema/padrao/imagens/layout/fundoBotao.gif);
+}
+-->
+</style>
+
+
+<script language="javascript" type="text/JavaScript" src="https://esaj.tjsp.jus.br/esaj-layout/tema/padrao/js/menu.js?n=2553626853"></script>
+
+<link rel="shortcut icon" href="https://esaj.tjsp.jus.br/esaj-layout/tema/padrao/clientes/SP/imagens/favicon.ico" type="image/x-icon" />
+
+
+	<script type="text/javascript">
+
+	  var _gaq = _gaq || [];
+	  _gaq.push(['_setAccount', 'UA-23111004-1']);
+	  _gaq.push(['_trackPageview']);
+
+	  (function() {
+	    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+	    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+	    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+	  })();
+
+	</script>
+
+
+
+<script>
+    var dict = {
+        'certificado.tituloCertificadoDigital': 'Certificado digital',
+        'certificado.msgCarregandoCertificado': 'Carregando certificados...',
+        'certificado.msgNenhumCertificadoEncontrado': 'Nenhum certificado encontrado',
+        'certificado.msgErroCarregarCertificado': 'Erro ao carregar certificados',
+        'certificado.msgCertificadoExpirado': '[Expirado]',
+        'certificado.msgCertificadoNaoValido': '[Ainda não válido]',
+        'certificado.msgCertificadoNaoIcpBrasil': '[Não ICP-Brasil]',
+        'certificado.tituloProblemasAoAssinar': 'Falha de comunicação com o dispositivo de assinatura digital',
+
+        'label.contato': 'Contato',
+        'label.identificarSe': 'Identificar-se ',
+
+        'mensagem.aguarde': 'Por favor, aguarde.',
+        'mensagem.paginaNaoCarregada': 'Não foi possível carregar a página.',
+        'mensagem.marcarLido': 'Marcar como lido',
+        'mensagem.registrosSelecionados': 'Registros selecionados',
+        'mensagem.registroJaSelecionado': 'Este registro já está selecionado',
+
+        'mensagem.data.invalida': 'A data digitada é inválida.',
+        'mensagem.data.anoInvalido': 'O ano informado deve ser maior que',
+        'mensagem.data.mesInvalido': 'O mês não pode ser maior que 12.',
+        'mensagem.data.mes': 'O mês',
+        'mensagem.data.mesMaior29dias': 'não pode ter mais que 29 dias.',
+        'mensagem.data.mesMaior28dias': 'não pode ter mais que 28 dias.',
+        'mensagem.data.mesMaior31dias': 'não pode ter mais que 31 dias.',
+        'mensagem.data.mesMaior30dias': 'não pode ter mais que 30 dias.',
+
+        'mensagem.email.invalido': 'O formato do endereço de e-mail não é válido. Verifique se ele tem o formato "usuario@dominio".',
+        'mensagem.email.caracteresInvalidos': 'O endereço de e-mail possui caracteres inválidos',
+        'mensagem.email.usuarioInvalido': 'O formato do usuário informado no endereço de e-mail não é válido.',
+        'mensagem.email.ipInvalido': 'O endereço IP informado no endereço de e-mail não é válido.',
+        'mensagem.email.dominioInvalido': 'O formato do domínio informado no endereço de e-mail não é válido.',
+        'mensagem.email.dominioIncompleto': 'O domínio informado no endereço de e-mail deve possuir pelo menos duas partes. Por exemplo: "usuario@empresa.com.br".',
+
+        'mensagem.texto.tamanhoInvalido': 'O tamanho do texto digitado é maior do que o tamanho permitido. Tamanho permitido:',
+        'mensagem.texto.caracter': 'O caracter',
+        'mensagem.texto.caracterPosicaoInvalida': 'não está permitido na posição',
+
+        'mensagem.numero.numeroInvalido': 'O valor digitado não é um número válido.',
+        'mensagem.numero.numeroNaoPodeCasasDecimais': 'O número não pode conter casas decimais',
+        'mensagem.numero.numeroCasaDecimaisInvalidas': 'O número de casas decimais é inválido. O número pode conter apenas',
+        'mensagem.numero.casaDecimais': 'casas decimais',
+        'mensagem.numero.numeroInteiroInvalido': 'O número de dígitos inteiros é inválido. O número pode conter apenas',
+        'mensagem.numero.digitosInteiros': 'dígitos inteiros',
+        'mensagem.numero.numeroTamanhoInvalido': 'O número digitado não pode ser maior que',
+        'mensagem.numero.numeroZeroInvalido': 'O número digitado deve ser diferente de zero.'
+    }
+</script>
+
+
+	
+
+
+  
+
+    
+
+<script>
+    var dict = {
+        'cas.msgNenhumCertificadoEncontrado': 'Nenhum certificado encontrado',
+        'certificado.tituloCertificadoDigital': 'Certificado digital',
+
+        'cas.msgDocumentoInvalido': 'Campo "CPF" não é válido.',
+        'cas.msgNumeroProcessoInvalido': 'O número de processo digitado não é válido. Número digitado:',
+        'cas.avisoMagistrado': 'Se você é um magistrado do Tribunal de Justiça, marque esta opção.',
+        'cas.msgCarregandoCertificados': 'Carregando certificados...',
+
+        'mensagem.marcarLido': 'Marcar como lido',
+        'mensagem.registrosSelecionados': 'Registros selecionados',
+        'mensagem.registroJaSelecionado': 'Este registro já está selecionado',
+
+        'mensagem.data.invalida': 'A data digitada é inválida.',
+        'mensagem.data.anoInvalido': 'O ano informado deve ser maior que',
+        'mensagem.data.mesInvalido': 'O mês não pode ser maior que 12.',
+        'mensagem.data.mes': 'O mês',
+        'mensagem.data.mesMaior29dias': 'não pode ter mais que 29 dias.',
+        'mensagem.data.mesMaior28dias': 'não pode ter mais que 28 dias.',
+        'mensagem.data.mesMaior31dias': 'não pode ter mais que 31 dias.',
+        'mensagem.data.mesMaior30dias': 'não pode ter mais que 30 dias.',
+
+        'mensagem.email.invalido': 'O formato do endereço de e-mail não é válido. Verifique se ele tem o formato "usuario@dominio".',
+        'mensagem.email.caracteresInvalidos': 'O endereço de e-mail possui caracteres inválidos',
+        'mensagem.email.usuarioInvalido': 'O formato do usuário informado no endereço de e-mail não é válido.',
+        'mensagem.email.ipInvalido': 'O endereço IP informado no endereço de e-mail não é válido.',
+        'mensagem.email.dominioInvalido': 'O formato do domínio informado no endereço de e-mail não é válido.',
+        'mensagem.email.dominioIncompleto': 'O domínio informado no endereço de e-mail deve possuir pelo menos duas partes. Por exemplo: "usuario@empresa.com.br".',
+
+        'mensagem.texto.tamanhoInvalido': 'O tamanho do texto digitado é maior do que o tamanho permitido. Tamanho permitido:',
+        'mensagem.texto.caracter': 'O caracter',
+        'mensagem.texto.caracterPosicaoInvalida': 'não está permitido na posição',
+
+        'mensagem.numero.numeroInvalido': 'O valor digitado não é um número válido.',
+        'mensagem.numero.numeroNaoPodeCasasDecimais': 'O número não pode conter casas decimais',
+        'mensagem.numero.numeroCasaDecimaisInvalidas': 'O número de casas decimais é inválido. O número pode conter apenas',
+        'mensagem.numero.casaDecimais': 'casas decimais',
+        'mensagem.numero.numeroInteiroInvalido': 'O número de dígitos inteiros é inválido. O número pode conter apenas',
+        'mensagem.numero.digitosInteiros': 'dígitos inteiros',
+        'mensagem.numero.numeroTamanhoInvalido': 'O número digitado não pode ser maior que',
+        'mensagem.numero.numeroZeroInvalido': 'O número digitado deve ser diferente de zero.'
+    }
+</script>
+    <script src="/sajcas/js/jquery/jquery.min.js" type="text/javascript"></script>
+    <script src="/sajcas/js/bootstrap/bootstrap.min.js" type="text/javascript"></script>
+    <script src="/sajcas/js/jquery/jquery.browser.min.js" type="text/javascript"></script>
+    <script src="/sajcas/js/jquery/jquery.shortcuts.js" type="text/javascript"></script>
+    <script src="/sajcas/js/jquery/ui/ui.core.js" type="text/javascript"></script>
+    <script src="/sajcas/js/jquery/ui/ui.tabs.js" type="text/javascript"></script>
+    <script src="/sajcas/js/spw/spwConcatenado-4.3.3-14.js" type="text/javascript"></script>
+    <script src="/sajcas/js/spw/spwLoginCertificado-4.3.1-2.js"></script>
+    <script src="/sajcas/js/jquery/jquery.blockUI.min.js"></script>
+    <script src="/sajcas/js/saj/saj-popup-modal-1.0.0-1.js"></script>
+    <script src="/sajcas/js/saj/saj-browser.js"></script>
+    <script src="/sajcas/js/saj/jquery.saj.campoCPF-1.0.0-1.js"></script>
+    <script src="/sajcas/js/saj/saj-tooltip.js" type="text/javaScript"></script>
+    <script src="/sajcas/js/assinarHash.js" type="text/javaScript"></script>
+    <script src="/sajcas/js/java/deployJava.js" type="text/javaScript"></script>
+    <script src="/sajcas/js/app-bundle.js" type="text/javaScript"></script>
+    <script src="/sajcas/js/libras.js" type="text/javaScript"></script>
+    <script src="/sajcas/js/saj-certificado.js" type="text/javaScript"></script>
+    <script src="/sajcas/js/softplan-websigner.js" type="text/javaScript"></script>
+    <script src="https://esaj.tjsp.jus.br/esaj/_next/static/vendor/components.js" type="text/javascript"></script>
+
+    <script>
+
+        window.saj = window.saj || {};
+        window.saj.env = window.saj.env || {};
+        window.saj.env.root = '/sajcas';
+        window.saj.env.css = '/sajcas/css';
+        window.saj.env.js = '/sajcas/js';
+        window.saj.env.imagens = '/sajcas/imagens';
+
+        $.saj = $.saj || {};
+        $.saj.cas = $.saj.cas || {};
+        $.saj.cas.mapaCampoLocalizacao = {"ORIENT_SEX":{"cdCampo":"2","nmIdentificacao":"Orientación sexual","nmAbreviado":"ORS","nmCampo":"Orientación sexual","nuTamanhoMaximo":"50","flAtivo":"S","nmChave":"ORIENT_SEX"},"NECES_ESP":{"cdCampo":"7","nmIdentificacao":"Necesidad especial","nmAbreviado":"NES","nmCampo":"Necesidad especial","nuTamanhoMaximo":"50","flAtivo":"S","nmChave":"NECES_ESP"},"IDENT_GEN":{"cdCampo":"1","nmIdentificacao":"Identidad de género","nmAbreviado":"IDG","nmCampo":"Identidad de género","nuTamanhoMaximo":"50","flAtivo":"S","nmChave":"IDENT_GEN"},"FALEC":{"cdCampo":"3","nmIdentificacao":"Fallecido","nmAbreviado":"FAL","nmCampo":"Fallecido","nuTamanhoMaximo":"1","flAtivo":"S","nmChave":"FALEC"},"TIPO_ORG":{"cdCampo":"5","nmIdentificacao":"Tipo de organización","nmAbreviado":"TOR","nmCampo":"Tipo de organización","nuTamanhoMaximo":"50","flAtivo":"S","nmChave":"TIPO_ORG"},"VULNER":{"cdCampo":"8","nmIdentificacao":"Vulnerabilidad","nmAbreviado":"VUL","nmCampo":"Vulnerabilidad","nuTamanhoMaximo":"50","flAtivo":"S","nmChave":"VULNER"},"PATEN_MIL":{"cdCampo":"4","nmIdentificacao":"Rango militar","nmAbreviado":"PAT","nmCampo":"Rango militar","nuTamanhoMaximo":"50","flAtivo":"S","nmChave":"PATEN_MIL"},"GRUPO_ETN":{"cdCampo":"6","nmIdentificacao":"Grupo étnico","nmAbreviado":"GET","nmCampo":"Grupo étnico","nuTamanhoMaximo":"50","flAtivo":"S","nmChave":"GRUPO_ETN"}};
+        $.saj.cas.magistrado = false;
+        $.saj.cas.loginCertificado = false;
+        $.saj.cas.loginCertificadoCofreDigital = false;
+        $.saj.cas.hashDesafio = 'uQ1jD7JZ4VFsEfzMxDWMvnyNwrFq39YevT4qnacz+NI=';
+        $.saj.certificado = $.saj.certificado || {};
+        $.saj.certificado.licenca = 'ARkEKi50anNwLmp1cy5iciwxMC4zMy4xOTIuMTAxLDEwLjMzLjE5Mi4xMDUsMTAuMzMuMTkyLjE0NiwxMC4zMy4xOTIuMjQxLDEwLjMzLjE5Mi45MCwxMC4zMy4xOTIuOTEsMTAuMzMuMTkyLjkyLDEwLjMzLjE5Mi45NCwxMC4zMy4xOTMuMTg1LDEwLjMzLjE5My4xODYsMTAuMzMuMTkzLjE4NywxMC4zMy4xOTMuMTg4LDEwLjMzLjE5NC4yMjQsMTAuMzMuMTk0LjIyNSwxMC4zMy4xOTQuMjU1LDEwLjMzLjE5NC43NCwxMC4zMy4xOTQuNzUsMTAuMzMuMTk0Ljc2LDEwLjMzLjE5NC43NywxMC4zMy4xOTQuNzksMTAuMzMuMTk1LjEwMiwxMC4zMy4xOTUuMTAyLDEwLjMzLjE5NS4xMTksMTAuMzMuMTk1LjEyMSwxMC4zMy4xOTUuMTIyLDEwLjMzLjE5NS4xMjMsMTAuMzMuMTk1LjEyNCwxMC4zMy4xOTUuMTI1LDEwLjMzLjE5NS4xMjYsMTAuMzMuMTk1LjEyNywxMC4zMy4xOTUuMTI4LDEwLjMzLjE5NS4xMjksMTAuMzMuMTk1LjEzMCwxMC4zMy4xOTUuMTMxLDEwLjMzLjE5NS4xMzIsMTAuMzMuMTk1LjE4MywxMC4zMy4xOTUuMTg0LDEwLjMzLjE5NS4xODUsMTAuMzMuMTk1LjE4NiwxMC4zMy4xOTUuMTg3LDEwLjMzLjE5NS4xODgsMTAuMzMuMTk1LjE4OSwxMC4zMy4xOTUuMTkxLDEwLjMzLjE5NS4xOTIsMTAuMzMuMTk1LjE5MywxMC4zMy4xOTUuMTk0LDEwLjMzLjE5NS4xOTUsMTAuMzMuMTk1LjE5NSwxMC4zMy4xOTUuMTk3LDEwLjMzLjE5NS4xOTgsMTAuMzMuMTk1LjIzNCwxMC4zMy4xOTUuMjM3LDEwLjk4LjE5Mi4xMTMsMTAuOTguMTkyLjExNCwxMC45OC4xOTIuMTE3LDEwLjk4LjE5Mi4yNTAsMTAuOTguMTkyLjQyLDEwLjk4LjE5Mi43MCwxMC45OC4xOTIuNzEsMTAuOTguMTkzLjEyMSwxMC45OC4xOTMuMTIyLDEwLjk4LjE5My4xOTksMTAuOTguMTkzLjIwMCwxMC45OC4xOTMuMjAxLDEwLjk4LjE5My4yMDIsMTAuOTguMTkzLjIyNSwxMC45OC4xOTQuMTIxLDEwLjk4LjE5NC4xMjIsMTAuOTguMTk0LjE0MSwxMC45OC4xOTQuMTQyLDEwLjk4LjE5NC4xNDMsMTAuOTguMTk0LjE0NCwxMC45OC4xOTQuMTQ1LDEwLjk4LjE5NC4xNDcsMTAuOTguMzIuNzYAAAABt8T6Ov8g0lWHnOe7bekYQC1kjn/SgVPWGteqlpMDF8qEOKOxdWahBlk0uh9nfmPiUY9MXcXchlgu6V/zygYGgSfZG11odlUkrXZCAYX/pB3ArsqmrqgvMK0mxuTVOThs/flGWltXnCFEFEU1Pp6RSdlhtCOEuGx5XWov3lux8DcnB+DxL2zauU4GfGJmoXCZDMWT2g7MXIu7VjrJJEkCH/nZ0hkhUsw/k0ORu7/kXJyBufrFZYbsQ/Nadjp9CgYhlsjKXmSPSn8GU8xUetHXGX3FzFJriyk8iqcH72p4z0/Msif4S+VNz0JV3+xffRvdmKuG28jHHDUqBxIrhjs+XA==';
+        $.saj.cas.SenhaExpirada = false;
+        $.saj.cas.DuploFatorHabilitado = false || false;
+        $.saj.cas.TempoConfiguracaoDuploFator = "" || 1;
+        $.saj.cas.DeEmail = "";
+        $.saj.cas.DeEmailAlternativo = "";
+        $.saj.cas.CdUsuario = "";
+        $.saj.cas.NmUsuario = "";
+        $.saj.cas.NmSocialUsuario = "";
+
+    </script>
+    <script src="/sajcas/js/saj/saj-web-2.2.40-1.js" type="text/javascript"></script>
+    <script src="/sajcas/js/sajIdentificarSeView-1.1.0-0.js" type="text/javascript"></script>
+    <script src="/sajcas/js/contadorTokenDuploFator.js" type="text/javascript"></script>
+    <script src="/sajcas/js/validacaoDuploFator.js" type="text/javascript"></script>
+</head>
+<body>
+<esaj-layout showMenu="false">
+    <table id="conteudoErroObtendoCertificado" width="100%" cellspacing="0" cellpadding="0" border="0" height="30" class="tabelaMensagem" style="padding-bottom: 10px; display: none;">
+        <tbody>
+        <tr>
+            <td width="35" valign="top" class="alert">
+                <img src="/sajcas/imagens/spw/icoError.gif">
+            </td>
+            <td class="tituloMensagem">
+                <b>Erro</b>
+            </td>
+        </tr>
+        <tr>
+            <td class="alert">&nbsp;</td>
+            <td>
+                <ul>
+                    <li id="msgErro"></li>
+                </ul>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <section class="bg-white md:bg-transparent md:m-auto w-screen md:w-[400px] h-full md:flex md:items-center" aria-label="Identificação">
+        <div>
+            <div>
+                <div class="login">
+                    <div class="tableLogin w-full">
+                        <div>
+                            <div>
+                                <div class="caixaPasta h-[calc(100vh-162px)] md:h-auto md:min-h-[600px] md:shadow-md bg-white">
+                                    <div class="logoContainer">
+                                        <img alt="Logotipo e-SAJ" src="/sajcas/imagens/layout/marcaSAJ.png"/>
+                                    </div>
+                                    <div id="loginContent">
+                                        <h1 class="loginHeading">
+                                            Entrar com identificação
+                                        </h1>
+                                        <div id="tabs">
+                                            <ul role="tablist">
+                                                <li role="tab">
+                                                    <a id="linkAbaCpf" href="#aba-cpf" class="esajLinkLogin">
+                                                        CPF/CNPJ
+                                                    </a>
+                                                </li>
+                                                <li role="tab">
+                                                    <a id="linkAbaCertificado" href="#aba-certificado" class="esajLinkLogin">
+                                                        Certificado digital
+                                                    </a>
+                                                </li>
+                                            </ul>
+
+                                            <form id="formCertificado" action="/sajcas/login?service=http%3A%2F%2Fesaj.tjsp.jus.br%2Fsecuritycasapireq%2Fapi%2Fcas%2Fauthenticate%2Fcallback%3Fstate%3DCfDJ8Fd6Gp-UDxtJjAJfepoyiWzZbJCnS6efGWQvf8-5XunRnt6SkduVM473kR7Hh0rPP-sdKlN_Myc1CPz8CRvO6ZLEnKBJSy1CmYtzZ_0F2oEZWg-uC7KLtikNasuNt_VOHL_yVhdDHyZGevkFHkMIozjYszFV6O0USulptbJGipiA5sVn1hMn_err9_jrU8fpTlusLgDuxlrlu-CAuXWfk5PTQdfwfL97hHL4pzW6TGRXeXVwsztJAoRttXuh31E3GtgnvlrSzaGP5gBJcYf1TQUcjKHOtaF6NBPLz7x_cPBGxyRIfdBl3W-QDDT4W1S5ZqvWcHIXIxGfKNTBgAqIHgHpjKbyHLilhTDWua7d8eW1" method="post">
+
+                                                <div id="aba-cpf" class="tabsConteudo">
+                                                    <table class="w-full">
+                                                        <tr>
+                                                            
+                                                            <td class="tdLabel"><label class="inputLabel" for="usernameForm">CPF/CNPJ<span class="text-red-600">*</span>:</label></td>
+                                                            
+                                                        </tr>
+                                                        <tr>
+                                                            <td><input id="usernameForm" name="username" title="Informe seu CPF/CNPJ para acessar o Portal e-SAJ.Para acessar com seu certificado digital, pressione CTRL+SHIFT+2." class="loginInput" required="true" type="text" value=""/></td>
+                                                        </tr>
+                                                        <tr>
+                                                            
+                                                            <td class="tdLabel"><label class="inputLabel" for="passwordForm">Senha<span class="text-red-600">*</span>:</label></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td><input id="passwordForm" name="password" class="loginInput" required="true" type="password" value="" alt="Senha" autocomplete="off"/></td>
+                                                        </tr>
+                                                        
+                                                            
+                                                        
+                                                        <tr>
+                                                            <td class="buttons">
+                                                                <!-- campos de controle do webflow -->
+                                                                <input type="hidden" name="lt" value=""/>
+                                                                <input type="hidden" id="flowExecutionKey" name="execution" value="84c1f78b-21ef-48ca-8ff0-e861718ff911_ZXlKaGJHY2lPaUpJVXpVeE1pSjkuUm5kTFR6SXlXbUo2VWt4Skt6azJhbEpvUzJ4SVJVczJTa1pFVUdsbmNub3ZjeTh3UjFkQmJFcEVhbWRXWnpVemRsZDJXaXRxVWxSaU1XaEpUbXhsVEhNdlEwNVVkVXRtYVdKaUt6RmFWMnBEYm01MlZWcExhbWx4SzFKUmVsVkVUMjFDTTNSb05WZzJibTFDV0dWR1ZGSjJhRlJtV0c5dVkwbEZkazl3Ym1jMFZsRXdiMFJFZVV4aVJtOVVTMkZUVUdONVprbzFSa1EyTjBNM01FRTBNQ3MzU25SVmFrRlFSVWtyVmxNek4yZDJkRWRNUXpCemNqZHRla050YkdKek9VSlpkakZWTDJNNVQwRmlXbVJVWjNGemFGaGliVlZsTUU5RFJFRkxRV055Um5sWk1UWmlkMVk0VDBKUllUaGhieXRHY2tabUx6TkdWWEpEWWs1alZ5OUNibFY1UTBGU2Ewd3hTRTE2U21GTFJFWkVaakJTWVZsQlJVbzFjbEF6VkRGVWFUWm9aa0pDUkVsWVVWQm9aSEZLYUZVemJXbHFaMmRhU1hSMkwzcHRUa3A1VlZWWlFsbFBUbE5aVFV0NUwxRXlSMWgxYzFSSk9VUlVaMlJMVGtaYVUyNHdlalpYVXprdk9GZ3ZUMnR1VkRSMlFsZEVWWEJpTjFBMVlWTjVOM1ozVFN0aFlWRnhMMWgxV0d4a2NsbEViVGx5ZUhvd2VUaFZOV2wwVTA5V1NXdHdZMWg0Y1U5b2MzcE9lVTlZY2tzMGRGZG1OWGsyWVZscFJEQklXRmhoYVd0S1pqZDFiV3RGWTBoeVdqTlRVM1ZsUVZocEwyTjJkMXBpU2tSTVFVeHFjRFFyV1RaSE5FTlFjR2hWV0dkdlFsWTRSWGxrY1hscVVXdExVRWhUV1dsSU4zWllORkJwY1ROTFlTczVZVFEyZFdOcFdXMXFlVlpSVkhsT2EyNUdOVWhVUm1wS2JreFZPVlJuV2xGUmJsUm5jVzVUU1VsMFJHRkdhVk5JTkRoaFRsUkxSemcwTlRSMVRqaHpiVzB4ZFc5MGVsVmhTblZNYVV4M1ZXZHlaMGd2U2t0VmN5OTZVbG8zV0c5d04wOHdUaTh5WlVOYUszbFVkM1ZpYlhKUldVbzVjVWxWTmpSSlVFOW9OWFpyYW1keWVrcGtTMjVGUlUxUWVVaFhWemRCTm0xSGFESm9VRkkyVTJoMWJrSlZXRUpEV0ZGdmJGQlVTVnBxY1c1TmJXMDBkMDkwYVhkaWF6Tm9hamxXWTFoc2FtOW5NbFl4VlZwb1NHODRPVzlyV0VGNGRVOVpaWEUwYW10eE4xWkdRVW8zTkdZdlJXTmpkM05DTTJkR2EyMDJWblZPTlM4NFJHVkpUVkYzUzA5VmFEVjFhSEJ4VUV4WVIwMWxjM3BHT0dzeE16Uk5Oa3RpY1hwdk5VVkljM1JVWm1kWWVtZG9SSEpwTTBZeU9WazVMM0ZIVFcwdlNtNU5OV0pUTDFSUVNHSXpZazFKUmprdldsbHdlbnAyTVRoRVZtUlBjekJ3YW1WSGNGRnNRWFoyTUhrdk9XRm9hVGxGV0RGMVpqVkRjMVI1VW1Kb1REbERUbVJ2TUN0a1FVTkZWa3N3UTJsNk5tVlVjbWxzYm5oRVZ6ZHFTemxxWmpGemFIVTFiSFpVY21oVmVVczRXV0l3YlZSeVJtZG9UM0Z3ZURKU1ozQXdRV3c0UXpSd2J5OURObkpwTHl0Q09YTjVlalZRUjJGNlpYWXZNV1ZDY1dvMWVVVmFhbUZJY0VZNFUzZFllSFowV21GcFZtZEphRk50WTBGUWIyMXZTRFZsYUZCd1MwVklSRUZrUTJkSWNFcDZUalkwVEZOak5sRm1VelJEZDFoQmQxVXpRMGx3VEc5T2JERnZNRFpCUkZGQ2FsazBTbGhNZUVsU2MyZG5ORTlLTmpCS05tSnFNMHRTYVhkNVdVcHROa05LVDI0clVVZElla1pSUzFkNVNYb3ZNVkJVY2xoUWJpdHJUMFJsWTFsUFduVTFURTQyVWsxTVRYUXpXazAyUkd0bksxazVhVWhUU1hadFozQmhXVzR6VTNNdmRrSXhlVlJhYlRnM05GaFplREpsZWpCVkwxQTFhbk5CTUROc05qUnFlVzFzWjFSVlZHMHJlRlJLWjBWNlNHcFNlbE00VUVsNU9IZGpjVlphUlZBMlNsSkJiRUUyYXl0NWNsWlVVRWQzTlRKUFdFNW1URUZUVUV4b2VuaDJiV3hMVkhoQ1pUWllXSHBqYTJsRk9VbHZObTVvTnpCak9IUnpVRFI0TTFSSWJFWjNkMncyYVZVck9EQXZjbFJ5VEVac09HUldUbTE2YWxaaVRuUlRlVk1yWTFKdVJ6UXdiSEUyY3paRlRFNHZNMHhKV2tOdVdISlNiMDFhVWxkTVNWVlRjMmRoYkhNM2FVY3pVUzlLWlZaS1MzbHVZVGwzWlVsM1ptWnVlbmQ2YmpoWGIwWTBhakZsWjA1eGFWRkdlVUpLVVd4T2RrNUVaamw2UmtreGRIUnBNeXREZEdORFkydFZXRkIyY1ZKWFZVbEhSV0pMTW0xR1F6VXJNMVJCTVdwcFEwMTZXakpMWm14MVp6WnpaMFJFUVdsTWIxUXljeTltVDNwMU1VWmxWREZFY3pGc1l6Wk9NVmhtWm1kdFZUZHRORTl5ZUNzNFpHaHhkRkI2YjB0Q1dHWXJTbTVvU1Zkc1dtWm1lREZ2ZURCNmRuRnNXa00zUzFCbmRqZGtaMDV6ZGxkRlRtaHFWbFJIVldOM2JtbGFPVGRpYjNBdlNVbFNSR0ZxV0dsTFJISnVWQzlUYlc4dmVXVk5NV2xUVG5WWFprVTRZMFYzTkhsTFJVOWpTSGhTWTJWeVVUUnhlbUpvTDIxSVJqZHBOWEp1Y0d4ck5FOUdTSHBGVVdsaFkxSTBkMUJYZUdSSlVVZEVlVTQxUmxKdFZWcGllWEZXUkZaTVFtWnBUVmRsUjJkRFR6RkVUblJ1T0RKbU5HOW1URWg1VmtSNmNUVnFOMDlqYVdoRk1XVmtURTFpUm5jemJFUkdRbTlPSzBoTmFXMWFja3huWmpKQ05WWkhlbUpsWm5sRmQxcFlSM1ZTWVM4NGNUQnVVRVZ5YkN0WGVFaE5URGN5WVhSelltbEZLMmQzTUZwRE1UQkRRMFV3TmxKWU0xSjJUVlZQUVRsaVRIQkdlSEppVXpKUEswZEVRa0pQU1N0bmFWUlZXSGN2VkdsNVdXdHlkVUo2VGs1c2JtWjFaRTVUUldKV2JpdFVNakJLWVU1blN6WlBTbEV6VEdaeE1XUkpabE4xT0ZWeU4wUXJObTAyTTNJM1ZEWTNMMUpYZHpSSGVFVTFieTlxVkVkQlFtdDRWREZRUVdoR1JGUjJjR1J1WVdKelJrUnFRMWRZZW5kcmVGbFBOamx6V1ZkeFdreDJOMmROZHl0WlVteDZRbVZ3TWpkcFdWQmFUbUpzU1RoTGNISjBaVmQ2U1VzNFdVWmhWa05LTjFjM1RuUTBjV05CYWpRNVNFUlpTa1I2Wlhad2JUWm9hbk5FZVdkNVpIbFBXRVpzZG5SQldHWm9VSEIzVW5Fd056TjNaMDk2ZDFRd2JqRkdielZsVVZoVWF6QmphRlpUUW1GamMwaHZZVkpHZVZNeVJrVXpORGxIZUVsSmRrMTJaRmhZYWpkYVREQTVhbVozVDNkaGIyNUdPVXRhVEhwQ1FUUnFXVzVvYmtwNFpXWmpTazl0YUc0M1VVSlZTMVpxVVd4RldHaEtiVUp3ZERGMFMzUllVa3BtY0RKak5reEVlblpaTjJ4TVFVTXpha1ZpT0ZCYVZsbE5Va2RDY0Vkb2JEbHlkbFkzTDJKWlJYQm1URWhRVHpodFVWWkdUMGhwUlZGRWN6SlFPV2d5V21sT1Z6WnFjMGMwU25WdlYyNUVhbmcwYmpKdVFpODJhWE14YkhaVmRFWTVLMnMxWlRReE1GSXdZamRGYTJKYWVsVXlSRlJxU201cFVIazBibXR6TVhkR1RIUmhNSGRxT0dKaFZWcENiV1JwYkc5S2RsTjNSM1Z0TWxSbWVrdEZlV3BzV1RaU2IzcFVRMDFGY0dSeFFYSnRaRmszV1VwTmN6Qm5WWGhTT1V4R1VYbHZRVU5VTVhrNFZHcFdVVlV4VlhOWlpYaHROVXB0Vmk5UlVuUlhVVVV5VjFJNE5uaGxWamgxYUdoMU56SlVNRWN5TlVsVVdVdFZTRU5ZV0RKaFdtdHBPR2R3WmxKR1pqSkJWR0p6UVc1aGFsZDJRMWxaVURGdlVXNUpWME5uVjNGMlJsTm5XRVk0ZUhobVRXaHJhMlpIT1ZGdFJYbGhOSEpoWm5kUlZVdHhLMXBvTURZNWRXb3dWMEY1YkRZemJUWkRTVE5FTVZoYVFYUXZNMDlHWW14dFRHTmFkVUZ1WkZCUVkxRlVia1k1TDB0TFRFNHllV3AxZFhnMGRHUmhWRFl6YzFjMmJsYzRhRTVLVmtWUVkwOU9MeTltZDNwS1JFVnViWFJ2Y201eFJHNXRaUzl1ZWpOWlNFZERWSFl4YzJSV01YQjNiR2hYZVV4aGVXcG9OSE12VmxkMmVURXJOMlpKVUVWc1ZsSlpibkpZY3pORFJVVlBiV2hHZUhaaGFEWTVORTVCTlZOVFdUQk1aMk5VTjJnemNGWkxaSGcwT1RKNVFWVTNhVmhsVmxsV09VTk1OM2RWTmtWNmJWUTNXbTlZZVZkM1MwOUZNVFl6TjNKWE1WZzBOa3A1U1d0eE0yMVBlRkJpYUhoMlNsUkViREEyV0hBMWNWUjBVR0pLU0ZobVdGWnNXWE5rWVVKWmFIbzVkVEVyVDJwTk5XRTVhVVZMZFdocVZXaE5abFZ5TldwQ2FtNUplakZCU1ZFOVBRLk96VElTSUVNU0xNOFN3ZmpQNmk2V3Zfc1FMYmo2eTg2NUVocGNsS3NwbW9YNEQ2dVM5N0hlQllpWmlhQVB3UDFoZDNpc2VzeVVoYTBJeEJNSUZjalBB"/>
+                                                                <input type="hidden" name="_eventId" value="submit"/>
+                                                                <input type="hidden" id="token" name="token" />
+
+                                                                <!-- campos de controle do webflow -->
+                                                                
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+		
+	
+	<input type="submit" name="pbEntrar" value="Entrar" onclick="" onmouseover="B_mOver(this);" onmouseout="B_mOut(this);" onmouseover="B_mOver(this);" onmouseout="B_mOut(this);" class="spwBotaoDefault " id="pbEntrar">
+
+
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td class="forgotPassword"><a href="https://esaj.tjsp.jus.br/esajperfil/reenviaSenha.do" class="esajLinkLogin">Esqueci minha senha</a></td>
+                                                        </tr>
+                                                    </table>
+
+                                                </div>
+
+                                                <div id="aba-certificado" class="tabsConteudo" style="display: none;">
+
+                                                    <table width="100%" border="0" cellspacing="0" cellpadding="0">
+
+                                                        <tr>
+                                                            <td class="tdLabel">
+                                                                <label class="inputLabel" for="certificados">
+                                                                    Certificado<span class="text-red-600">*</span>:
+                                                                </label>
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td >
+                                                                <div class="certificadoTd">
+                                                                    <input id="certificadoSelecionado" type="hidden" name="certificadoSelecionado"/>
+                                                                    <select name="certificado" id="certificados" class="max-w-[218px] md:max-w-[234px]" style="display: inline; position: relative;" title="Selecione seu Certificado digital ou para acessar o Portal e-SAJ com seu número de CPF pressione CTRL+SHIFT+1.">
+                                                                        <option value="">Carregando certificados</option>
+                                                                    </select>
+                                                                    <button id="certificadosRecarregar" class="spwBotaoDefault mt-[6px]" style="display: none; position: relative;">
+                                                                        <img width="14" height="14" id="certificados-recarregar" style="vertical-align: middle;" class="mx-auto" src="/sajcas/imagens/certificado/recarregarCertificadosNew.png" alt="Recarregar certificados"/>
+                                                                    </button>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>
+                                                                
+                                                            </td>
+                                                        </tr>
+                                                        
+                                                            <tr>
+                                                                <td>
+                                                                    <div id="magistrado-container">
+                                                                        <input type="checkbox" name="magistrado" id="magistrado" value="true"/>
+                                                                        <label for="magistrado" class="magistradoLabel">Magistrado</label>
+                                                                    </div>
+                                                                </td>
+                                                            </tr>
+                                                        
+                                                        <tr>
+                                                            <td id="LoginCertContainer">
+                                                                <div id="LoginCert" style="height: 0px;">
+                                                                    <!-- conteudo inserido somente quando a tab e exibida (ver sajIdentificarseView.js) -->
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td class="buttons">
+                                                                
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+	
+	    
+	<input type="button" name="pbEntrar" value="Entrar" onclick="" disabled="disabled" onmouseover="B_mOver(this);" onmouseout="B_mOut(this);" class="disabled " id="submitCertificado">
+
+
+                                                            </td>
+                                                        </tr>
+
+                                                    </table>
+                                                    <input type="hidden" name="signature" id="signature"/>
+                                                </div>
+                                            <div>
+</div></form>
+                                            <p class="registerText mt-2">
+                                                Não possui identificação?
+                                                <a href="#" id="ancoraHabilitacao">
+                                                    Inicie seu cadastro
+                                                </a>
+                                            </p>
+                                        </div>
+                                    </div>
+                                    
+
+
+
+
+
+
+
+<div id="modalTokenDuploFator">
+    <h2 class="loginHeading">
+        Validação de identificação
+    </h2>
+    <div id="txtEnvio">
+        <p class="txt-envio-span">Insira o código de validação enviado para seu endereço de e-mail principal <b></b> e seus e-mails alternativos cadastrados no Portal.</p>
+    </div>
+    <div id="inputToken" class="input-token-div">
+        <label for="tokenInformado">Código*</label>
+        <input class="loginInput" type="text" required maxlength="6" oninput="verificarCaracteres(this)" class="input-token" id="tokenInformado" name="tokenInformado">
+        <div id="contadorRegressivo" class="contador-regressivo" style="display:none"></div>
+        <div id="contadorRegressivoSR" class="sr-only" aria-live="polite" aria-atomic="true"></div>
+        <div id="avisoTokenInvalido" class="aviso-token-invalido" style="display: none">
+            
+        </div>
+    </div>
+    <div class="btn-group-sm text-left">
+        <button id="btnEnviarToken" type="submit" class="spwBotaoDefault" >
+            Enviar
+        </button>
+        <button id="btnReceberToken" type="submit" onclick="inicializaContador()" class="spwBotao newCodeBtn" >
+            Receber novo código
+        </button>
+        <input type="hidden" value="">
+    </div>
+</div>
+
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <td>&nbsp;</td>
+        </div>
+
+        <tr>
+            <td valign="top">
+                
+
+
+
+
+
+
+
+<div id="habilitacao" class="login">
+    <table class="tableHabilitacao">
+        <tr>
+            <td>
+                <div class="caixaConteudoHab h-[calc(100vh-162px)] md:h-auto md:min-h-[600px] md:shadow-md bg-white">
+                    <div class="logoContainer">
+                        <img alt="Logotipo e-SAJ" src="/sajcas/imagens/layout/marcaSAJ.png"/>
+                    </div>
+                    <h2 class="loginHeading">Faça seu cadastro</h2>
+                    <p>Para iniciar o seu cadastro, informe seu CPF ou CNPJ</p>
+                    <form name="habilitacaoForm" method="post" action="/sajcas/iniciarHabilitacao.do" autocomplete="off" onsubmit="return applySubmit(this, eval('function spwSubmit(t, e){decodificaInputMulSelOnSubmit();if (!IS_enableSubmit) return false; return BENV_isCamposValidos(t); } spwSubmit(this, event);'));">
+                        <table class="w-full">
+                            <tr>
+                                
+                                <td class="tdLabel">
+                                    <label for="registerNumber">CPF/CNPJ<span class="text-red-600">*</span>:</label>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><input class="loginInput" type="text" id="registerNumber" name="entity.nuCpfCnpj"/></td>
+                            </tr>
+                            <tr>
+                                <td class="buttons" style="padding-bottom: 16px">
+                                    <input type="hidden" name="pbHabilitar" value="S"/>
+                                    
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+		
+	
+	<input type="submit" name="pbHabilitar" value="Iniciar" onclick="" onmouseover="B_mOver(this);" onmouseout="B_mOut(this);" onmouseover="B_mOver(this);" onmouseout="B_mOut(this);" class="spwBotaoDefault " id="pbHabilitar">
+
+
+                                </td>
+                            </tr>
+                        </table>
+                        <p class="registerText">
+                            Já possui cadastro?
+
+                            <a href="#" id="ancoraLogin">Identificar-se agora</a>
+                        </p>
+                    </form>
+                </div>
+            </td>
+        </tr>
+    </table>
+    <br/>
+</div>
+<script>
+    $(function () {
+        var controlarCampoOab = function ($select) {
+            if ($select.val() == 1) {
+                $('tr#trOab').show();
+            } else {
+                $('tr#trOab').hide();
+            }
+        };
+        var controlarSelect = function () {
+            var $select = $(this);
+            controlarCampoOab($select);
+        };
+        var $select = $('select#selectPerfil');
+        $select.bind('click', controlarSelect);
+        $select.bind('change', controlarSelect);
+
+        controlarCampoOab($select);
+
+        function checkRegisterFields() {
+            var registerNumber = $('#registerNumber').val();
+
+            if(registerNumber.trim() !== '') {
+                $('#pbHabilitar').prop('disabled', false);
+            } else {
+                $('#pbHabilitar').prop('disabled', true);
+            }
+        }
+
+        checkRegisterFields()
+
+        $('#registerNumber').on('keyup', checkRegisterFields);
+    });
+</script>
+            </td>
+        </tr>
+
+        <tr>
+            <td valign="top">&nbsp;</td>
+            <td>&nbsp;</td>
+            <td valign="top">&nbsp;</td>
+        </tr>
+    </section>
+    
+
+
+<div id="webSignerNaoInstalado" style="display: none;">
+    <p>Para utilização do certificado digital no Portal e-SAJ é necessário a instalação do plug-in Web Signer. Por favor, realize a instalação antes de continuar.</p>
+    <div class="footer_certificado">
+        <button id="redirecionarParaPaginaInstalacao" class="actionPrincipal spwBotaoDefault">Instalar</button>
+        <button class="fecharModalInstalacao spwBotao">Cancelar</button>
+        <button class="spwBotao" onclick="window.open('https://esaj.tjsp.jus.br/WebHelp//#id_instalacao_lacuna.htm','_blank')">Ajuda</button>
+    </div>
+</div>
+
+<div id="webSignerNaoSuportado" style="display: none;">
+    <p>O navegador utilizado não é compatível com a tecnologia (Web Signer) necessária para utilização do certificado digital. Por favor, utilize um dos navegadores homologados. Em caso de dúvidas, efetue a validação de requisitos <a href="https://esaj.tjsp.jus.br/petpg-verificacao/abrirVerificacaoRequisitosPet.do" target="_blank">aqui</a>.</p>
+    <div class="footer_certificado">
+        <button class="fecharModalInstalacao spwBotaoDefault actionPrincipal">OK</button>
+    </div>
+</div>
+
+</esaj-layout>
+</body>
+</html>

@@ -1,0 +1,6 @@
+{
+  "numero": "1000001-11.2020.8.26.0100",
+  "tribunal": "TJSP",
+  "erro": "Message: \nStacktrace:\nSymbols not available. Dumping unresolved backtrace:\n\t0x3e8543\n\t0x3e8584\n\t0x1db4e0\n\t0x22594a\n\t0x225beb\n\t0x267bb2\n\t0x248264\n\t0x2653a1\n\t0x247fb6\n\t0x2196f9\n\t0x21a4b4\n\t0x63d034\n\t0x6382c9\n\t0x656460\n\t0x401a68\n\t0x40988d\n\t0x3f0df8\n\t0x3f0fc2\n\t0x3dab3a\n\t0x758d5d49\n\t0x7734d5db\n\t0x7734d561\n",
+  "modo": "SCRAPING_ERRO"
+}

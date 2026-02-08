@@ -1,0 +1,4985 @@
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+        
+        
+    
+    
+
+
+
+<html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">	
+
+	
+
+
+
+
+
+
+
+
+    <script language="javascript" type="text/JavaScript"
+            src="https://esaj.tjsp.jus.br/sajcas/verificarLogin.js?script=1769536180377"></script>
+
+    <script language="javascript">
+        if (window.sajcas && window.sajcas.usuarioLogadoNoCasServer) {
+            var GATEWAY_TRUE = 'gateway=true', GATEWAY_FALSE = 'gateway=false';
+            var urlRetornoSistema = '';
+            if (urlRetornoSistema === '') {
+                urlRetornoSistema = window.location.href;
+            }
+
+            if (urlRetornoSistema.indexOf(GATEWAY_FALSE) !== -1) {
+                urlRetornoSistema = urlRetornoSistema.replace(GATEWAY_FALSE, GATEWAY_TRUE);
+            } else {
+                urlRetornoSistema.lastIndexOf('?') !== -1 ? urlRetornoSistema += '&' : urlRetornoSistema += '?';
+                urlRetornoSistema += GATEWAY_TRUE;
+            }
+
+            window.location.href = urlRetornoSistema;
+        }
+    </script>
+
+
+	<title>Portal de Serviços e-SAJ</title>
+
+	
+	<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+	<link rel="stylesheet" href="/cpopg/softheme/src/css/app.css?v=2.8.34-30">
+	<link rel="stylesheet" href="/cpopg/softheme/src/fonts/saj/styles.css?v=2.8.34-30">
+	<link rel="stylesheet" href="/cpopg/css/formulario.css?v=2.8.34-30" type="text/css"/>
+	
+
+	<link rel="stylesheet" href="/cpopg/webjars/select2/3.5.4/select2.css?v=2.8.34-30" type="text/css" >
+	<link rel="stylesheet" href="/cpopg/webjars/select2/3.5.4/select2-bootstrap.css?v=2.8.34-30" type="text/css">
+	<link rel="stylesheet" href="/cpopg/css/saj/select2/saj-select2.css">
+
+	
+ 
+<script>
+	window.saj = window.saj || {};
+	window.saj.env = window.saj.env || {};
+	window.saj.env.root = '/cpopg';
+	window.saj.env.css = '/cpopg/css';
+	window.saj.env.js = '/cpopg/js';
+	window.saj.env.imagens = '/cpopg/imagens';
+	window.saj.env.queryString = 'processo.codigo=DWZ004HSL0000&processo.foro=500&processo.numero=7010330-77.2009.8.26.0500&consultaDeRequisitorios=true';	
+
+	window.saj.cpo = window.saj.cpo || {};
+
+	// transfere variavel se cpo esta rodando para totem
+	window.saj.cpo.totem = 'false' == 'true';
+</script>
+
+	
+	<script language="javascript" type="text/JavaScript" src="/cpopg/js/jquery/jquery.min.js?n=1620728708"></script>
+	<script language="javascript" type="text/JavaScript" src="/cpopg/js/jquery/jquery.func_toggle.js?n=8eff7d1a-0fb5-40ee-a0cb-7a5f7e496cae"></script>
+	<script language="javascript" type="text/javascript" src="/cpopg/js/jquery/jquery.blockUI.min.js?n=40e7d625-d644-4e3a-9f76-e1cb4e2dfee1"></script>
+	<script language="javascript" type="text/javascript" src="/cpopg/js/jquery/jquery.browser.min.js?n=55f767bc-e84e-4824-857a-96b74be9d90d"></script>
+
+	<script language="javascript" type="text/javascript" src="/cpopg/webjars/lodash/4.17.21/lodash.js?n=94e40f1c-83cc-4be9-8cd2-8b506403785d"></script>
+	<script language="javascript" type="text/JavaScript" src="/cpopg/js/select2/select2.js?n=b4aa3dd0-8066-47e2-a1ea-fef2cb21869a"></script>
+	<script language="javascript" type="text/JavaScript" src="/cpopg/webjars/select2/3.5.4/select2_locale_pt-BR.js?n=6eb10d71-93df-4c56-b1d6-f14d2106f9ca"></script>
+	<script language="javascript" type="text/JavaScript" src="/cpopg/js/saj/saj-select2.js?n=e2ed63b8-ab38-40eb-8900-6a68817de63b"></script>
+
+	<script language="javascript" type="text/JavaScript" src="/cpopg/js/saj/saj-web-2.2.41-4.js?n=bda28680-337b-44d3-aefe-b08e37299f79"></script>
+	<script language="javascript" type="text/JavaScript" src="/cpopg/js/saj/saj-tooltip.js?n=069bd3cd-5e82-478f-9f74-e1a8ed8e600a"></script>
+	<script language="javascript" type="text/JavaScript" src="/cpopg/js/saj/saj-popup-modal-1.0.0-1.js?n=1451b244-1e65-4c2a-b7fb-1d078f1a36f6"></script>
+	<script language="javascript" type="text/JavaScript" src="/cpopg/js/saj/saj-browser.js?n=f9584e6e-678b-4386-9e08-d0130538e617"></script>
+	<script language="javascript" type="text/JavaScript" src="/cpopg/js/saj/saj-mascara-input.js?n=db127d8d-2a76-41e7-9e54-d4626515e6a5"></script>
+	<script language="javascript" type="text/JavaScript" src="/cpopg/js/saj/saj-numeroProcesso.js?n=247d3ec2-729c-4463-9636-63dd6b304649"></script>
+	<script language="javascript" type="text/JavaScript" src="/cpopg/js/saj-cpo-cbpesquisa.js?n=295666404"></script>
+	<script language="javascript" type="text/JavaScript" src="/cpopg/js/saj/acessibilidade/acessibilidade.js?n=a45b5070-ab5b-465b-953c-384d46d8d790"></script>
+	
+	<script language="javascript" type="text/JavaScript" src="/cpopg/softheme/src/js/app.js?n=789536343"></script>   
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js?n=d3f1a69a-cc4b-404e-b576-288cf96e5991" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js?n=1791337263" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
+	
+	
+
+
+
+
+<script>
+	(function($){
+		$(function(){
+			var intervalo = 1795000;
+			$.saj.manterSessao('/cpopg/manterSessao.do', intervalo);
+		});
+				
+	})(jQuery);
+</script>
+
+
+
+
+	
+    <script language="javascript" type="text/JavaScript">
+        $.saj = $.saj || {};
+        $.saj.acessoRecurso = {
+            abrirPastaDigitalEmPopup: 'true' == 'true',
+            idRecursoQueProvocouLiberacaoPorSenha: '',
+            limitaAcessoPastaDigital: 'false',
+            popupSenha: {
+                mostrar: 'false' == 'true',
+                titulo: 'Senha do processo',
+                altura: 220 + Number("10"),
+                alturaAdicionalParaMensagemValidacao: Number("0"),
+                largura: 580
+            },
+            popupMensagem: {
+                titulo: 'Aviso:',
+                texto: 'Você atingiu o limite diário de acessos à pasta digital em processos que não está vinculado.'
+            },
+			tituloPopupRecebimentoIntimacao: 'Aviso de intimação',
+			tituloPopupRecebimentoIntimacaoPendente: 'Aviso de intimação/citação pendente',
+			labelBotaoOk: 'OK',
+			labelBotaoCancelar: 'Cancelar'
+        };
+
+        $.saj.getUrlParameter = function getUrlParameter(sParam) {
+            var sPageURL = decodeURIComponent(window.location.search.substring(1)), sURLVariables = sPageURL.split('&'), sParameterName, i;
+            for (i = 0; i < sURLVariables.length; i++) {
+                sParameterName = sURLVariables[i].split('=');
+                if (sParameterName[0] === sParam) {
+                    return sParameterName[1] === undefined ? true : sParameterName[1];
+                }
+            }
+        };
+    </script>
+    <script language="javascript" type="text/JavaScript" src="/cpopg/jsp/show-2.8.33-0.js?n=3479389853"></script>
+
+	<script type="text/javascript">
+		(function($) {
+			$(function(){
+				// Correção temporária do alinhamento do divisor de seção de formulário do SPW 
+				$('td[background$="spw/fundo_subtitulo2.gif"]').attr('valign', 'top');
+				
+                	$('#cbPesquisa option[value="NUMCDA"]').remove();
+                	$('#cbPesquisa option[value="DOCDELEG"]').remove();
+                	$('#cbPesquisa option[value="PRECATORIA"]').remove()
+                
+			})
+		})(jQuery);
+	</script>
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+
+</head>
+
+<body>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script type="text/javascript">
+    (function ($) {
+        $(function () {
+            var captcha = $.saj.getUrlParameter('uuidCaptcha');
+
+            if (!captcha) {
+                return;
+            }
+
+            if(!captcha){
+                return;
+            }
+            var $processoPrinc = $('.processoPrinc');
+            $processoPrinc.attr('href', $processoPrinc.attr('href') + '&uuidCaptcha=' + captcha);
+
+            var $processoPaiApenso = $('.processoPaiApenso');
+            $processoPaiApenso.attr('href', $processoPaiApenso.attr('href') + '&uuidCaptcha=' + captcha);
+
+            $('.incidente').each(function () {
+                var $incidente = $(this);
+                var url = $incidente.attr('href');
+                $incidente.attr('href', url + '&uuidCaptcha=' + captcha);
+            });
+
+        })
+    })(jQuery);
+</script>
+
+<!-- HEADER-->
+<div class="unj-entity-header">
+    
+
+
+
+
+<div class="unj-entity-header__actions__barra">
+    <div class="container">
+        <div class="row">
+            <div class="col-3 col-md-4">
+                <a href="javascript:history.back();" class="unj-link-back">
+                    <i id="setaVoltar" class="icon-back"></i>
+                </a>
+            </div>
+            <div class="col-13 col-md-12 unj-ta-r">
+                <input type="hidden" name="_csrf" value="9764a40f-832f-4037-893c-4104f5eb7a71" />
+                <!-- CDAS -->
+                
+                <!-- Custas -->
+                
+                <!-- Pasta digital -->
+                
+                    
+                        
+                        
+                            
+                        
+                    
+                    
+                        
+                        
+                            <a class="linkPasta btn btn-secondary btn-space" id="linkPasta" aria-hidden="true" title="Pasta digital" href="#liberarAutoPorSenha">
+                                Visualizar autos
+                            </a>
+                            <!-- link da pasta digital exibido somente para leitores de tela (deficientes visuais), neste caso o link anterior é ignorado pelo leitor
+                            Obs: necessário manter a table devido aos atributos de acessibilidade se comportarem adequadamente com a tabela, comportamento que não é possível colocando
+                            os atributos somente na tag do link-->
+                            <a class="linkPasta btn btn-secondary btn-space" id="linkPastaAcessibilidade" style="font-size:0;height:0;width:0;padding:0;margin:0;border:none" href="#liberarAutoPorSenha&acessibilidade=true">
+                                Visualizar autos
+                            </a>
+                        
+                    
+                
+                
+                    
+                    
+                    
+                    
+                        <!-- Peticionar -->
+                        
+                        
+                        
+                    
+                
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+
+
+
+
+
+
+
+<div class="unj-entity-header__summary__barra">
+    <div id="containerDadosPrincipaisProcesso" class="container">
+        <div class="row">
+            <div class="col-lg-12 col-xl-13">
+                <!--principal -->
+                
+                    <span id="numeroProcesso" class="unj-larger-1">
+                        7010330-77.2009.8.26.0500
+                    </span>
+                    
+                    
+                    
+                    
+                
+                <!-- incidente -->
+                
+                
+                
+            </div>
+
+        </div>
+        <div class="row">
+            <input type="hidden" name="_csrf" value="9764a40f-832f-4037-893c-4104f5eb7a71" />
+            
+                <div class="col-lg-3 col-xl-3 mb-3">
+                    <span id="labelClasseProcesso" class="unj-label">Classe</span>
+                    <div class="lh-1-1 line-clamp__2"><span id="classeProcesso" title="Precatório">Precatório</span></div>
+                </div>
+            
+            
+                <div class="col-lg-2 col-xl-3 mb-3">
+                    <span id="labelAssuntoProcesso" class="unj-label">
+                        Assunto
+                    </span>
+                    <div class="lh-1-1 line-clamp__2"> <span id="assuntoProcesso" title="Repetição de indébito">Repetição de indébito</span></div>
+                </div>
+            
+            
+                <div class="col-lg-2 col-xl-2 mb-2">
+                    <span id="labelForoProcesso" class="unj-label">
+                        Foro
+                    </span>
+                    <div class="lh-1-1 line-clamp__2"> <span id="foroProcesso" title="DEPRE">DEPRE</span></div>
+                </div>
+            
+            
+                <div class="col-lg-3 col-xl-2 mb-2">
+                    <span id="labelVaraProcesso" class="unj-label">
+                        Vara
+                    </span>
+                    <div class="lh-1-1 line-clamp__2"><span id="varaProcesso" title="DEPRE - DIRETORIA DE EXECUÇÕES DE PRECATÓRIOS E CÁLCULOS">DEPRE - DIRETORIA DE EXECUÇÕES DE PRECATÓRIOS E CÁLCULOS</span></div>
+                </div>
+            
+
+            
+                <div class="col-lg-3 mb-2">
+                    <span id="labelJuizProcesso" class="unj-label">Juiz</span>
+                    <div class="line-clamp__2"> <span id="juizProcesso" title="Afonso de Barros Faro Júnior">Afonso de Barros Faro Júnior</span> </div>
+                </div>
+            
+
+            <!-- Processo principal -->
+            
+
+            
+        </div>
+    </div>
+</div>
+
+    
+
+
+
+
+<div class="unj-entity-header__details__barra">
+    <div class="container">
+        <div class="unj-ta-r">
+            
+                <a href="#maisDetalhes" class="unj-link-collapse" data-toggle="collapse" aria-expanded="false" aria-controls="maisDetalhes">
+                    <span class="unj-link-collapse__show">
+                        <i id="botaoExpandirDadosSecundarios" class="unj-link-collapse__icon glyph glyph-chevron-down"></i>
+                        Mais
+                    </span>
+                    <span class="unj-link-collapse__hide">
+                        <i id="botaoRecolherDadosSecundarios" class="unj-link-collapse__icon glyph glyph-chevron-up"></i>
+                        Recolher
+                    </span>
+                </a>
+            
+        </div>
+        <div id="maisDetalhes" class="collapse" aria-expanded="false">
+            <div class="row unj-row--border-top">
+                
+                    <div class="col-lg-3 mb-2">
+                        <span id="labelDistribuicaoProcesso" class="unj-label">Distribuição </span>
+                        <div id="dataHoraDistribuicaoProcesso">26/10/2009 às 00:00 - Livre</div>
+                    </div>
+                
+                
+                
+                    <div class="col-lg-3 mb-2">
+                        <span id="labelControleProcesso" class="unj-label">Controle</span>
+                        <div id="numeroControleProcesso">0</div>
+                    </div>
+                
+                
+                    <div class="col-lg-2 col-xl-2 mb-2">
+                        <span id="labelAreaProcesso" class="unj-label">Área</span>
+                        <div id="areaProcesso" class="lh-1-1 line-clamp__2"> <span title="Cível">Cível</span></div>
+                    </div>
+                
+                
+                
+                
+                    <div class="col-lg-3 mb-2">
+                        <span class="unj-label">Outros números</span>
+                        <div>PG6966/2009, 0426781-06.1998.8.26.0053, 0539.842678-1, OC79/2011, 1743-05398426781, REM176/2010, 1743/98, EP10330/2009</div>
+                    </div>
+                
+                
+                
+                
+            </div>
+        </div>
+        
+    </div>
+</div>
+
+</div>
+
+
+<div class="div-conteudo container mb-90">
+	
+		
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+	
+		
+
+
+
+
+    
+
+
+
+<aside class="aside-nav aside-nav--left aside-nav--acessibilidade">
+    <div class="aside-nav__inner">
+        <header class="aside-nav__main-menu__header"><span
+                class="aside-nav__main-menu__header__text">  Menu e-SAJ</span>
+            <a href="#" class="aside-nav__user__close-button close-offcanvas">
+                <img src="https://esaj.tjsp.jus.br/esaj-layout/img/icons/icon-close--light.png" alt="">
+            </a>
+        </header>
+        <nav class="aside-nav__main-menu">
+            <ul class="aside-nav__main-menu__list" id="conteudoMenuEsaj">
+            </ul>
+        </nav>
+        <div id="esaj-beta-switcher-placeholder"></div>
+    </div>
+</aside>
+<aside class="aside-nav aside-nav--right aside-nav__user aside-nav--acessibilidade">
+    <div class="aside-nav__inner">
+        <div class="aside-nav__user__sign">
+            <div class="aside-nav__user__sign__brand">
+                <img src="https://esaj.tjsp.jus.br/esaj-layout/img/aside/brasoes/br-tjsp.jpg" alt="">
+            </div>
+            <ul class="aside-nav__user__sign__list">
+                <li><span class="aside-nav__user__sign__place">Tribunal de Justiça do Estado de São Paulo</span></li>
+            </ul>
+            <a href="#" class="aside-nav__user__close-button close-offcanvas">
+                <img src="https://esaj.tjsp.jus.br/esaj-layout/img/icons/icon-close--dark.png" alt="">
+            </a>
+        </div>
+        <hr>
+        <div class="aside-nav__user__info">
+            <h4 class="aside-nav__user__title">Minha conta</h4>
+            <ul class="aside-nav__user__info__list">
+                <li class="aside-nav__user__info__list__item"><span class="aside-nav__user__info__name" id="menuNmUsuarioLogado"></span></li>
+                <li class="aside-nav__user__info__list__item"><span class="aside-nav__user__info__oab" id="menuUsuarioOabs">OAB: </span></li>
+            </ul>
+            <ul class="aside-nav__user__info__list-access">
+                <li class="aside-nav__user__info__list-access__item"><a class="aside-nav__user__info__list-access__item__link" href="https://esaj.tjsp.jus.br/esaj/cadastro.do">Meu perfil</a></li>
+                
+                    <li class="aside-nav__user__info__list-access__item"><a class="aside-nav__user__info__list-access__item__link" href="https://esaj.tjsp.jus.br/caixapostal">Caixa Postal</a></li>
+                
+                <li class="aside-nav__user__info__list-access__item"><a class="aside-nav__user__info__list-access__item__link" id="logoutLink" href="#">Sair</a></li>
+            </ul>
+        </div>
+    </div>
+</aside>
+<header>
+    <link rel="shortcut icon" href="https://esaj.tjsp.jus.br/esaj-layout/tema/padrao/clientes/SP/imagens/favicon.ico" type="image/x-icon"/>
+    <link href="https://esaj.tjsp.jus.br/esaj-layout/app.css" rel="stylesheet" type="text/css"/>
+    <nav class="header__navbar--barra">
+        
+            <div class="header__navbar__barra-acessibilidade">
+                <a class="header__navbar__barra-acessibilidade-anchor"  target="_blank" href="https://www.tjsp.jus.br/Acessibilidade/Orientacoes"><span>Acessibilidade</span></a>
+                <a target="_blank" href="https://www.tjsp.jus.br/Acessibilidade/Orientacoes">
+                    <img onmouseover="exibirLibras()" onmouseleave="ocultarLibras()" src="https://esaj.tjsp.jus.br/esaj-layout/tema/padrao/imagens/layout/mao.png" alt="MAO">
+                </a>
+            </div>
+            <img id="gifLibras" class="header__navbar__barra-acessibilidade-libras" style="display: none" height="100" width="100" border="0" alt="LIBRAS" src="https://esaj.tjsp.jus.br/esaj-layout/tema/padrao/imagens/layout/libras.gif"/>
+        
+        <a class="header__navbar__menu-hamburger open__aside-nav--left navbar-menu-hamburger__item__link">
+            <span class="menu-hamburger__alert" style="display:none;"></span>
+            <span class="glyph glyph-hamburger"></span>
+        </a>
+
+        <h1 class="header__navbar__title" href=""><a class="linkLogo" href="https://esaj.tjsp.jus.br/esaj-layout/redirecionarNovoEsaj.do"><strong>e-SAJ</strong></a> | Consulta de Requisitórios</h1>
+
+        <ul class="header__navbar__menu header__navbar__menu--right">
+            <li class="header__navbar__menu__item header__navbar__menu__item--initials">
+                <a class="header__navbar__brand__initials" href="http://www.tjsp.jus.br/"> TJSP </a>
+            </li>
+            <li class="header__navbar__menu__item header__navbar__menu__item--user">
+               <span class="header__navbar__name open__aside-nav--right">
+                     <span id="headerNmUsuarioLogado" class="header__navbar__name__text"></span>
+                     <span class="glyph glyph-contact header__navbar__name__icon"></span>
+               </span>
+            </li>
+        </ul>
+    </nav>
+</header>
+<div class="offcanvas-backdrop"></div>
+
+
+<script>
+    var dict = {
+        'certificado.tituloCertificadoDigital': 'Certificado digital',
+        'certificado.msgCarregandoCertificado': 'Carregando certificados...',
+        'certificado.msgNenhumCertificadoEncontrado': 'Nenhum certificado encontrado',
+        'certificado.msgErroCarregarCertificado': 'Erro ao carregar certificados',
+        'certificado.msgCertificadoExpirado': '[Expirado]',
+        'certificado.msgCertificadoNaoValido': '[Ainda não válido]',
+        'certificado.msgCertificadoNaoIcpBrasil': '[Não ICP-Brasil]',
+        'certificado.tituloProblemasAoAssinar': 'Falha de comunicação com o dispositivo de assinatura digital',
+
+        'label.contato': 'Contato',
+        'label.identificarSe': 'Identificar-se ',
+
+        'mensagem.aguarde': 'Por favor, aguarde.',
+        'mensagem.paginaNaoCarregada': 'Não foi possível carregar a página.',
+        'mensagem.marcarLido': 'Marcar como lido',
+        'mensagem.registrosSelecionados': 'Registros selecionados',
+        'mensagem.registroJaSelecionado': 'Este registro já está selecionado',
+
+        'mensagem.data.invalida': 'A data digitada é inválida.',
+        'mensagem.data.anoInvalido': 'O ano informado deve ser maior que',
+        'mensagem.data.mesInvalido': 'O mês não pode ser maior que 12.',
+        'mensagem.data.mes': 'O mês',
+        'mensagem.data.mesMaior29dias': 'não pode ter mais que 29 dias.',
+        'mensagem.data.mesMaior28dias': 'não pode ter mais que 28 dias.',
+        'mensagem.data.mesMaior31dias': 'não pode ter mais que 31 dias.',
+        'mensagem.data.mesMaior30dias': 'não pode ter mais que 30 dias.',
+
+        'mensagem.email.invalido': 'O formato do endereço de e-mail não é válido. Verifique se ele tem o formato "usuario@dominio".',
+        'mensagem.email.caracteresInvalidos': 'O endereço de e-mail possui caracteres inválidos',
+        'mensagem.email.usuarioInvalido': 'O formato do usuário informado no endereço de e-mail não é válido.',
+        'mensagem.email.ipInvalido': 'O endereço IP informado no endereço de e-mail não é válido.',
+        'mensagem.email.dominioInvalido': 'O formato do domínio informado no endereço de e-mail não é válido.',
+        'mensagem.email.dominioIncompleto': 'O domínio informado no endereço de e-mail deve possuir pelo menos duas partes. Por exemplo: "usuario@empresa.com.br".',
+
+        'mensagem.texto.tamanhoInvalido': 'O tamanho do texto digitado é maior do que o tamanho permitido. Tamanho permitido:',
+        'mensagem.texto.caracter': 'O caracter',
+        'mensagem.texto.caracterPosicaoInvalida': 'não está permitido na posição',
+
+        'mensagem.numero.numeroInvalido': 'O valor digitado não é um número válido.',
+        'mensagem.numero.numeroNaoPodeCasasDecimais': 'O número não pode conter casas decimais',
+        'mensagem.numero.numeroCasaDecimaisInvalidas': 'O número de casas decimais é inválido. O número pode conter apenas',
+        'mensagem.numero.casaDecimais': 'casas decimais',
+        'mensagem.numero.numeroInteiroInvalido': 'O número de dígitos inteiros é inválido. O número pode conter apenas',
+        'mensagem.numero.digitosInteiros': 'dígitos inteiros',
+        'mensagem.numero.numeroTamanhoInvalido': 'O número digitado não pode ser maior que',
+        'mensagem.numero.numeroZeroInvalido': 'O número digitado deve ser diferente de zero.'
+    }
+</script>
+
+
+
+<script>
+    var appEsajLayout = appEsajLayout || {};
+    appEsajLayout.urlNovoMenuHtml = 'https://esaj.tjsp.jus.br/esaj-layout/menuPortalV2Html.do?servico=950700';
+
+    var appEsajCas = appEsajCas || {};
+    appEsajCas.urlServicoConteudoIdentificacao = 'https://esaj.tjsp.jus.br/sajcas/conteudoIdentificacaoJson?script=1769497231125&retorno=' + encodeURIComponent(location.href);
+</script>
+<script src="https://esaj.tjsp.jus.br/esaj-layout/js/portalV2-bundle.js?n=806192629"></script>
+<script src="https://esaj.tjsp.jus.br/esaj-layout/js/saj-certificado.js?n=47741893"></script>
+<script src="https://esaj.tjsp.jus.br/esaj-layout/js/softplan-websigner-2.5.1.js?n=736057767"></script>
+
+<script src="https://esaj.tjsp.jus.br/sajcas/seletorVersaoBeta.js?n=25a70215-13f6-40eb-82b2-85620e647f9e&versao=2"></script>
+<script>
+    function exibirLibras() {
+        document.getElementById("gifLibras").style.display = 'block';
+        var cel1 = document.getElementsByClassName('esajCelulaIdentificacao');
+        var cel2 = document.getElementsByClassName('esajCelulaIdentificacaoServico');
+        mudarPosicao(cel1, 'static');
+        mudarPosicao(cel2, 'static');
+    }
+    function ocultarLibras() {
+        document.getElementById("gifLibras").style.display = 'none';
+        var cel1 = document.getElementsByClassName('esajCelulaIdentificacao');
+        var cel2 = document.getElementsByClassName('esajCelulaIdentificacaoServico');
+        mudarPosicao(cel1, 'relative');
+        mudarPosicao(cel2, 'relative');
+    }
+
+    function mudarPosicao(coll, posicao) {
+        if (!coll) {
+            return;
+        }
+        for (var i = 0, len = coll.length; i < len; i++) {
+            coll[i].style["position"] = posicao;
+        }
+    }
+</script>
+
+	
+
+
+
+
+	        
+	            
+	                
+	                
+	                
+	                
+	                
+	                
+	                
+	                
+	                
+	                
+	            
+	        
+	            
+	                
+	                    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	                
+	                
+	                
+	                
+	                
+	                
+	                
+	                
+	                
+	                
+	            
+	        
+	            
+	                
+	                
+	                    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div style="padding-top: 10px;">
+	
+	
+		
+		
+			<h2 class="subtitle tituloDoBloco">Partes do processo</h2>
+		
+	
+</div>
+
+<!--  cabecalho da tabela de lista (partes) -->
+
+
+<!--  dados da lista partes principais (partes) -->
+<table id="tablePartesPrincipais" style="margin-left:15px; margin-top:1px;" align="center" border="0" cellPadding="0" cellSpacing="0" width="98%">
+	
+		
+
+
+
+
+
+
+
+
+
+<tr class="fundoClaro">
+	<td valign="top" width="141" style="padding-bottom: 5px" class="label">
+		<span class="mensagemExibindo tipoDeParticipacao">Reqte&nbsp;</span>
+	</td>
+	<td class="nomeParteEAdvogado" width="*" align="left" style="padding-bottom: 5px">
+		
+			
+				
+				
+					CORTEX INDÚSTRIA TÊXTIL LTDA. (OU CORTTEX INDÚSTRIA TÊXTIL LTDA.) E O/O
+				
+			
+
+			
+		 
+		
+			
+				<br />
+				<span class="mensagemExibindo">Advogado:&nbsp;</span>
+				
+					
+					
+						Pedro Wanderley Roncato
+					
+				&nbsp;
+				
+			
+		
+		
+	</td>
+</tr>
+
+	
+		
+
+
+
+
+
+
+
+
+
+<tr class="fundoClaro">
+	<td valign="top" width="141" style="padding-bottom: 5px" class="label">
+		<span class="mensagemExibindo tipoDeParticipacao">Ent. Devedora&nbsp;</span>
+	</td>
+	<td class="nomeParteEAdvogado" width="*" align="left" style="padding-bottom: 5px">
+		
+			
+				
+				
+					FAZENDA DO ESTADO DE SÃO PAULO
+				
+			
+
+			
+		 
+		
+			
+				<br />
+				<span class="mensagemExibindo">Advogado:&nbsp;</span>
+				
+					
+					
+						WLADIMIR RIBEIRO JUNIOR
+					
+				&nbsp;
+				
+			
+				<br />
+				<span class="mensagemExibindo">Advogada:&nbsp;</span>
+				
+					
+					
+						FERNANDA RIBEIRO DE MATTOS LUCCAS E OUTROS
+					
+				&nbsp;
+				
+			
+				<br />
+				<span class="mensagemExibindo">Advogado:&nbsp;</span>
+				
+					
+					
+						Wladimir Ribeiro Junior
+					
+				&nbsp;
+				
+			
+				<br />
+				<span class="mensagemExibindo">Advogada:&nbsp;</span>
+				
+					
+					
+						Fernanda Ribeiro de Mattos Luccas
+					
+				&nbsp;
+				
+			
+		
+		
+	</td>
+</tr>
+
+	
+</table>
+
+
+
+
+	                
+	                
+	                
+	                
+	                
+	                
+	                
+	                
+	                
+	            
+	        
+	            
+	                
+	                
+	                
+	                
+	                
+	                    
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div style="padding-top: 10px;">
+	
+	
+		
+		
+		
+		
+	
+
+	
+		
+		
+			<h2 class="subtitle tituloDoBloco">Movimentações</h2>
+		
+	
+</div>
+
+
+ 
+	
+
+<table  style="margin-left:15px; margin-top:1px;" align="center" border="0" cellPadding="0" cellSpacing="0" width="98%">
+	
+		
+			<thead>
+				<tr>
+				  <th width="120" class="label" style="vertical-align: bottom">Data</th>
+				  <th vAlign="middle" width="20" aria-hidden="true">&nbsp;</th>
+				  <th vAlign="middle"  class="label">Movimento</th>
+				</tr>
+				<tr class="fundoEscuro" height="2" aria-hidden="true">
+					<td></td>
+					<td></td>
+					<td></td>
+				</tr>
+			</thead>
+
+			
+			<tbody id="tabelaUltimasMovimentacoes">
+				
+					
+
+
+
+
+
+
+
+
+
+
+	
+	
+		
+	
+
+
+
+	<tr class="fundoClaro containerMovimentacao" style="">
+		<td class="dataMovimentacao" width="120" style="vertical-align: top">
+			13/11/2025
+		</td>
+		<td width="20" valign="top" aria-hidden="true">
+			
+		</td>
+		<td class="descricaoMovimentacao" style="vertical-align: top; padding-bottom: 5px">
+			
+			
+				
+				
+					Pedido de Penhora no Rosto dos Autos Juntado
+				
+			
+			
+			<br />
+			<span style="font-style: italic;">
+				N&ordm; Protocolo: WDEP.25.80018884-0
+Tipo da Peti&ccedil;&atilde;o: Pedido de Penhora no Rosto dos Autos
+Data: 13/11/2025 15:37
+
+			</span>
+			
+		</td>
+	</tr>
+	
+
+
+				
+					
+
+
+
+
+
+
+
+
+
+
+	
+	
+		
+	
+
+
+
+	<tr class="fundoEscuro containerMovimentacao" style="">
+		<td class="dataMovimentacao" width="120" style="vertical-align: top">
+			04/07/2025
+		</td>
+		<td width="20" valign="top" aria-hidden="true">
+			
+		</td>
+		<td class="descricaoMovimentacao" style="vertical-align: top; padding-bottom: 5px">
+			
+			
+				
+				
+					Petição Outras Juntada
+				
+			
+			
+			<br />
+			<span style="font-style: italic;">
+				N&ordm; Protocolo: WDEP.25.90081354-1
+Tipo da Peti&ccedil;&atilde;o: Peti&ccedil;&otilde;es - Outras - DEPRE
+Data: 04/07/2025 14:07
+
+			</span>
+			
+		</td>
+	</tr>
+	
+
+
+				
+					
+
+
+
+
+
+
+
+
+
+
+	
+	
+		
+	
+
+
+
+	<tr class="fundoClaro containerMovimentacao" style="">
+		<td class="dataMovimentacao" width="120" style="vertical-align: top">
+			16/05/2025
+		</td>
+		<td width="20" valign="top" aria-hidden="true">
+			
+		</td>
+		<td class="descricaoMovimentacao" style="vertical-align: top; padding-bottom: 5px">
+			
+			
+				
+				
+					Petição Outras Juntada
+				
+			
+			
+			<br />
+			<span style="font-style: italic;">
+				N&ordm; Protocolo: WDEP.25.90057409-1
+Tipo da Peti&ccedil;&atilde;o: Peti&ccedil;&otilde;es - Outras - DEPRE
+Data: 16/05/2025 15:03
+
+			</span>
+			
+		</td>
+	</tr>
+	
+
+
+				
+					
+
+
+
+
+
+
+
+
+
+
+	
+	
+		
+	
+
+
+
+	<tr class="fundoEscuro containerMovimentacao" style="">
+		<td class="dataMovimentacao" width="120" style="vertical-align: top">
+			08/05/2025
+		</td>
+		<td width="20" valign="top" aria-hidden="true">
+			
+		</td>
+		<td class="descricaoMovimentacao" style="vertical-align: top; padding-bottom: 5px">
+			
+			
+				
+				
+					Remetido ao DJE
+				
+			
+			
+			<br />
+			<span style="font-style: italic;">
+				Rela&ccedil;&atilde;o: 0469/2025
+Teor do ato: Processo de Origem: 0426781-06.1998.8.26.0053 Unidade de Processamento das Execu&ccedil;&otilde;es contra a Fazenda P&uacute;blica da Comarca da Capital - UPEFAZ Foro Central - Fazenda P&uacute;blica/Acidentes Tendo em vista exist&ecirc;ncia de fato que impede o pagamento do valor parcial diretamente em conta indicada pelo benefici&aacute;rio, tais como penhora, aus&ecirc;ncia de dados fiscais, confus&atilde;o das verbas, n&atilde;o ter sido informada no prazo a conta para dep&oacute;sito, o montante ser&aacute; transferido para a conta vinculada aos autos da execu&ccedil;&atilde;o a disposi&ccedil;&atilde;o daquele Ju&iacute;zo. Publique-se. S&atilde;o Paulo,03 de maio de 2025.
+Advogados(s): Pedro Wanderley Roncato (OAB 107020/SP), Wladimir Ribeiro Junior (OAB 125142/SP), FAZENDA DO ESTADO DE S&Atilde;O PAULO - r&eacute;u-revel , Fernanda Ribeiro de Mattos Luccas (OAB 136973/SP)
+			</span>
+			
+		</td>
+	</tr>
+	
+
+
+				
+					
+
+
+
+
+
+
+
+
+
+
+	
+	
+		
+	
+
+
+
+	<tr class="fundoClaro containerMovimentacao" style="">
+		<td class="dataMovimentacao" width="120" style="vertical-align: top">
+			03/05/2025
+		</td>
+		<td width="20" valign="top" aria-hidden="true">
+			
+				
+					
+					
+						
+					
+				
+
+				<a class="linkMovVincProc"
+					id="linkMovVincProc-19794223"
+					title="Visualizar documento em inteiro teor"
+					href="#liberarAutoPorSenha"
+				   	target="_blank"
+				   	onclick="javascript:jQuery.saj.validarAberturaIntimacaoNaoRecebida(event, this, 'DWZ004HSL0000', 56, '#liberarAutoPorSenha')">
+					<img width="16" height="16" border="0" src="/cpopg/imagens/doc.png" />
+				</a>
+			
+		</td>
+		<td class="descricaoMovimentacao" style="vertical-align: top; padding-bottom: 5px">
+			
+			
+				
+					<a class="linkMovVincProc"
+						id="linkMovVincProc-2-19794223"
+						title="Visualizar documento em inteiro teor"
+						href="#liberarAutoPorSenha"
+					   	target="_blank"
+					   	onclick="javascript:jQuery.saj.validarAberturaIntimacaoNaoRecebida(event, this, 'DWZ004HSL0000', 56, '#liberarAutoPorSenha')">
+						DEPRE - Ofício Transmissão Planilha Pagamento Realizado - Ao Juiz
+					</a>
+				
+				
+			
+			
+			<br />
+			<span style="font-style: italic;">
+				Of&iacute;cio - Comunica&ccedil;&atilde;o de disponibiliza&ccedil;&atilde;o de pagamento parcial - DEPRE2
+			</span>
+			
+		</td>
+	</tr>
+	
+
+
+				
+			</tbody>
+			
+			
+			<tbody style="display: none;" id="tabelaTodasMovimentacoes">
+				
+					
+
+
+
+
+
+
+
+
+
+
+	
+	
+		
+	
+
+
+
+	<tr class="fundoClaro containerMovimentacao" style="">
+		<td class="dataMovimentacao" width="120" style="vertical-align: top">
+			13/11/2025
+		</td>
+		<td width="20" valign="top" aria-hidden="true">
+			
+		</td>
+		<td class="descricaoMovimentacao" style="vertical-align: top; padding-bottom: 5px">
+			
+			
+				
+				
+					Pedido de Penhora no Rosto dos Autos Juntado
+				
+			
+			
+			<br />
+			<span style="font-style: italic;">
+				N&ordm; Protocolo: WDEP.25.80018884-0
+Tipo da Peti&ccedil;&atilde;o: Pedido de Penhora no Rosto dos Autos
+Data: 13/11/2025 15:37
+
+			</span>
+			
+		</td>
+	</tr>
+	
+
+
+				
+					
+
+
+
+
+
+
+
+
+
+
+	
+	
+		
+	
+
+
+
+	<tr class="fundoEscuro containerMovimentacao" style="">
+		<td class="dataMovimentacao" width="120" style="vertical-align: top">
+			04/07/2025
+		</td>
+		<td width="20" valign="top" aria-hidden="true">
+			
+		</td>
+		<td class="descricaoMovimentacao" style="vertical-align: top; padding-bottom: 5px">
+			
+			
+				
+				
+					Petição Outras Juntada
+				
+			
+			
+			<br />
+			<span style="font-style: italic;">
+				N&ordm; Protocolo: WDEP.25.90081354-1
+Tipo da Peti&ccedil;&atilde;o: Peti&ccedil;&otilde;es - Outras - DEPRE
+Data: 04/07/2025 14:07
+
+			</span>
+			
+		</td>
+	</tr>
+	
+
+
+				
+					
+
+
+
+
+
+
+
+
+
+
+	
+	
+		
+	
+
+
+
+	<tr class="fundoClaro containerMovimentacao" style="">
+		<td class="dataMovimentacao" width="120" style="vertical-align: top">
+			16/05/2025
+		</td>
+		<td width="20" valign="top" aria-hidden="true">
+			
+		</td>
+		<td class="descricaoMovimentacao" style="vertical-align: top; padding-bottom: 5px">
+			
+			
+				
+				
+					Petição Outras Juntada
+				
+			
+			
+			<br />
+			<span style="font-style: italic;">
+				N&ordm; Protocolo: WDEP.25.90057409-1
+Tipo da Peti&ccedil;&atilde;o: Peti&ccedil;&otilde;es - Outras - DEPRE
+Data: 16/05/2025 15:03
+
+			</span>
+			
+		</td>
+	</tr>
+	
+
+
+				
+					
+
+
+
+
+
+
+
+
+
+
+	
+	
+		
+	
+
+
+
+	<tr class="fundoEscuro containerMovimentacao" style="">
+		<td class="dataMovimentacao" width="120" style="vertical-align: top">
+			08/05/2025
+		</td>
+		<td width="20" valign="top" aria-hidden="true">
+			
+		</td>
+		<td class="descricaoMovimentacao" style="vertical-align: top; padding-bottom: 5px">
+			
+			
+				
+				
+					Remetido ao DJE
+				
+			
+			
+			<br />
+			<span style="font-style: italic;">
+				Rela&ccedil;&atilde;o: 0469/2025
+Teor do ato: Processo de Origem: 0426781-06.1998.8.26.0053 Unidade de Processamento das Execu&ccedil;&otilde;es contra a Fazenda P&uacute;blica da Comarca da Capital - UPEFAZ Foro Central - Fazenda P&uacute;blica/Acidentes Tendo em vista exist&ecirc;ncia de fato que impede o pagamento do valor parcial diretamente em conta indicada pelo benefici&aacute;rio, tais como penhora, aus&ecirc;ncia de dados fiscais, confus&atilde;o das verbas, n&atilde;o ter sido informada no prazo a conta para dep&oacute;sito, o montante ser&aacute; transferido para a conta vinculada aos autos da execu&ccedil;&atilde;o a disposi&ccedil;&atilde;o daquele Ju&iacute;zo. Publique-se. S&atilde;o Paulo,03 de maio de 2025.
+Advogados(s): Pedro Wanderley Roncato (OAB 107020/SP), Wladimir Ribeiro Junior (OAB 125142/SP), FAZENDA DO ESTADO DE S&Atilde;O PAULO - r&eacute;u-revel , Fernanda Ribeiro de Mattos Luccas (OAB 136973/SP)
+			</span>
+			
+		</td>
+	</tr>
+	
+
+
+				
+					
+
+
+
+
+
+
+
+
+
+
+	
+	
+		
+	
+
+
+
+	<tr class="fundoClaro containerMovimentacao" style="">
+		<td class="dataMovimentacao" width="120" style="vertical-align: top">
+			03/05/2025
+		</td>
+		<td width="20" valign="top" aria-hidden="true">
+			
+				
+					
+					
+						
+					
+				
+
+				<a class="linkMovVincProc"
+					id="linkMovVincProc-19794223"
+					title="Visualizar documento em inteiro teor"
+					href="#liberarAutoPorSenha"
+				   	target="_blank"
+				   	onclick="javascript:jQuery.saj.validarAberturaIntimacaoNaoRecebida(event, this, 'DWZ004HSL0000', 56, '#liberarAutoPorSenha')">
+					<img width="16" height="16" border="0" src="/cpopg/imagens/doc.png" />
+				</a>
+			
+		</td>
+		<td class="descricaoMovimentacao" style="vertical-align: top; padding-bottom: 5px">
+			
+			
+				
+					<a class="linkMovVincProc"
+						id="linkMovVincProc-2-19794223"
+						title="Visualizar documento em inteiro teor"
+						href="#liberarAutoPorSenha"
+					   	target="_blank"
+					   	onclick="javascript:jQuery.saj.validarAberturaIntimacaoNaoRecebida(event, this, 'DWZ004HSL0000', 56, '#liberarAutoPorSenha')">
+						DEPRE - Ofício Transmissão Planilha Pagamento Realizado - Ao Juiz
+					</a>
+				
+				
+			
+			
+			<br />
+			<span style="font-style: italic;">
+				Of&iacute;cio - Comunica&ccedil;&atilde;o de disponibiliza&ccedil;&atilde;o de pagamento parcial - DEPRE2
+			</span>
+			
+		</td>
+	</tr>
+	
+
+
+				
+					
+
+
+
+
+
+
+
+
+
+
+	
+	
+		
+	
+
+
+
+	<tr class="fundoEscuro containerMovimentacao" style="">
+		<td class="dataMovimentacao" width="120" style="vertical-align: top">
+			03/05/2025
+		</td>
+		<td width="20" valign="top" aria-hidden="true">
+			
+				
+					
+					
+						
+					
+				
+
+				<a class="linkMovVincProc"
+					id="linkMovVincProc-19794222"
+					title="Visualizar documento em inteiro teor"
+					href="#liberarAutoPorSenha"
+				   	target="_blank"
+				   	onclick="javascript:jQuery.saj.validarAberturaIntimacaoNaoRecebida(event, this, 'DWZ004HSL0000', 55, '#liberarAutoPorSenha')">
+					<img width="16" height="16" border="0" src="/cpopg/imagens/doc.png" />
+				</a>
+			
+		</td>
+		<td class="descricaoMovimentacao" style="vertical-align: top; padding-bottom: 5px">
+			
+			
+				
+					<a class="linkMovVincProc"
+						id="linkMovVincProc-2-19794222"
+						title="Visualizar documento em inteiro teor"
+						href="#liberarAutoPorSenha"
+					   	target="_blank"
+					   	onclick="javascript:jQuery.saj.validarAberturaIntimacaoNaoRecebida(event, this, 'DWZ004HSL0000', 55, '#liberarAutoPorSenha')">
+						DEPRE - Comunicação da realização do pagamento
+					</a>
+				
+				
+			
+			
+			<br />
+			<span style="font-style: italic;">
+				Processo de Origem: 0426781-06.1998.8.26.0053 Unidade de Processamento das Execu&ccedil;&otilde;es contra a Fazenda P&uacute;blica da Comarca da Capital - UPEFAZ Foro Central - Fazenda P&uacute;blica/Acidentes Tendo em vista exist&ecirc;ncia de fato que impede o pagamento do valor parcial diretamente em conta indicada pelo benefici&aacute;rio, tais como penhora, aus&ecirc;ncia de dados fiscais, confus&atilde;o das verbas, n&atilde;o ter sido informada no prazo a conta para dep&oacute;sito, o montante ser&aacute; transferido para a conta vinculada aos autos da execu&ccedil;&atilde;o a disposi&ccedil;&atilde;o daquele Ju&iacute;zo. Publique-se. S&atilde;o Paulo,03 de maio de 2025.
+			</span>
+			
+		</td>
+	</tr>
+	
+
+
+				
+					
+
+
+
+
+
+
+
+
+
+
+	
+	
+		
+	
+
+
+
+	<tr class="fundoClaro containerMovimentacao" style="">
+		<td class="dataMovimentacao" width="120" style="vertical-align: top">
+			03/05/2025
+		</td>
+		<td width="20" valign="top" aria-hidden="true">
+			
+		</td>
+		<td class="descricaoMovimentacao" style="vertical-align: top; padding-bottom: 5px">
+			
+			
+				
+				
+					DEPRE - Pagamento Parcial direcionado para Vara de Origem
+				
+			
+			
+			<br />
+			<span style="font-style: italic;">
+				
+			</span>
+			
+		</td>
+	</tr>
+	
+
+
+				
+					
+
+
+
+
+
+
+
+
+
+
+	
+	
+		
+	
+
+
+
+	<tr class="fundoEscuro containerMovimentacao" style="">
+		<td class="dataMovimentacao" width="120" style="vertical-align: top">
+			30/04/2025
+		</td>
+		<td width="20" valign="top" aria-hidden="true">
+			
+		</td>
+		<td class="descricaoMovimentacao" style="vertical-align: top; padding-bottom: 5px">
+			
+			
+				
+				
+					Petição Outras Juntada
+				
+			
+			
+			<br />
+			<span style="font-style: italic;">
+				N&ordm; Protocolo: WDEP.25.90050891-9
+Tipo da Peti&ccedil;&atilde;o: Peti&ccedil;&otilde;es - Outras - DEPRE
+Data: 30/04/2025 10:38
+
+			</span>
+			
+		</td>
+	</tr>
+	
+
+
+				
+					
+
+
+
+
+
+
+
+
+
+
+	
+	
+		
+	
+
+
+
+	<tr class="fundoClaro containerMovimentacao" style="">
+		<td class="dataMovimentacao" width="120" style="vertical-align: top">
+			17/04/2025
+		</td>
+		<td width="20" valign="top" aria-hidden="true">
+			
+		</td>
+		<td class="descricaoMovimentacao" style="vertical-align: top; padding-bottom: 5px">
+			
+			
+				
+				
+					Certidão de Publicação Expedida
+				
+			
+			
+			<br />
+			<span style="font-style: italic;">
+				Rela&ccedil;&atilde;o: 0382/2025
+Data da Publica&ccedil;&atilde;o: 23/04/2025
+N&uacute;mero do Di&aacute;rio: 4187
+			</span>
+			
+		</td>
+	</tr>
+	
+
+
+				
+					
+
+
+
+
+
+
+
+
+
+
+	
+	
+		
+	
+
+
+
+	<tr class="fundoEscuro containerMovimentacao" style="">
+		<td class="dataMovimentacao" width="120" style="vertical-align: top">
+			16/04/2025
+		</td>
+		<td width="20" valign="top" aria-hidden="true">
+			
+		</td>
+		<td class="descricaoMovimentacao" style="vertical-align: top; padding-bottom: 5px">
+			
+			
+				
+				
+					Remetido ao DJE
+				
+			
+			
+			<br />
+			<span style="font-style: italic;">
+				Rela&ccedil;&atilde;o: 0382/2025
+Teor do ato: Processo de Origem: Unidade de Processamento das Execu&ccedil;&otilde;es contra a Fazenda P&uacute;blica da Comarca da Capital - UPEFAZ Vistos. P&aacute;ginas 267/274, 286/288: Como cedi&ccedil;o, os atos praticados por quem n&atilde;o possui mandato, ou o tenha sem poderes suficientes, s&atilde;o, em regra, ineficazes em rela&ccedil;&atilde;o &agrave;quele em cujo nome foram praticados, a teor do disposto no art. 662 do C&oacute;digo Civil. Sendo assim, o(a) subscritor(a) do requerimento, Dr(a). Pedro Wanderley Roncato (OAB/SP 107.020), dever&aacute; providenciar o protocolo de nova peti&ccedil;&atilde;o, que dever&aacute; estar acompanhada de c&oacute;pia do instrumento de procura&ccedil;&atilde;o ou substabelecimento que o habilite a praticar todos os atos processuais, para posterior regulariza&ccedil;&atilde;o cadastral [e aprecia&ccedil;&atilde;o do pedido alhures]. Publique-se. S&atilde;o Paulo, 03 de abril de 2025.
+Advogados(s): Pedro Wanderley Roncato (OAB 107020/SP), Wladimir Ribeiro Junior (OAB 125142/SP), FAZENDA DO ESTADO DE S&Atilde;O PAULO - r&eacute;u-revel , Fernanda Ribeiro de Mattos Luccas (OAB 136973/SP)
+			</span>
+			
+		</td>
+	</tr>
+	
+
+
+				
+					
+
+
+
+
+
+
+
+
+
+
+	
+	
+		
+	
+
+
+
+	<tr class="fundoClaro containerMovimentacao" style="">
+		<td class="dataMovimentacao" width="120" style="vertical-align: top">
+			15/04/2025
+		</td>
+		<td width="20" valign="top" aria-hidden="true">
+			
+				
+					
+					
+						
+					
+				
+
+				<a class="linkMovVincProc"
+					id="linkMovVincProc-19617814"
+					title="Visualizar documento em inteiro teor"
+					href="#liberarAutoPorSenha"
+				   	target="_blank"
+				   	onclick="javascript:jQuery.saj.validarAberturaIntimacaoNaoRecebida(event, this, 'DWZ004HSL0000', 50, '#liberarAutoPorSenha')">
+					<img width="16" height="16" border="0" src="/cpopg/imagens/doc.png" />
+				</a>
+			
+		</td>
+		<td class="descricaoMovimentacao" style="vertical-align: top; padding-bottom: 5px">
+			
+			
+				
+					<a class="linkMovVincProc"
+						id="linkMovVincProc-2-19617814"
+						title="Visualizar documento em inteiro teor"
+						href="#liberarAutoPorSenha"
+					   	target="_blank"
+					   	onclick="javascript:jQuery.saj.validarAberturaIntimacaoNaoRecebida(event, this, 'DWZ004HSL0000', 50, '#liberarAutoPorSenha')">
+						DEPRE - Certidão de Decurso do Prazo
+					</a>
+				
+				
+			
+			
+			<br />
+			<span style="font-style: italic;">
+				Certid&atilde;o - Cart.Dig. Decurso de prazo cadastro de procurador - DEPRE1
+			</span>
+			
+		</td>
+	</tr>
+	
+
+
+				
+					
+
+
+
+
+
+
+
+
+
+
+	
+	
+		
+	
+
+
+
+	<tr class="fundoEscuro containerMovimentacao" style="">
+		<td class="dataMovimentacao" width="120" style="vertical-align: top">
+			15/04/2025
+		</td>
+		<td width="20" valign="top" aria-hidden="true">
+			
+				
+					
+					
+						
+					
+				
+
+				<a class="linkMovVincProc"
+					id="linkMovVincProc-19455364"
+					title="Visualizar documento em inteiro teor"
+					href="#liberarAutoPorSenha"
+				   	target="_blank"
+				   	onclick="javascript:jQuery.saj.validarAberturaIntimacaoNaoRecebida(event, this, 'DWZ004HSL0000', 49, '#liberarAutoPorSenha')">
+					<img width="16" height="16" border="0" src="/cpopg/imagens/doc.png" />
+				</a>
+			
+		</td>
+		<td class="descricaoMovimentacao" style="vertical-align: top; padding-bottom: 5px">
+			
+			
+				
+					<a class="linkMovVincProc"
+						id="linkMovVincProc-2-19455364"
+						title="Visualizar documento em inteiro teor"
+						href="#liberarAutoPorSenha"
+					   	target="_blank"
+					   	onclick="javascript:jQuery.saj.validarAberturaIntimacaoNaoRecebida(event, this, 'DWZ004HSL0000', 49, '#liberarAutoPorSenha')">
+						DEPRE Decisão Publicável
+					</a>
+				
+				
+			
+			
+			<br />
+			<span style="font-style: italic;">
+				Processo de Origem: Unidade de Processamento das Execu&ccedil;&otilde;es contra a Fazenda P&uacute;blica da Comarca da Capital - UPEFAZ Vistos. P&aacute;ginas 267/274, 286/288: Como cedi&ccedil;o, os atos praticados por quem n&atilde;o possui mandato, ou o tenha sem poderes suficientes, s&atilde;o, em regra, ineficazes em rela&ccedil;&atilde;o &agrave;quele em cujo nome foram praticados, a teor do disposto no art. 662 do C&oacute;digo Civil. Sendo assim, o(a) subscritor(a) do requerimento, Dr(a). Pedro Wanderley Roncato (OAB/SP 107.020), dever&aacute; providenciar o protocolo de nova peti&ccedil;&atilde;o, que dever&aacute; estar acompanhada de c&oacute;pia do instrumento de procura&ccedil;&atilde;o ou substabelecimento que o habilite a praticar todos os atos processuais, para posterior regulariza&ccedil;&atilde;o cadastral [e aprecia&ccedil;&atilde;o do pedido alhures]. Publique-se. S&atilde;o Paulo, 03 de abril de 2025.
+			</span>
+			
+		</td>
+	</tr>
+	
+
+
+				
+					
+
+
+
+
+
+
+
+
+
+
+	
+	
+		
+	
+
+
+
+	<tr class="fundoClaro containerMovimentacao" style="">
+		<td class="dataMovimentacao" width="120" style="vertical-align: top">
+			04/04/2025
+		</td>
+		<td width="20" valign="top" aria-hidden="true">
+			
+		</td>
+		<td class="descricaoMovimentacao" style="vertical-align: top; padding-bottom: 5px">
+			
+			
+				
+				
+					Certidão de Publicação Expedida
+				
+			
+			
+			<br />
+			<span style="font-style: italic;">
+				Rela&ccedil;&atilde;o: 0335/2025
+Data da Publica&ccedil;&atilde;o: 04/04/2025
+N&uacute;mero do Di&aacute;rio: 4177
+			</span>
+			
+		</td>
+	</tr>
+	
+
+
+				
+					
+
+
+
+
+
+
+
+
+
+
+	
+	
+		
+	
+
+
+
+	<tr class="fundoEscuro containerMovimentacao" style="">
+		<td class="dataMovimentacao" width="120" style="vertical-align: top">
+			04/04/2025
+		</td>
+		<td width="20" valign="top" aria-hidden="true">
+			
+		</td>
+		<td class="descricaoMovimentacao" style="vertical-align: top; padding-bottom: 5px">
+			
+			
+				
+				
+					Certidão de Publicação Expedida
+				
+			
+			
+			<br />
+			<span style="font-style: italic;">
+				Rela&ccedil;&atilde;o: 0334/2025
+Data da Publica&ccedil;&atilde;o: 04/04/2025
+N&uacute;mero do Di&aacute;rio: 4177
+			</span>
+			
+		</td>
+	</tr>
+	
+
+
+				
+					
+
+
+
+
+
+
+
+
+
+
+	
+	
+		
+	
+
+
+
+	<tr class="fundoClaro containerMovimentacao" style="">
+		<td class="dataMovimentacao" width="120" style="vertical-align: top">
+			02/04/2025
+		</td>
+		<td width="20" valign="top" aria-hidden="true">
+			
+		</td>
+		<td class="descricaoMovimentacao" style="vertical-align: top; padding-bottom: 5px">
+			
+			
+				
+				
+					Remetido ao DJE
+				
+			
+			
+			<br />
+			<span style="font-style: italic;">
+				Rela&ccedil;&atilde;o: 0335/2025
+Teor do ato: Processo de Origem: Unidade de Processamento das Execu&ccedil;&otilde;es contra a Fazenda P&uacute;blica da Comarca da Capital - UPEFAZ Vistos. P&aacute;ginas 267/274 e 286/289: Em face do requerimento formulado, procedeu-se &agrave; inclus&atilde;o do(s) procurador(es) do(a) interessado(a) e &agrave; exclus&atilde;o do(a) advogado(a) anteriormente habilitado(a), conforme certid&atilde;o &agrave; p&aacute;gina 290. Intime-se o(a) patrono(a) origin&aacute;rio(a), Dr(a). Mirian Teresa Pascon (OAB/SP 132.073), para, no prazo de 05 (cinco) dias, em caso de discord&acirc;ncia, manifestar-se acerca da nova procura&ccedil;&atilde;o/substabelecimento acostada(o) nos autos. Em tempo, quanto ao cadastramento das partes para o acesso digital, dever&aacute; o advogado observar as informa&ccedil;&otilde;es do Comunicado n&ordm; 01/2017, seguindo o manual para acesso ao sistema disponibilizado no s&iacute;tio eletr&ocirc;nico deste Tribunal. Publique-se. S&atilde;o Paulo, 27 de mar&ccedil;o de 2025.
+Advogados(s): Pedro Wanderley Roncato (OAB 107020/SP), Wladimir Ribeiro Junior (OAB 125142/SP), FAZENDA DO ESTADO DE S&Atilde;O PAULO - r&eacute;u-revel , Fernanda Ribeiro de Mattos Luccas (OAB 136973/SP)
+			</span>
+			
+		</td>
+	</tr>
+	
+
+
+				
+					
+
+
+
+
+
+
+
+
+
+
+	
+	
+		
+	
+
+
+
+	<tr class="fundoEscuro containerMovimentacao" style="">
+		<td class="dataMovimentacao" width="120" style="vertical-align: top">
+			31/03/2025
+		</td>
+		<td width="20" valign="top" aria-hidden="true">
+			
+				
+					
+					
+						
+					
+				
+
+				<a class="linkMovVincProc"
+					id="linkMovVincProc-19327612"
+					title="Visualizar documento em inteiro teor"
+					href="#liberarAutoPorSenha"
+				   	target="_blank"
+				   	onclick="javascript:jQuery.saj.validarAberturaIntimacaoNaoRecebida(event, this, 'DWZ004HSL0000', 45, '#liberarAutoPorSenha')">
+					<img width="16" height="16" border="0" src="/cpopg/imagens/doc.png" />
+				</a>
+			
+		</td>
+		<td class="descricaoMovimentacao" style="vertical-align: top; padding-bottom: 5px">
+			
+			
+				
+					<a class="linkMovVincProc"
+						id="linkMovVincProc-2-19327612"
+						title="Visualizar documento em inteiro teor"
+						href="#liberarAutoPorSenha"
+					   	target="_blank"
+					   	onclick="javascript:jQuery.saj.validarAberturaIntimacaoNaoRecebida(event, this, 'DWZ004HSL0000', 45, '#liberarAutoPorSenha')">
+						DEPRE Decisão Publicável
+					</a>
+				
+				
+			
+			
+			<br />
+			<span style="font-style: italic;">
+				Processo de Origem: Unidade de Processamento das Execu&ccedil;&otilde;es contra a Fazenda P&uacute;blica da Comarca da Capital - UPEFAZ Vistos. P&aacute;ginas 267/274 e 286/289: Em face do requerimento formulado, procedeu-se &agrave; inclus&atilde;o do(s) procurador(es) do(a) interessado(a) e &agrave; exclus&atilde;o do(a) advogado(a) anteriormente habilitado(a), conforme certid&atilde;o &agrave; p&aacute;gina 290. Intime-se o(a) patrono(a) origin&aacute;rio(a), Dr(a). Mirian Teresa Pascon (OAB/SP 132.073), para, no prazo de 05 (cinco) dias, em caso de discord&acirc;ncia, manifestar-se acerca da nova procura&ccedil;&atilde;o/substabelecimento acostada(o) nos autos. Em tempo, quanto ao cadastramento das partes para o acesso digital, dever&aacute; o advogado observar as informa&ccedil;&otilde;es do Comunicado n&ordm; 01/2017, seguindo o manual para acesso ao sistema disponibilizado no s&iacute;tio eletr&ocirc;nico deste Tribunal. Publique-se. S&atilde;o Paulo, 27 de mar&ccedil;o de 2025.
+			</span>
+			
+		</td>
+	</tr>
+	
+
+
+				
+					
+
+
+
+
+
+
+
+
+
+
+	
+	
+		
+	
+
+
+
+	<tr class="fundoClaro containerMovimentacao" style="">
+		<td class="dataMovimentacao" width="120" style="vertical-align: top">
+			27/03/2025
+		</td>
+		<td width="20" valign="top" aria-hidden="true">
+			
+				
+					
+					
+						
+					
+				
+
+				<a class="linkMovVincProc"
+					id="linkMovVincProc-19327326"
+					title="Visualizar documento em inteiro teor"
+					href="#liberarAutoPorSenha"
+				   	target="_blank"
+				   	onclick="javascript:jQuery.saj.validarAberturaIntimacaoNaoRecebida(event, this, 'DWZ004HSL0000', 44, '#liberarAutoPorSenha')">
+					<img width="16" height="16" border="0" src="/cpopg/imagens/doc.png" />
+				</a>
+			
+		</td>
+		<td class="descricaoMovimentacao" style="vertical-align: top; padding-bottom: 5px">
+			
+			
+				
+					<a class="linkMovVincProc"
+						id="linkMovVincProc-2-19327326"
+						title="Visualizar documento em inteiro teor"
+						href="#liberarAutoPorSenha"
+					   	target="_blank"
+					   	onclick="javascript:jQuery.saj.validarAberturaIntimacaoNaoRecebida(event, this, 'DWZ004HSL0000', 44, '#liberarAutoPorSenha')">
+						DEPRE - Certidão
+					</a>
+				
+				
+			
+			
+			<br />
+			<span style="font-style: italic;">
+				Certid&atilde;o - Cart.Dig. Inclus&atilde;o de advogado - DEPRE1
+			</span>
+			
+		</td>
+	</tr>
+	
+
+
+				
+					
+
+
+
+
+
+
+
+
+
+
+	
+	
+		
+	
+
+
+
+	<tr class="fundoEscuro containerMovimentacao" style="">
+		<td class="dataMovimentacao" width="120" style="vertical-align: top">
+			19/03/2025
+		</td>
+		<td width="20" valign="top" aria-hidden="true">
+			
+		</td>
+		<td class="descricaoMovimentacao" style="vertical-align: top; padding-bottom: 5px">
+			
+			
+				
+				
+					Petição Outras Juntada
+				
+			
+			
+			<br />
+			<span style="font-style: italic;">
+				N&ordm; Protocolo: WDEP.25.90030531-7
+Tipo da Peti&ccedil;&atilde;o: Peti&ccedil;&otilde;es - Outras - DEPRE
+Data: 19/03/2025 13:33
+
+			</span>
+			
+		</td>
+	</tr>
+	
+
+
+				
+					
+
+
+
+
+
+
+
+
+
+
+	
+	
+		
+	
+
+
+
+	<tr class="fundoClaro containerMovimentacao" style="">
+		<td class="dataMovimentacao" width="120" style="vertical-align: top">
+			10/03/2025
+		</td>
+		<td width="20" valign="top" aria-hidden="true">
+			
+		</td>
+		<td class="descricaoMovimentacao" style="vertical-align: top; padding-bottom: 5px">
+			
+			
+				
+				
+					Remetido ao DJE
+				
+			
+			
+			<br />
+			<span style="font-style: italic;">
+				Rela&ccedil;&atilde;o: 0183/2025
+Teor do ato: Processo de Origem: 0426781-06.1998.8.26.0053 Unidade de Processamento das Execu&ccedil;&otilde;es contra a Fazenda P&uacute;blica da Comarca da Capital - UPEFAZ Foro Central - Fazenda P&uacute;blica/Acidentes Tendo em vista exist&ecirc;ncia de fato que impede o pagamento do valor parcial diretamente em conta indicada pelo benefici&aacute;rio, tais como penhora, aus&ecirc;ncia de dados fiscais, confus&atilde;o das verbas, n&atilde;o ter sido informada no prazo a conta para dep&oacute;sito, o montante ser&aacute; transferido para a conta vinculada aos autos da execu&ccedil;&atilde;o a disposi&ccedil;&atilde;o daquele Ju&iacute;zo. Publique-se. S&atilde;o Paulo,07 de mar&ccedil;o de 2025.
+Advogados(s): Pedro Wanderley Roncato (OAB 107020/SP), Wladimir Ribeiro Junior (OAB 125142/SP), Mirian Teresa Pascon (OAB 132073/SP), FAZENDA DO ESTADO DE S&Atilde;O PAULO - r&eacute;u-revel , Fernanda Ribeiro de Mattos Luccas (OAB 136973/SP)
+			</span>
+			
+		</td>
+	</tr>
+	
+
+
+				
+					
+
+
+
+
+
+
+
+
+
+
+	
+	
+		
+	
+
+
+
+	<tr class="fundoEscuro containerMovimentacao" style="">
+		<td class="dataMovimentacao" width="120" style="vertical-align: top">
+			07/03/2025
+		</td>
+		<td width="20" valign="top" aria-hidden="true">
+			
+				
+					
+					
+						
+					
+				
+
+				<a class="linkMovVincProc"
+					id="linkMovVincProc-18063306"
+					title="Visualizar documento em inteiro teor"
+					href="#liberarAutoPorSenha"
+				   	target="_blank"
+				   	onclick="javascript:jQuery.saj.validarAberturaIntimacaoNaoRecebida(event, this, 'DWZ004HSL0000', 40, '#liberarAutoPorSenha')">
+					<img width="16" height="16" border="0" src="/cpopg/imagens/doc.png" />
+				</a>
+			
+		</td>
+		<td class="descricaoMovimentacao" style="vertical-align: top; padding-bottom: 5px">
+			
+			
+				
+					<a class="linkMovVincProc"
+						id="linkMovVincProc-2-18063306"
+						title="Visualizar documento em inteiro teor"
+						href="#liberarAutoPorSenha"
+					   	target="_blank"
+					   	onclick="javascript:jQuery.saj.validarAberturaIntimacaoNaoRecebida(event, this, 'DWZ004HSL0000', 40, '#liberarAutoPorSenha')">
+						DEPRE - Ofício Transmissão Planilha Pagamento Realizado - Ao Juiz
+					</a>
+				
+				
+			
+			
+			<br />
+			<span style="font-style: italic;">
+				Of&iacute;cio - Comunica&ccedil;&atilde;o de disponibiliza&ccedil;&atilde;o de pagamento parcial - DEPRE2
+			</span>
+			
+		</td>
+	</tr>
+	
+
+
+				
+					
+
+
+
+
+
+
+
+
+
+
+	
+	
+		
+	
+
+
+
+	<tr class="fundoClaro containerMovimentacao" style="">
+		<td class="dataMovimentacao" width="120" style="vertical-align: top">
+			07/03/2025
+		</td>
+		<td width="20" valign="top" aria-hidden="true">
+			
+				
+					
+					
+						
+					
+				
+
+				<a class="linkMovVincProc"
+					id="linkMovVincProc-18063300"
+					title="Visualizar documento em inteiro teor"
+					href="#liberarAutoPorSenha"
+				   	target="_blank"
+				   	onclick="javascript:jQuery.saj.validarAberturaIntimacaoNaoRecebida(event, this, 'DWZ004HSL0000', 39, '#liberarAutoPorSenha')">
+					<img width="16" height="16" border="0" src="/cpopg/imagens/doc.png" />
+				</a>
+			
+		</td>
+		<td class="descricaoMovimentacao" style="vertical-align: top; padding-bottom: 5px">
+			
+			
+				
+					<a class="linkMovVincProc"
+						id="linkMovVincProc-2-18063300"
+						title="Visualizar documento em inteiro teor"
+						href="#liberarAutoPorSenha"
+					   	target="_blank"
+					   	onclick="javascript:jQuery.saj.validarAberturaIntimacaoNaoRecebida(event, this, 'DWZ004HSL0000', 39, '#liberarAutoPorSenha')">
+						DEPRE - Comunicação da realização do pagamento
+					</a>
+				
+				
+			
+			
+			<br />
+			<span style="font-style: italic;">
+				Processo de Origem: 0426781-06.1998.8.26.0053 Unidade de Processamento das Execu&ccedil;&otilde;es contra a Fazenda P&uacute;blica da Comarca da Capital - UPEFAZ Foro Central - Fazenda P&uacute;blica/Acidentes Tendo em vista exist&ecirc;ncia de fato que impede o pagamento do valor parcial diretamente em conta indicada pelo benefici&aacute;rio, tais como penhora, aus&ecirc;ncia de dados fiscais, confus&atilde;o das verbas, n&atilde;o ter sido informada no prazo a conta para dep&oacute;sito, o montante ser&aacute; transferido para a conta vinculada aos autos da execu&ccedil;&atilde;o a disposi&ccedil;&atilde;o daquele Ju&iacute;zo. Publique-se. S&atilde;o Paulo,07 de mar&ccedil;o de 2025.
+			</span>
+			
+		</td>
+	</tr>
+	
+
+
+				
+					
+
+
+
+
+
+
+
+
+
+
+	
+	
+		
+	
+
+
+
+	<tr class="fundoEscuro containerMovimentacao" style="">
+		<td class="dataMovimentacao" width="120" style="vertical-align: top">
+			07/03/2025
+		</td>
+		<td width="20" valign="top" aria-hidden="true">
+			
+		</td>
+		<td class="descricaoMovimentacao" style="vertical-align: top; padding-bottom: 5px">
+			
+			
+				
+				
+					DEPRE - Pagamento Parcial direcionado para Vara de Origem
+				
+			
+			
+			<br />
+			<span style="font-style: italic;">
+				
+			</span>
+			
+		</td>
+	</tr>
+	
+
+
+				
+					
+
+
+
+
+
+
+
+
+
+
+	
+	
+		
+	
+
+
+
+	<tr class="fundoClaro containerMovimentacao" style="">
+		<td class="dataMovimentacao" width="120" style="vertical-align: top">
+			22/11/2024
+		</td>
+		<td width="20" valign="top" aria-hidden="true">
+			
+				
+					
+					
+						
+					
+				
+
+				<a class="linkMovVincProc"
+					id="linkMovVincProc-14186693"
+					title="Visualizar documento em inteiro teor"
+					href="#liberarAutoPorSenha"
+				   	target="_blank"
+				   	onclick="javascript:jQuery.saj.validarAberturaIntimacaoNaoRecebida(event, this, 'DWZ004HSL0000', 37, '#liberarAutoPorSenha')">
+					<img width="16" height="16" border="0" src="/cpopg/imagens/doc.png" />
+				</a>
+			
+		</td>
+		<td class="descricaoMovimentacao" style="vertical-align: top; padding-bottom: 5px">
+			
+			
+				
+					<a class="linkMovVincProc"
+						id="linkMovVincProc-2-14186693"
+						title="Visualizar documento em inteiro teor"
+						href="#liberarAutoPorSenha"
+					   	target="_blank"
+					   	onclick="javascript:jQuery.saj.validarAberturaIntimacaoNaoRecebida(event, this, 'DWZ004HSL0000', 37, '#liberarAutoPorSenha')">
+						DEPRE - Certidão de Decurso do Prazo
+					</a>
+				
+				
+			
+			
+			<br />
+			<span style="font-style: italic;">
+				Certid&atilde;o - Decurso de prazo - Novo Fluxo DEPRE
+			</span>
+			
+		</td>
+	</tr>
+	
+
+
+				
+					
+
+
+
+
+
+
+
+
+
+
+	
+	
+		
+	
+
+
+
+	<tr class="fundoEscuro containerMovimentacao" style="">
+		<td class="dataMovimentacao" width="120" style="vertical-align: top">
+			19/11/2024
+		</td>
+		<td width="20" valign="top" aria-hidden="true">
+			
+		</td>
+		<td class="descricaoMovimentacao" style="vertical-align: top; padding-bottom: 5px">
+			
+			
+				
+				
+					Petição Outras Juntada
+				
+			
+			
+			<br />
+			<span style="font-style: italic;">
+				N&ordm; Protocolo: WDEP.24.90106831-8
+Tipo da Peti&ccedil;&atilde;o: Peti&ccedil;&otilde;es - Outras - DEPRE
+Data: 19/11/2024 13:50
+
+			</span>
+			
+		</td>
+	</tr>
+	
+
+
+				
+					
+
+
+
+
+
+
+
+
+
+
+	
+	
+		
+	
+
+
+
+	<tr class="fundoClaro containerMovimentacao" style="">
+		<td class="dataMovimentacao" width="120" style="vertical-align: top">
+			31/10/2024
+		</td>
+		<td width="20" valign="top" aria-hidden="true">
+			
+		</td>
+		<td class="descricaoMovimentacao" style="vertical-align: top; padding-bottom: 5px">
+			
+			
+				
+				
+					Certidão de Publicação Expedida
+				
+			
+			
+			<br />
+			<span style="font-style: italic;">
+				Rela&ccedil;&atilde;o: 0709/2024
+Data da Publica&ccedil;&atilde;o: 04/11/2024
+N&uacute;mero do Di&aacute;rio: 4084
+			</span>
+			
+		</td>
+	</tr>
+	
+
+
+				
+					
+
+
+
+
+
+
+
+
+
+
+	
+	
+		
+	
+
+
+
+	<tr class="fundoEscuro containerMovimentacao" style="">
+		<td class="dataMovimentacao" width="120" style="vertical-align: top">
+			31/10/2024
+		</td>
+		<td width="20" valign="top" aria-hidden="true">
+			
+		</td>
+		<td class="descricaoMovimentacao" style="vertical-align: top; padding-bottom: 5px">
+			
+			
+				
+				
+					Remetido ao DJE
+				
+			
+			
+			<br />
+			<span style="font-style: italic;">
+				Rela&ccedil;&atilde;o: 0709/2024
+Teor do ato: Processo de Origem: 0426781-06.1998.8.26.0053 Unidade de Processamento das Execu&ccedil;&otilde;es contra a Fazenda P&uacute;blica da Comarca da Capital - UPEFAZ Foro Central - Fazenda P&uacute;blica/Acidentes Em cumprimento &agrave; requisi&ccedil;&atilde;o expedida pelo Ju&iacute;zo da Execu&ccedil;&atilde;o que deu origem a este precat&oacute;rio, ficam as partes cientes da atualiza&ccedil;&atilde;o do valor visando o pagamento integral do d&eacute;bito. &Eacute; de responsabilidade das partes, sob as penas da lei e ado&ccedil;&atilde;o das medidas c&iacute;veis, criminais e administrativas cab&iacute;veis, informar a exist&ecirc;ncia de qualquer &oacute;bice &agrave; transfer&ecirc;ncia do valor, existente em qualquer processo judicial ou administrativo, no prazo de 10 dias. Eventual altera&ccedil;&atilde;o da titularidade do cr&eacute;dito dever&aacute; ser informada no prazo de 10 dias, sob pena de transfer&ecirc;ncia do valor &agrave;(s) parte(s) e/ou ao(s) advogado(s) cadastrado(s), sendo desnecess&aacute;rio o peticionamento se os dados do cadastrado estiverem atualizados. As quest&otilde;es jurisdicionais relacionadas &agrave; cess&atilde;o de cr&eacute;dito, habilita&ccedil;&atilde;o de herdeiros, penhoras, entre outras, s&atilde;o de compet&ecirc;ncia do ju&iacute;zo da execu&ccedil;&atilde;o e dever&atilde;o ser por ele dirimidas, comunicando-se &agrave; DEPRE as decis&otilde;es judiciais. Com rela&ccedil;&atilde;o ao c&aacute;lculo do valor do precat&oacute;rio efetuado pela DEPRE, ressalvado o pedido de revis&atilde;o de c&aacute;lculo por mero erro material previsto no artigo 26 e ss da resolu&ccedil;&atilde;o 303 do CNJ, as demais quest&otilde;es s&atilde;o de cunho jurisdicional e dever&atilde;o ser dirigidas ao ju&iacute;zo da execu&ccedil;&atilde;o. Eventuais impugna&ccedil;&otilde;es aos c&aacute;lculos dever&atilde;o ser feitas unicamente no formato eletr&ocirc;nico por meio do modelo de peti&ccedil;&atilde;o Impugna&ccedil;&atilde;o de C&aacute;lculos do Pagamento DEPRE. Fica o benefici&aacute;rio intimado a apresentar os dados necess&aacute;rios para a transfer&ecirc;ncia do dep&oacute;sito, observando-se que os dados banc&aacute;rios dever&atilde;o ser encaminhados novamente caso n&atilde;o tenham sido informados atrav&eacute;s do peticionamento estruturado para essa finalidade (peti&ccedil;&atilde;o de &quot;atualiza&ccedil;&atilde;o das informa&ccedil;&otilde;es banc&aacute;rias - DEPRE). Dessa forma, mesmo que tenham sido informados por ocasi&atilde;o do of&iacute;cio requisit&oacute;rio ou do texto de acordo celebrado, &eacute; obrigat&oacute;rio que novamente sejam comunicados os dados banc&aacute;rios, devendo faz&ecirc;-lo unicamente no formato eletr&ocirc;nico por meio do modelo de peti&ccedil;&atilde;o &quot;Atualiza&ccedil;&atilde;o das informa&ccedil;&otilde;es banc&aacute;rias - DEPRE&quot;. Tratando-se de atualiza&ccedil;&atilde;o das informa&ccedil;&otilde;es banc&aacute;rias, dever&aacute; constar do Termo de Declara&ccedil;&atilde;o como requerente a parte especificamente beneficiada pelo pagamento em quest&atilde;o. Havendo v&aacute;rios pagamentos, dever&atilde;o ser produzidos tantos Termos de Declara&ccedil;&atilde;o quanto beneficiados. Indicando conta banc&aacute;ria de titularidade de advogado ou sociedade de advogados, dever&aacute; fazer constar da peti&ccedil;&atilde;o o CPF ou CNPJ relacionado, a fim de possibilitar a transfer&ecirc;ncia dos valores. Caso o of&iacute;cio que originou este precat&oacute;rio n&atilde;o esteja acompanhado da procura&ccedil;&atilde;o com poderes espec&iacute;ficos para receber e dar quita&ccedil;&atilde;o, necess&aacute;rio sua juntada aos autos para que seja efetuado o levantamento dos valores para conta banc&aacute;ria de titularidade do patrono ou de sociedade de advogados de que &eacute; s&oacute;cio. De outra parte, considerando-se o princ&iacute;pio da colabora&ccedil;&atilde;o processual, com o intuito de maximizar a efici&ecirc;ncia dos procedimentos e proporcionar maior celeridade na libera&ccedil;&atilde;o dos valores,caso a procura&ccedil;&atilde;o com poderes espec&iacute;ficos para receber e dar quita&ccedil;&atilde;o j&aacute; conste dos autos do precat&oacute;rio, caber&aacute; ao benefici&aacute;rio indicar o n&uacute;mero da(s) p&aacute;gina(s) em que ela se encontra ou apresentar nova procura&ccedil;&atilde;o atualizada, o que dever&aacute; ser feito na mesma ocasi&atilde;o de comunica&ccedil;&atilde;o dos dados banc&aacute;rios e por interm&eacute;dio da pr&oacute;pria peti&ccedil;&atilde;o de &quot;Atualiza&ccedil;&atilde;o das informa&ccedil;&otilde;es banc&aacute;rias - DEPRE&quot;. Ultrapassados os prazos acima deferidos, o valor ser&aacute; transferido para a conta corrente cadastrada, procedendo-se &agrave; expedi&ccedil;&atilde;o da DIRF/REINF, se o caso e conforme as informa&ccedil;&otilde;es prestadas pelo benefici&aacute;rio. N&atilde;o havendo dados banc&aacute;rios cadastrados no sistema ou informados atrav&eacute;s do modelo adequado de peti&ccedil;&atilde;o, o valor ser&aacute; remetido ao Ju&iacute;zo da execu&ccedil;&atilde;o, incluindo eventuais descontos e reten&ccedil;&otilde;es que sobre ele incidiu. Existindo controv&eacute;rsia quanto ao destinat&aacute;rio do pagamento, cujo deslinde envolve decis&atilde;o de natureza jurisdicional, ou de fato que impede o pagamento do valor diretamente em conta indicada pelo benefici&aacute;rio, tais como penhora, aus&ecirc;ncia de dados fiscais, confus&atilde;o das verbas, n&atilde;o ter sido informada no prazo a conta para dep&oacute;sito, o valor, incluindo eventuais descontos e reten&ccedil;&otilde;es que sobre ele incidiu, ser&aacute; encaminhado para o Ju&iacute;zo da execu&ccedil;&atilde;o. N&atilde;o havendo &oacute;bice ao levantamento a informar ou altera&ccedil;&atilde;o de titularidade do cr&eacute;dito, fica dispensado qualquer peticionamento, com exce&ccedil;&atilde;o daqueles relacionados &agrave; apresenta&ccedil;&atilde;o de dados banc&aacute;rios. Havendo peticionamento, tornem os autos conclusos para aprecia&ccedil;&atilde;o do pedido pelo Magistrado. Intime-se. S&atilde;o Paulo,30 de outubro de 2024.
+Advogados(s): Pedro Wanderley Roncato (OAB 107020/SP), Wladimir Ribeiro Junior (OAB 125142/SP), Mirian Teresa Pascon (OAB 132073/SP), FAZENDA DO ESTADO DE S&Atilde;O PAULO - r&eacute;u-revel , Fernanda Ribeiro de Mattos Luccas (OAB 136973/SP)
+			</span>
+			
+		</td>
+	</tr>
+	
+
+
+				
+					
+
+
+
+
+
+
+
+
+
+
+	
+	
+		
+	
+
+
+
+	<tr class="fundoClaro containerMovimentacao" style="">
+		<td class="dataMovimentacao" width="120" style="vertical-align: top">
+			30/10/2024
+		</td>
+		<td width="20" valign="top" aria-hidden="true">
+			
+				
+					
+					
+						
+					
+				
+
+				<a class="linkMovVincProc"
+					id="linkMovVincProc-13935240"
+					title="Visualizar documento em inteiro teor"
+					href="#liberarAutoPorSenha"
+				   	target="_blank"
+				   	onclick="javascript:jQuery.saj.validarAberturaIntimacaoNaoRecebida(event, this, 'DWZ004HSL0000', 33, '#liberarAutoPorSenha')">
+					<img width="16" height="16" border="0" src="/cpopg/imagens/doc.png" />
+				</a>
+			
+		</td>
+		<td class="descricaoMovimentacao" style="vertical-align: top; padding-bottom: 5px">
+			
+			
+				
+					<a class="linkMovVincProc"
+						id="linkMovVincProc-2-13935240"
+						title="Visualizar documento em inteiro teor"
+						href="#liberarAutoPorSenha"
+					   	target="_blank"
+					   	onclick="javascript:jQuery.saj.validarAberturaIntimacaoNaoRecebida(event, this, 'DWZ004HSL0000', 33, '#liberarAutoPorSenha')">
+						DEPRE - Comunicação da realização do pagamento
+					</a>
+				
+				
+			
+			
+			<br />
+			<span style="font-style: italic;">
+				Processo de Origem: 0426781-06.1998.8.26.0053 Unidade de Processamento das Execu&ccedil;&otilde;es contra a Fazenda P&uacute;blica da Comarca da Capital - UPEFAZ Foro Central - Fazenda P&uacute;blica/Acidentes Em cumprimento &agrave; requisi&ccedil;&atilde;o expedida pelo Ju&iacute;zo da Execu&ccedil;&atilde;o que deu origem a este precat&oacute;rio, ficam as partes cientes da atualiza&ccedil;&atilde;o do valor visando o pagamento integral do d&eacute;bito. &Eacute; de responsabilidade das partes, sob as penas da lei e ado&ccedil;&atilde;o das medidas c&iacute;veis, criminais e administrativas cab&iacute;veis, informar a exist&ecirc;ncia de qualquer &oacute;bice &agrave; transfer&ecirc;ncia do valor, existente em qualquer processo judicial ou administrativo, no prazo de 10 dias. Eventual altera&ccedil;&atilde;o da titularidade do cr&eacute;dito dever&aacute; ser informada no prazo de 10 dias, sob pena de transfer&ecirc;ncia do valor &agrave;(s) parte(s) e/ou ao(s) advogado(s) cadastrado(s), sendo desnecess&aacute;rio o peticionamento se os dados do cadastrado estiverem atualizados. As quest&otilde;es jurisdicionais relacionadas &agrave; cess&atilde;o de cr&eacute;dito, habilita&ccedil;&atilde;o de herdeiros, penhoras, entre outras, s&atilde;o de compet&ecirc;ncia do ju&iacute;zo da execu&ccedil;&atilde;o e dever&atilde;o ser por ele dirimidas, comunicando-se &agrave; DEPRE as decis&otilde;es judiciais. Com rela&ccedil;&atilde;o ao c&aacute;lculo do valor do precat&oacute;rio efetuado pela DEPRE, ressalvado o pedido de revis&atilde;o de c&aacute;lculo por mero erro material previsto no artigo 26 e ss da resolu&ccedil;&atilde;o 303 do CNJ, as demais quest&otilde;es s&atilde;o de cunho jurisdicional e dever&atilde;o ser dirigidas ao ju&iacute;zo da execu&ccedil;&atilde;o. Eventuais impugna&ccedil;&otilde;es aos c&aacute;lculos dever&atilde;o ser feitas unicamente no formato eletr&ocirc;nico por meio do modelo de peti&ccedil;&atilde;o Impugna&ccedil;&atilde;o de C&aacute;lculos do Pagamento DEPRE. Fica o benefici&aacute;rio intimado a apresentar os dados necess&aacute;rios para a transfer&ecirc;ncia do dep&oacute;sito, observando-se que os dados banc&aacute;rios dever&atilde;o ser encaminhados novamente caso n&atilde;o tenham sido informados atrav&eacute;s do peticionamento estruturado para essa finalidade (peti&ccedil;&atilde;o de &quot;atualiza&ccedil;&atilde;o das informa&ccedil;&otilde;es banc&aacute;rias - DEPRE). Dessa forma, mesmo que tenham sido informados por ocasi&atilde;o do of&iacute;cio requisit&oacute;rio ou do texto de acordo celebrado, &eacute; obrigat&oacute;rio que novamente sejam comunicados os dados banc&aacute;rios, devendo faz&ecirc;-lo unicamente no formato eletr&ocirc;nico por meio do modelo de peti&ccedil;&atilde;o &quot;Atualiza&ccedil;&atilde;o das informa&ccedil;&otilde;es banc&aacute;rias - DEPRE&quot;. Tratando-se de atualiza&ccedil;&atilde;o das informa&ccedil;&otilde;es banc&aacute;rias, dever&aacute; constar do Termo de Declara&ccedil;&atilde;o como requerente a parte especificamente beneficiada pelo pagamento em quest&atilde;o. Havendo v&aacute;rios pagamentos, dever&atilde;o ser produzidos tantos Termos de Declara&ccedil;&atilde;o quanto beneficiados. Indicando conta banc&aacute;ria de titularidade de advogado ou sociedade de advogados, dever&aacute; fazer constar da peti&ccedil;&atilde;o o CPF ou CNPJ relacionado, a fim de possibilitar a transfer&ecirc;ncia dos valores. Caso o of&iacute;cio que originou este precat&oacute;rio n&atilde;o esteja acompanhado da procura&ccedil;&atilde;o com poderes espec&iacute;ficos para receber e dar quita&ccedil;&atilde;o, necess&aacute;rio sua juntada aos autos para que seja efetuado o levantamento dos valores para conta banc&aacute;ria de titularidade do patrono ou de sociedade de advogados de que &eacute; s&oacute;cio. De outra parte, considerando-se o princ&iacute;pio da colabora&ccedil;&atilde;o processual, com o intuito de maximizar a efici&ecirc;ncia dos procedimentos e proporcionar maior celeridade na libera&ccedil;&atilde;o dos valores,caso a procura&ccedil;&atilde;o com poderes espec&iacute;ficos para receber e dar quita&ccedil;&atilde;o j&aacute; conste dos autos do precat&oacute;rio, caber&aacute; ao benefici&aacute;rio indicar o n&uacute;mero da(s) p&aacute;gina(s) em que ela se encontra ou apresentar nova procura&ccedil;&atilde;o atualizada, o que dever&aacute; ser feito na mesma ocasi&atilde;o de comunica&ccedil;&atilde;o dos dados banc&aacute;rios e por interm&eacute;dio da pr&oacute;pria peti&ccedil;&atilde;o de &quot;Atualiza&ccedil;&atilde;o das informa&ccedil;&otilde;es banc&aacute;rias - DEPRE&quot;. Ultrapassados os prazos acima deferidos, o valor ser&aacute; transferido para a conta corrente cadastrada, procedendo-se &agrave; expedi&ccedil;&atilde;o da DIRF/REINF, se o caso e conforme as informa&ccedil;&otilde;es prestadas pelo benefici&aacute;rio. N&atilde;o havendo dados banc&aacute;rios cadastrados no sistema ou informados atrav&eacute;s do modelo adequado de peti&ccedil;&atilde;o, o valor ser&aacute; remetido ao Ju&iacute;zo da execu&ccedil;&atilde;o, incluindo eventuais descontos e reten&ccedil;&otilde;es que sobre ele incidiu. Existindo controv&eacute;rsia quanto ao destinat&aacute;rio do pagamento, cujo deslinde envolve decis&atilde;o de natureza jurisdicional, ou de fato que impede o pagamento do valor diretamente em conta indicada pelo benefici&aacute;rio, tais como penhora, aus&ecirc;ncia de dados fiscais, confus&atilde;o das verbas, n&atilde;o ter sido informada no prazo a conta para dep&oacute;sito, o valor, incluindo eventuais descontos e reten&ccedil;&otilde;es que sobre ele incidiu, ser&aacute; encaminhado para o Ju&iacute;zo da execu&ccedil;&atilde;o. N&atilde;o havendo &oacute;bice ao levantamento a informar ou altera&ccedil;&atilde;o de titularidade do cr&eacute;dito, fica dispensado qualquer peticionamento, com exce&ccedil;&atilde;o daqueles relacionados &agrave; apresenta&ccedil;&atilde;o de dados banc&aacute;rios. Havendo peticionamento, tornem os autos conclusos para aprecia&ccedil;&atilde;o do pedido pelo Magistrado. Intime-se. S&atilde;o Paulo,30 de outubro de 2024.
+			</span>
+			
+		</td>
+	</tr>
+	
+
+
+				
+					
+
+
+
+
+
+
+
+
+
+
+	
+	
+		
+	
+
+
+
+	<tr class="fundoEscuro containerMovimentacao" style="">
+		<td class="dataMovimentacao" width="120" style="vertical-align: top">
+			30/10/2024
+		</td>
+		<td width="20" valign="top" aria-hidden="true">
+			
+		</td>
+		<td class="descricaoMovimentacao" style="vertical-align: top; padding-bottom: 5px">
+			
+			
+				
+				
+					DEPRE - Cálculo Prévio para pagamento integral
+				
+			
+			
+			<br />
+			<span style="font-style: italic;">
+				
+			</span>
+			
+		</td>
+	</tr>
+	
+
+
+				
+					
+
+
+
+
+
+
+
+
+
+
+	
+	
+		
+	
+
+
+
+	<tr class="fundoClaro containerMovimentacao" style="">
+		<td class="dataMovimentacao" width="120" style="vertical-align: top">
+			30/10/2024
+		</td>
+		<td width="20" valign="top" aria-hidden="true">
+			
+		</td>
+		<td class="descricaoMovimentacao" style="vertical-align: top; padding-bottom: 5px">
+			
+			
+				
+				
+					Documento Juntado
+				
+			
+			
+			<br />
+			<span style="font-style: italic;">
+				
+			</span>
+			
+		</td>
+	</tr>
+	
+
+
+				
+					
+
+
+
+
+
+
+
+
+
+
+	
+	
+		
+	
+
+
+
+	<tr class="fundoEscuro containerMovimentacao" style="">
+		<td class="dataMovimentacao" width="120" style="vertical-align: top">
+			30/10/2024
+		</td>
+		<td width="20" valign="top" aria-hidden="true">
+			
+		</td>
+		<td class="descricaoMovimentacao" style="vertical-align: top; padding-bottom: 5px">
+			
+			
+				
+				
+					Documento Juntado
+				
+			
+			
+			<br />
+			<span style="font-style: italic;">
+				
+			</span>
+			
+		</td>
+	</tr>
+	
+
+
+				
+					
+
+
+
+
+
+
+
+
+
+
+	
+	
+		
+	
+
+
+
+	<tr class="fundoClaro containerMovimentacao" style="">
+		<td class="dataMovimentacao" width="120" style="vertical-align: top">
+			30/10/2024
+		</td>
+		<td width="20" valign="top" aria-hidden="true">
+			
+		</td>
+		<td class="descricaoMovimentacao" style="vertical-align: top; padding-bottom: 5px">
+			
+			
+				
+				
+					Documento Juntado
+				
+			
+			
+			<br />
+			<span style="font-style: italic;">
+				
+			</span>
+			
+		</td>
+	</tr>
+	
+
+
+				
+					
+
+
+
+
+
+
+
+
+
+
+	
+	
+		
+	
+
+
+
+	<tr class="fundoEscuro containerMovimentacao" style="">
+		<td class="dataMovimentacao" width="120" style="vertical-align: top">
+			30/10/2024
+		</td>
+		<td width="20" valign="top" aria-hidden="true">
+			
+		</td>
+		<td class="descricaoMovimentacao" style="vertical-align: top; padding-bottom: 5px">
+			
+			
+				
+				
+					Documento Juntado
+				
+			
+			
+			<br />
+			<span style="font-style: italic;">
+				
+			</span>
+			
+		</td>
+	</tr>
+	
+
+
+				
+					
+
+
+
+
+
+
+
+
+
+
+	
+	
+		
+	
+
+
+
+	<tr class="fundoClaro containerMovimentacao" style="">
+		<td class="dataMovimentacao" width="120" style="vertical-align: top">
+			03/08/2024
+		</td>
+		<td width="20" valign="top" aria-hidden="true">
+			
+				
+					
+					
+						
+					
+				
+
+				<a class="linkMovVincProc"
+					id="linkMovVincProc-13638162"
+					title="Visualizar documento em inteiro teor"
+					href="#liberarAutoPorSenha"
+				   	target="_blank"
+				   	onclick="javascript:jQuery.saj.validarAberturaIntimacaoNaoRecebida(event, this, 'DWZ004HSL0000', 27, '#liberarAutoPorSenha')">
+					<img width="16" height="16" border="0" src="/cpopg/imagens/doc.png" />
+				</a>
+			
+		</td>
+		<td class="descricaoMovimentacao" style="vertical-align: top; padding-bottom: 5px">
+			
+			
+				
+					<a class="linkMovVincProc"
+						id="linkMovVincProc-2-13638162"
+						title="Visualizar documento em inteiro teor"
+						href="#liberarAutoPorSenha"
+					   	target="_blank"
+					   	onclick="javascript:jQuery.saj.validarAberturaIntimacaoNaoRecebida(event, this, 'DWZ004HSL0000', 27, '#liberarAutoPorSenha')">
+						Ofício Requisitório-Retificação de Precatório Expedido
+					</a>
+				
+				
+			
+			
+			<br />
+			<span style="font-style: italic;">
+				Of&iacute;cio - Requisit&oacute;rio Eletr&ocirc;nico - Precat&oacute;rio - Retifica&ccedil;&atilde;o - Execu&ccedil;&atilde;o Fiscal-Fazenda P&uacute;blica-Acidentes do Trabalho
+			</span>
+			
+		</td>
+	</tr>
+	
+
+
+				
+					
+
+
+
+
+
+
+
+
+
+
+	
+	
+		
+	
+
+
+
+	<tr class="fundoEscuro containerMovimentacao" style="">
+		<td class="dataMovimentacao" width="120" style="vertical-align: top">
+			24/07/2023
+		</td>
+		<td width="20" valign="top" aria-hidden="true">
+			
+		</td>
+		<td class="descricaoMovimentacao" style="vertical-align: top; padding-bottom: 5px">
+			
+			
+				
+				
+					Certidão de Publicação Expedida
+				
+			
+			
+			<br />
+			<span style="font-style: italic;">
+				Rela&ccedil;&atilde;o: 0425/2023
+Data da Disponibiliza&ccedil;&atilde;o: 24/07/2023
+Data da Publica&ccedil;&atilde;o: 25/07/2023
+N&uacute;mero do Di&aacute;rio: 3784
+P&aacute;gina: 39
+			</span>
+			
+		</td>
+	</tr>
+	
+
+
+				
+					
+
+
+
+
+
+
+
+
+
+
+	
+	
+		
+	
+
+
+
+	<tr class="fundoClaro containerMovimentacao" style="">
+		<td class="dataMovimentacao" width="120" style="vertical-align: top">
+			21/07/2023
+		</td>
+		<td width="20" valign="top" aria-hidden="true">
+			
+		</td>
+		<td class="descricaoMovimentacao" style="vertical-align: top; padding-bottom: 5px">
+			
+			
+				
+				
+					Remetido ao DJE
+				
+			
+			
+			<br />
+			<span style="font-style: italic;">
+				Rela&ccedil;&atilde;o: 0425/2023
+Teor do ato: Processo de Origem:0426781-06.1998.8.26.0053 - Unidade de Processamento das Execu&ccedil;&otilde;es contra a Fazenda P&uacute;blica da Comarca da Capital - UPEFAZ - Foro Central - Fazenda P&uacute;blica/Acidentes Vistos. A inclus&atilde;o do procurador da credora foi devidamente formalizada, conforme certid&atilde;o &agrave; p&aacute;gina 215. Em rela&ccedil;&atilde;o &agrave; exclus&atilde;o de advogados do processo de precat&oacute;rio, bem como &agrave; exclusividade nas intima&ccedil;&otilde;es e notifica&ccedil;&otilde;es, o requerimento dever&aacute; ser submetido ao Ju&iacute;zo de origem, o qual, no caso de deferimento, informar&aacute; a Diretoria de Execu&ccedil;&otilde;es de Precat&oacute;rios e C&aacute;lculos. Quanto ao cadastramento de advogados para o acesso digital de precat&oacute;rios, favor observar o Comunicado 01/2017, e seguir o passo a passo. Publique-se. S&atilde;o Paulo, 20 de julho de 2023.
+Advogados(s): Pedro Wanderley Roncato (OAB 107020S/P), Wladimir Ribeiro Junior (OAB 125142S/P), Mirian Teresa Pascon (OAB 132073/SP), MIRIAN TERESA PASCON , WLADIMIR RIBEIRO JUNIOR (OAB 125142S/P), FERNANDA RIBEIRO DE MATTOS LUCCAS E OUTROS (OAB 136973S/P), Fernanda Ribeiro de Mattos Luccas (OAB 136973S/P)
+			</span>
+			
+		</td>
+	</tr>
+	
+
+
+				
+					
+
+
+
+
+
+
+
+
+
+
+	
+	
+		
+	
+
+
+
+	<tr class="fundoEscuro containerMovimentacao" style="">
+		<td class="dataMovimentacao" width="120" style="vertical-align: top">
+			20/07/2023
+		</td>
+		<td width="20" valign="top" aria-hidden="true">
+			
+				
+					
+					
+						
+					
+				
+
+				<a class="linkMovVincProc"
+					id="linkMovVincProc-11921835"
+					title="Visualizar documento em inteiro teor"
+					href="#liberarAutoPorSenha"
+				   	target="_blank"
+				   	onclick="javascript:jQuery.saj.validarAberturaIntimacaoNaoRecebida(event, this, 'DWZ004HSL0000', 24, '#liberarAutoPorSenha')">
+					<img width="16" height="16" border="0" src="/cpopg/imagens/doc.png" />
+				</a>
+			
+		</td>
+		<td class="descricaoMovimentacao" style="vertical-align: top; padding-bottom: 5px">
+			
+			
+				
+					<a class="linkMovVincProc"
+						id="linkMovVincProc-2-11921835"
+						title="Visualizar documento em inteiro teor"
+						href="#liberarAutoPorSenha"
+					   	target="_blank"
+					   	onclick="javascript:jQuery.saj.validarAberturaIntimacaoNaoRecebida(event, this, 'DWZ004HSL0000', 24, '#liberarAutoPorSenha')">
+						DEPRE  Decisão Proferida
+					</a>
+				
+				
+			
+			
+			<br />
+			<span style="font-style: italic;">
+				Processo de Origem:0426781-06.1998.8.26.0053 - Unidade de Processamento das Execu&ccedil;&otilde;es contra a Fazenda P&uacute;blica da Comarca da Capital - UPEFAZ - Foro Central - Fazenda P&uacute;blica/Acidentes Vistos. A inclus&atilde;o do procurador da credora foi devidamente formalizada, conforme certid&atilde;o &agrave; p&aacute;gina 215. Em rela&ccedil;&atilde;o &agrave; exclus&atilde;o de advogados do processo de precat&oacute;rio, bem como &agrave; exclusividade nas intima&ccedil;&otilde;es e notifica&ccedil;&otilde;es, o requerimento dever&aacute; ser submetido ao Ju&iacute;zo de origem, o qual, no caso de deferimento, informar&aacute; a Diretoria de Execu&ccedil;&otilde;es de Precat&oacute;rios e C&aacute;lculos. Quanto ao cadastramento de advogados para o acesso digital de precat&oacute;rios, favor observar o Comunicado 01/2017, e seguir o passo a passo. Publique-se. S&atilde;o Paulo, 20 de julho de 2023.
+			</span>
+			
+		</td>
+	</tr>
+	
+
+
+				
+					
+
+
+
+
+
+
+
+
+
+
+	
+	
+		
+	
+
+
+
+	<tr class="fundoClaro containerMovimentacao" style="">
+		<td class="dataMovimentacao" width="120" style="vertical-align: top">
+			20/07/2023
+		</td>
+		<td width="20" valign="top" aria-hidden="true">
+			
+				
+					
+					
+						
+					
+				
+
+				<a class="linkMovVincProc"
+					id="linkMovVincProc-11921738"
+					title="Visualizar documento em inteiro teor"
+					href="#liberarAutoPorSenha"
+				   	target="_blank"
+				   	onclick="javascript:jQuery.saj.validarAberturaIntimacaoNaoRecebida(event, this, 'DWZ004HSL0000', 23, '#liberarAutoPorSenha')">
+					<img width="16" height="16" border="0" src="/cpopg/imagens/doc.png" />
+				</a>
+			
+		</td>
+		<td class="descricaoMovimentacao" style="vertical-align: top; padding-bottom: 5px">
+			
+			
+				
+					<a class="linkMovVincProc"
+						id="linkMovVincProc-2-11921738"
+						title="Visualizar documento em inteiro teor"
+						href="#liberarAutoPorSenha"
+					   	target="_blank"
+					   	onclick="javascript:jQuery.saj.validarAberturaIntimacaoNaoRecebida(event, this, 'DWZ004HSL0000', 23, '#liberarAutoPorSenha')">
+						DEPRE - Certidão
+					</a>
+				
+				
+			
+			
+			<br />
+			<span style="font-style: italic;">
+				Certid&atilde;o - DEPRE 1.4.1 - Gen&eacute;rica
+			</span>
+			
+		</td>
+	</tr>
+	
+
+
+				
+					
+
+
+
+
+
+
+
+
+
+
+	
+	
+		
+	
+
+
+
+	<tr class="fundoEscuro containerMovimentacao" style="">
+		<td class="dataMovimentacao" width="120" style="vertical-align: top">
+			30/06/2023
+		</td>
+		<td width="20" valign="top" aria-hidden="true">
+			
+		</td>
+		<td class="descricaoMovimentacao" style="vertical-align: top; padding-bottom: 5px">
+			
+			
+				
+				
+					Certidão de Publicação Expedida
+				
+			
+			
+			<br />
+			<span style="font-style: italic;">
+				Rela&ccedil;&atilde;o: 0368/2023
+Data da Disponibiliza&ccedil;&atilde;o: 30/06/2023
+Data da Publica&ccedil;&atilde;o: 03/07/2023
+N&uacute;mero do Di&aacute;rio: 3768
+P&aacute;gina: 6
+			</span>
+			
+		</td>
+	</tr>
+	
+
+
+				
+					
+
+
+
+
+
+
+
+
+
+
+	
+	
+		
+	
+
+
+
+	<tr class="fundoClaro containerMovimentacao" style="">
+		<td class="dataMovimentacao" width="120" style="vertical-align: top">
+			29/06/2023
+		</td>
+		<td width="20" valign="top" aria-hidden="true">
+			
+		</td>
+		<td class="descricaoMovimentacao" style="vertical-align: top; padding-bottom: 5px">
+			
+			
+				
+				
+					Remetido ao DJE
+				
+			
+			
+			<br />
+			<span style="font-style: italic;">
+				Rela&ccedil;&atilde;o: 0368/2023
+Teor do ato: Processo de Origem: 0426781-06.1998.8.26.0053 Unidade de Processamento das Execu&ccedil;&otilde;es contra a Fazenda P&uacute;blica da Comarca da Capital - UPEFAZ Foro Central - Fazenda P&uacute;blica/Acidentes Vistos. Em face do of&iacute;cio n&ordm; 2023 do Ju&iacute;zo do feito de 19/07/2021 (p&aacute;gs. 101/102), foram procedidas as seguintes retifica&ccedil;&otilde;es, no sistema desta Diretoria, dos nomes constantes das contas requisitadas (p&aacute;gs. 72/73): - de CORTTEX IND&Uacute;STRIA TEXTIL LTDA para CORTTEX IND&Uacute;STRIA, COM&Eacute;RCIO, IMPORTA&Ccedil;&Atilde;O E EXPORTA&Ccedil;&Atilde;O LTDA; - de DI MARTINO E GIUSTI IND&Uacute;STRIAS METAL&Uacute;RGICAS LTDA para DI MARTINO IND&Uacute;STRIAS METAL&Uacute;RGICAS LTDA; e - de IND&Uacute;STRIA E COM&Eacute;RCIO DE AUTO PE&Ccedil;AS NAKAYONE LTDA para FERRAZ LOCA&Ccedil;&Atilde;O DE M&Aacute;QUINAS E EQUIPAMENTOS INDUSTRIAIS LTDA. Oficie-se &agrave; devedora e ao Ju&iacute;zo da execu&ccedil;&atilde;o para conhecimento. Cientifique-se. S&atilde;o Paulo, 28 de junho de 2023.
+Advogados(s): Wladimir Ribeiro Junior (OAB 125142S/P), Mirian Teresa Pascon (OAB 132073/SP), WLADIMIR RIBEIRO JUNIOR (OAB 125142S/P), FERNANDA RIBEIRO DE MATTOS LUCCAS E OUTROS (OAB 136973S/P), Fernanda Ribeiro de Mattos Luccas (OAB 136973S/P)
+			</span>
+			
+		</td>
+	</tr>
+	
+
+
+				
+					
+
+
+
+
+
+
+
+
+
+
+	
+	
+		
+	
+
+
+
+	<tr class="fundoEscuro containerMovimentacao" style="">
+		<td class="dataMovimentacao" width="120" style="vertical-align: top">
+			29/06/2023
+		</td>
+		<td width="20" valign="top" aria-hidden="true">
+			
+				
+					
+					
+						
+					
+				
+
+				<a class="linkMovVincProc"
+					id="linkMovVincProc-12175533"
+					title="Visualizar documento em inteiro teor"
+					href="#liberarAutoPorSenha"
+				   	target="_blank"
+				   	onclick="javascript:jQuery.saj.validarAberturaIntimacaoNaoRecebida(event, this, 'DWZ004HSL0000', 20, '#liberarAutoPorSenha')">
+					<img width="16" height="16" border="0" src="/cpopg/imagens/doc.png" />
+				</a>
+			
+		</td>
+		<td class="descricaoMovimentacao" style="vertical-align: top; padding-bottom: 5px">
+			
+			
+				
+					<a class="linkMovVincProc"
+						id="linkMovVincProc-2-12175533"
+						title="Visualizar documento em inteiro teor"
+						href="#liberarAutoPorSenha"
+					   	target="_blank"
+					   	onclick="javascript:jQuery.saj.validarAberturaIntimacaoNaoRecebida(event, this, 'DWZ004HSL0000', 20, '#liberarAutoPorSenha')">
+						DEPRE  Decisão Proferida
+					</a>
+				
+				
+			
+			
+			<br />
+			<span style="font-style: italic;">
+				Processo de Origem: 0426781-06.1998.8.26.0053 Unidade de Processamento das Execu&ccedil;&otilde;es contra a Fazenda P&uacute;blica da Comarca da Capital - UPEFAZ Foro Central - Fazenda P&uacute;blica/Acidentes Vistos. Em face do of&iacute;cio n&ordm; 2023 do Ju&iacute;zo do feito de 19/07/2021 (p&aacute;gs. 101/102), foram procedidas as seguintes retifica&ccedil;&otilde;es, no sistema desta Diretoria, dos nomes constantes das contas requisitadas (p&aacute;gs. 72/73): - de CORTTEX IND&Uacute;STRIA TEXTIL LTDA para CORTTEX IND&Uacute;STRIA, COM&Eacute;RCIO, IMPORTA&Ccedil;&Atilde;O E EXPORTA&Ccedil;&Atilde;O LTDA; - de DI MARTINO E GIUSTI IND&Uacute;STRIAS METAL&Uacute;RGICAS LTDA para DI MARTINO IND&Uacute;STRIAS METAL&Uacute;RGICAS LTDA; e - de IND&Uacute;STRIA E COM&Eacute;RCIO DE AUTO PE&Ccedil;AS NAKAYONE LTDA para FERRAZ LOCA&Ccedil;&Atilde;O DE M&Aacute;QUINAS E EQUIPAMENTOS INDUSTRIAIS LTDA. Oficie-se &agrave; devedora e ao Ju&iacute;zo da execu&ccedil;&atilde;o para conhecimento. Cientifique-se. S&atilde;o Paulo, 28 de junho de 2023.
+			</span>
+			
+		</td>
+	</tr>
+	
+
+
+				
+					
+
+
+
+
+
+
+
+
+
+
+	
+	
+		
+	
+
+
+
+	<tr class="fundoClaro containerMovimentacao" style="">
+		<td class="dataMovimentacao" width="120" style="vertical-align: top">
+			28/06/2023
+		</td>
+		<td width="20" valign="top" aria-hidden="true">
+			
+		</td>
+		<td class="descricaoMovimentacao" style="vertical-align: top; padding-bottom: 5px">
+			
+			
+				
+				
+					Petição Juntada
+				
+			
+			
+			<br />
+			<span style="font-style: italic;">
+				
+			</span>
+			
+		</td>
+	</tr>
+	
+
+
+				
+					
+
+
+
+
+
+
+
+
+
+
+	
+	
+		
+	
+
+
+
+	<tr class="fundoEscuro containerMovimentacao" style="">
+		<td class="dataMovimentacao" width="120" style="vertical-align: top">
+			07/08/2021
+		</td>
+		<td width="20" valign="top" aria-hidden="true">
+			
+		</td>
+		<td class="descricaoMovimentacao" style="vertical-align: top; padding-bottom: 5px">
+			
+			
+				
+				
+					Processo Digitalizado
+				
+			
+			
+			<br />
+			<span style="font-style: italic;">
+				
+			</span>
+			
+		</td>
+	</tr>
+	
+
+
+				
+					
+
+
+
+
+
+
+
+
+
+
+	
+	
+		
+	
+
+
+
+	<tr class="fundoClaro containerMovimentacao" style="">
+		<td class="dataMovimentacao" width="120" style="vertical-align: top">
+			05/08/2021
+		</td>
+		<td width="20" valign="top" aria-hidden="true">
+			
+				
+					
+					
+						
+					
+				
+
+				<a class="linkMovVincProc"
+					id="linkMovVincProc-8456502"
+					title="Visualizar documento em inteiro teor"
+					href="#liberarAutoPorSenha"
+				   	target="_blank"
+				   	onclick="javascript:jQuery.saj.validarAberturaIntimacaoNaoRecebida(event, this, 'DWZ004HSL0000', 12, '#liberarAutoPorSenha')">
+					<img width="16" height="16" border="0" src="/cpopg/imagens/doc.png" />
+				</a>
+			
+		</td>
+		<td class="descricaoMovimentacao" style="vertical-align: top; padding-bottom: 5px">
+			
+			
+				
+					<a class="linkMovVincProc"
+						id="linkMovVincProc-2-8456502"
+						title="Visualizar documento em inteiro teor"
+						href="#liberarAutoPorSenha"
+					   	target="_blank"
+					   	onclick="javascript:jQuery.saj.validarAberturaIntimacaoNaoRecebida(event, this, 'DWZ004HSL0000', 12, '#liberarAutoPorSenha')">
+						Ofício Requisitório - Cessão de Crédito – Precatório Expedido
+					</a>
+				
+				
+			
+			
+			<br />
+			<span style="font-style: italic;">
+				Of&iacute;cio - Requisit&oacute;rio Eletr&ocirc;nico - Precat&oacute;rio - Cess&atilde;o de Cr&eacute;dito - Execu&ccedil;&atilde;o Fiscal-Fazenda P&uacute;blica-Acidentes do Trabalho
+			</span>
+			
+		</td>
+	</tr>
+	
+
+
+				
+					
+
+
+
+
+
+
+
+
+
+
+	
+	
+		
+	
+
+
+
+	<tr class="fundoEscuro containerMovimentacao" style="">
+		<td class="dataMovimentacao" width="120" style="vertical-align: top">
+			03/04/2013
+		</td>
+		<td width="20" valign="top" aria-hidden="true">
+			
+		</td>
+		<td class="descricaoMovimentacao" style="vertical-align: top; padding-bottom: 5px">
+			
+			
+				
+				
+					ENCAMINHADO AO ARQUIVO GERAL (SGDAC) EM
+				
+			
+			
+			<br />
+			<span style="font-style: italic;">
+				Remetente: 1.4 
+Destinat&aacute;rio: 0.9 
+Usu&aacute;rio: DMSOUZA 
+Volumes: 1
+			</span>
+			
+		</td>
+	</tr>
+	
+
+
+				
+					
+
+
+
+
+
+
+
+
+
+
+	
+	
+		
+	
+
+
+
+	<tr class="fundoClaro containerMovimentacao" style="">
+		<td class="dataMovimentacao" width="120" style="vertical-align: top">
+			02/04/2013
+		</td>
+		<td width="20" valign="top" aria-hidden="true">
+			
+		</td>
+		<td class="descricaoMovimentacao" style="vertical-align: top; padding-bottom: 5px">
+			
+			
+				
+				
+					ENCAMINHADO AO DEPRE 1.4 EM
+				
+			
+			
+			<br />
+			<span style="font-style: italic;">
+				Remetente: 3.5 
+Destinat&aacute;rio: 1.4 
+Usu&aacute;rio: SALOMAO 
+Volumes: 1
+			</span>
+			
+		</td>
+	</tr>
+	
+
+
+				
+					
+
+
+
+
+
+
+
+
+
+
+	
+	
+		
+	
+
+
+
+	<tr class="fundoEscuro containerMovimentacao" style="">
+		<td class="dataMovimentacao" width="120" style="vertical-align: top">
+			09/02/2013
+		</td>
+		<td width="20" valign="top" aria-hidden="true">
+			
+		</td>
+		<td class="descricaoMovimentacao" style="vertical-align: top; padding-bottom: 5px">
+			
+			
+				
+				
+					ENCAMINHADO AO DEPRE 3.5 EM
+				
+			
+			
+			<br />
+			<span style="font-style: italic;">
+				Remetente: 1.4 
+Destinat&aacute;rio: 3.5 
+Usu&aacute;rio: SILVIA 
+Volumes: 1
+			</span>
+			
+		</td>
+	</tr>
+	
+
+
+				
+					
+
+
+
+
+
+
+
+
+
+
+	
+	
+		
+	
+
+
+
+	<tr class="fundoClaro containerMovimentacao" style="">
+		<td class="dataMovimentacao" width="120" style="vertical-align: top">
+			07/02/2011
+		</td>
+		<td width="20" valign="top" aria-hidden="true">
+			
+		</td>
+		<td class="descricaoMovimentacao" style="vertical-align: top; padding-bottom: 5px">
+			
+			
+				
+				
+					ENCAMINHADO AO ARQUIVO GERAL (SGDAC) EM
+				
+			
+			
+			<br />
+			<span style="font-style: italic;">
+				Remetente: 3.3 
+Destinat&aacute;rio: 0.9 
+Usu&aacute;rio: PENSAL 
+Volumes: 0
+			</span>
+			
+		</td>
+	</tr>
+	
+
+
+				
+					
+
+
+
+
+
+
+
+
+
+
+	
+	
+		
+	
+
+
+
+	<tr class="fundoEscuro containerMovimentacao" style="">
+		<td class="dataMovimentacao" width="120" style="vertical-align: top">
+			08/09/2010
+		</td>
+		<td width="20" valign="top" aria-hidden="true">
+			
+		</td>
+		<td class="descricaoMovimentacao" style="vertical-align: top; padding-bottom: 5px">
+			
+			
+				
+				
+					ENCAMINHADO AO DEPRE 3.3 EM
+				
+			
+			
+			<br />
+			<span style="font-style: italic;">
+				Remetente: 3.2 
+Destinat&aacute;rio: 3.3 
+Usu&aacute;rio: PENSAL 
+Volumes: 0
+			</span>
+			
+		</td>
+	</tr>
+	
+
+
+				
+					
+
+
+
+
+
+
+
+
+
+
+	
+	
+		
+	
+
+
+
+	<tr class="fundoClaro containerMovimentacao" style="">
+		<td class="dataMovimentacao" width="120" style="vertical-align: top">
+			12/03/2010
+		</td>
+		<td width="20" valign="top" aria-hidden="true">
+			
+		</td>
+		<td class="descricaoMovimentacao" style="vertical-align: top; padding-bottom: 5px">
+			
+			
+				
+				
+					ENCAMINHADO AO DEPRE 3.2 EM
+				
+			
+			
+			<br />
+			<span style="font-style: italic;">
+				Remetente: 1.3 
+Destinat&aacute;rio: 3.2 
+Usu&aacute;rio: SUPINO 
+Volumes: 0
+			</span>
+			
+		</td>
+	</tr>
+	
+
+
+				
+					
+
+
+
+
+
+
+
+
+
+
+	
+	
+		
+	
+
+
+
+	<tr class="fundoEscuro containerMovimentacao" style="">
+		<td class="dataMovimentacao" width="120" style="vertical-align: top">
+			10/03/2010
+		</td>
+		<td width="20" valign="top" aria-hidden="true">
+			
+		</td>
+		<td class="descricaoMovimentacao" style="vertical-align: top; padding-bottom: 5px">
+			
+			
+				
+				
+					ENCAMINHADO AO DEPRE 1.3 PARA FINS DE EXPEDIÇÃO E ARQUIVAMENTO
+				
+			
+			
+			<br />
+			<span style="font-style: italic;">
+				Remetente: 3.1 
+Destinat&aacute;rio: 1.3 
+Usu&aacute;rio: OSMAR 
+Volumes: 0
+			</span>
+			
+		</td>
+	</tr>
+	
+
+
+				
+					
+
+
+
+
+
+
+
+
+
+
+	
+	
+		
+	
+
+
+
+	<tr class="fundoClaro containerMovimentacao" style="">
+		<td class="dataMovimentacao" width="120" style="vertical-align: top">
+			10/03/2010
+		</td>
+		<td width="20" valign="top" aria-hidden="true">
+			
+		</td>
+		<td class="descricaoMovimentacao" style="vertical-align: top; padding-bottom: 5px">
+			
+			
+				
+				
+					Remessa
+				
+			
+			
+			<br />
+			<span style="font-style: italic;">
+				Remessa efetuada para FAZENDA DO ESTADO DE S&Atilde;O PAULO 
+Assunto 1: ENC. 1&ordf;S VIAS PROCS. EP-  P/PAGT&ordm;. 
+Assunto 2: - 
+Order 1: 79 
+Order 2: 84 
+Ano-ordem: 11 
+Natureza: Outras Esp&eacute;cies 
+Remessa: 176/10
+			</span>
+			
+		</td>
+	</tr>
+	
+
+
+				
+					
+
+
+
+
+
+
+
+
+
+
+	
+	
+		
+	
+
+
+
+	<tr class="fundoEscuro containerMovimentacao" style="">
+		<td class="dataMovimentacao" width="120" style="vertical-align: top">
+			27/11/2009
+		</td>
+		<td width="20" valign="top" aria-hidden="true">
+			
+		</td>
+		<td class="descricaoMovimentacao" style="vertical-align: top; padding-bottom: 5px">
+			
+			
+				
+				
+					INTIMAÇÃO PARA REGULARIZAÇÃO DE PEÇAS, DOJ DE
+				
+			
+			
+			<br />
+			<span style="font-style: italic;">
+				Remetente: 3.1 
+Destinat&aacute;rio: 3.1 
+Usu&aacute;rio: VILMA 
+Volumes: 0
+			</span>
+			
+		</td>
+	</tr>
+	
+
+
+				
+					
+
+
+
+
+
+
+
+
+
+
+	
+	
+		
+	
+
+
+
+	<tr class="fundoClaro containerMovimentacao" style="">
+		<td class="dataMovimentacao" width="120" style="vertical-align: top">
+			26/10/2009
+		</td>
+		<td width="20" valign="top" aria-hidden="true">
+			
+		</td>
+		<td class="descricaoMovimentacao" style="vertical-align: top; padding-bottom: 5px">
+			
+			
+				
+				
+					ENCAMINHADO AO DEPRE 3.1 EM
+				
+			
+			
+			<br />
+			<span style="font-style: italic;">
+				Remetente: 1.1 
+Destinat&aacute;rio: 3.1 
+Usu&aacute;rio: PENSAL 
+Volumes: 0
+			</span>
+			
+		</td>
+	</tr>
+	
+
+
+				
+			</tbody>
+
+		
+		
+	
+</table>
+
+	<div id="divLinksTituloBlocoMovimentacoes" style="text-align:right">
+		
+
+
+
+
+
+
+
+
+
+<input id="mensagemNaoExibidamovimentacoes" type="hidden" value=""/>
+
+    <input id="linkNaoExibidomovimentacoes" type="hidden" value="Recolher"/>
+
+<span id="mensagensExibindomovimentacoes" class="mensagemExibindo">
+
+</span> &nbsp;
+
+    <a id="linkmovimentacoes" href="javascript:" class="linkNaoSelecionado unj-link-collapse">
+        <span id="setasDireitamovimentacoes" class="setasDireita">
+            <i class="unj-link-collapse__icon glyph glyph-chevron-down"></i>
+        </span>
+        Mais
+    </a>
+
+<script>
+	$(function() {
+		var controlarLink = function() {
+			var $linkNaoExibido = $('input#linkNaoExibidomovimentacoes');
+			var conteudoLinkNaoApresentado = $linkNaoExibido.val();
+			var $link = $('a#linkmovimentacoes');
+			
+			$linkNaoExibido.val($link.html());
+			$link.html(conteudoLinkNaoApresentado);
+		};
+
+		var controlarMensagem = function() {
+			var $mensagemNaoExibida = $('input#mensagemNaoExibidamovimentacoes');
+			var $spanMensagem = $('span#mensagensExibindomovimentacoes');
+			var mensagemExibida = $spanMensagem.html();
+			var mensagemNaoExibida = $mensagemNaoExibida.val();
+			
+			$spanMensagem.html(mensagemNaoExibida);
+			$mensagemNaoExibida.val(mensagemExibida);
+		};
+
+		var controlarMensagemLink = function() {
+			controlarMensagem();
+			controlarLink();
+		};
+		
+		var esconderElementosExtrasMostrarDefault = function() {
+			$('#tabelaTodasMovimentacoes').hide();
+			$('#tabelaUltimasMovimentacoes').show();
+		};
+
+		var mostrarElementosExtrasEsconderDefault = function() {
+			$('#tabelaUltimasMovimentacoes').hide();
+			$('#tabelaTodasMovimentacoes').show();
+		};
+
+		var initPagina = function() {
+            var setasDireita = '<span id="setasDireitamovimentacoes" class="setasDireita"><i class="unj-link-collapse__icon glyph glyph-chevron-up"></i></span>';
+			var $linkEscondido = $('input#linkNaoExibidomovimentacoes');
+			$linkEscondido.val(setasDireita+$linkEscondido.val());
+		};
+
+		var bindLink = function() {
+			var $link = $('a#linkmovimentacoes');
+			$link.funcToggle('click', mostrarElementosExtrasEsconderDefault, esconderElementosExtrasMostrarDefault);
+			$link.bind('click', controlarMensagemLink);
+		};
+
+		initPagina();
+		bindLink();
+		esconderElementosExtrasMostrarDefault();
+	});
+</script>
+
+	</div>
+
+		
+
+	
+
+	                
+	                
+	                
+	                
+	                
+	                
+	            
+	        
+	            
+	                
+	                
+	                
+	                
+	                    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div style="padding-top: 10px;">
+	
+	
+		
+		
+			<h2 class="subtitle tituloDoBloco">Petições diversas</h2>
+		
+	
+</div>
+
+<!-- Tabela de petições diversas -->
+<table style="margin-left:15px; margin-top:1px;" align="center" width="98%" border="0" cellspacing="0" cellpadding="1"  >
+	
+		
+			<thead>
+			    <tr class="label">
+			      <th width="140"  style="text-align:left">Data</th>
+			      <th width="*" >Tipo</th>
+			    </tr>
+			    <tr class="fundoEscuro" height="2" aria-hidden="true">
+					<td></td>
+					<td></td>
+				</tr>
+			</thead>
+			<tbody>
+				
+					
+						<tr class="fundoClaro"> 
+							<td width="140"  style="text-align:left">
+								06/08/2021
+							</td>
+							<td width="*">
+								Habilitação de Herdeiro de Precatório <br/>
+								Expediente excepcional.
+Notificação por email à DEPRE 3.2 em 09/08/21.
+Transferido para DEPRE 3.6 em 18/10/2022
+							</td>
+						</tr>
+					
+				
+					
+						<tr class="fundoEscuro"> 
+							<td width="140"  style="text-align:left">
+								22/11/2022
+							</td>
+							<td width="*">
+								Alteração de Procurador/Substabelecimento de requisitório <br/>
+								DEPRE 1.4.1
+							</td>
+						</tr>
+					
+				
+					
+						<tr class="fundoClaro"> 
+							<td width="140"  style="text-align:left">
+								19/11/2024
+							</td>
+							<td width="*">
+								Alteração de Procurador/Substabelecimento de requisitório <br/>
+								
+							</td>
+						</tr>
+					
+				
+					
+						<tr class="fundoEscuro"> 
+							<td width="140"  style="text-align:left">
+								19/03/2025
+							</td>
+							<td width="*">
+								Alteração de Procurador/Substabelecimento de requisitório <br/>
+								
+							</td>
+						</tr>
+					
+				
+					
+						<tr class="fundoClaro"> 
+							<td width="140"  style="text-align:left">
+								30/04/2025
+							</td>
+							<td width="*">
+								Informação sobre Requisitório/Pagamento <br/>
+								DP
+							</td>
+						</tr>
+					
+				
+					
+						<tr class="fundoEscuro"> 
+							<td width="140"  style="text-align:left">
+								16/05/2025
+							</td>
+							<td width="*">
+								Informação sobre Requisitório/Pagamento <br/>
+								
+							</td>
+						</tr>
+					
+				
+					
+						<tr class="fundoClaro"> 
+							<td width="140"  style="text-align:left">
+								04/07/2025
+							</td>
+							<td width="*">
+								Informação sobre Requisitório/Pagamento <br/>
+								ALTERAÇÃO DE PÓLO
+							</td>
+						</tr>
+					
+				
+					
+						<tr class="fundoEscuro"> 
+							<td width="140"  style="text-align:left">
+								13/11/2025
+							</td>
+							<td width="*">
+								Pedido de Penhora no Rosto dos Autos <br/>
+								
+							</td>
+						</tr>
+					
+				
+			</tbody>
+		
+		
+	
+</table>
+<!--  Tabela de petições diversas -->
+
+
+	                
+	                
+	                
+	                
+	                
+	                
+	                
+	            
+	        
+	            
+	                
+	                
+	                
+	                    
+
+
+
+
+
+
+
+
+
+
+
+
+<script type="text/javascript">
+	(function($) {
+		$(function(){
+			var captcha = $.saj.getUrlParameter('uuidCaptcha');
+			if(!captcha){
+				return;
+			}
+			$('.incidente a').each(function(){
+				var $incidente = $(this);
+				var url = $incidente.attr('href');
+				$incidente.attr('href', url+'&uuidCaptcha='+captcha);
+			});
+		})
+	})(jQuery);
+</script>
+
+
+
+
+
+
+
+
+
+
+
+<div style="padding-top: 10px;">
+	
+	
+		
+		
+			<h2 class="subtitle tituloDoBloco">Incidentes, ações incidentais, recursos e execuções de sentenças</h2>
+		
+	
+</div>
+
+<table style="margin-left:15px; margin-top:1px;" align="center" width="98%" border="0" cellspacing="0" cellpadding="1"  >
+
+	
+	
+		<tr>
+		  <td id="processoSemIncidentes" colspan="3" align="left">
+		 	
+ 				
+ 				
+ 					Não há incidentes, ações incidentais, recursos ou execuções de sentenças vinculados a este processo.
+ 				
+ 			
+		  </td> 
+	    </tr>
+	
+
+</table>
+<!--  Incidentes -->
+
+	                
+	                
+	                
+	                
+	                
+	                
+	                
+	                
+	            
+	        
+	            
+	                
+	                
+	                
+	                
+	                
+	                
+	                
+	                
+	                
+	                
+	                    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script type="text/javascript">
+    (function ($) {
+        $(function () {
+            var captcha = $.saj.getUrlParameter('uuidCaptcha');
+
+            if(!captcha){
+                return;
+            }
+            $.each($('.processoApensado'), function (i, value) {
+                var $link = $(value);
+                $link.attr('href', $link.attr('href') + '&uuidCaptcha=' + captcha);
+            })
+
+        })
+    })(jQuery);
+</script>
+
+
+
+
+
+
+
+
+
+<div style="padding-top: 10px;">
+	
+	
+		
+		
+			<h2 class="subtitle tituloDoBloco">Apensos, Entranhados e Unificados</h2>
+		
+	
+</div>
+
+
+
+    
+        <table style="margin-left:15px; margin-top:1px;" align="center" width="98%" border="0" cellspacing="0" cellpadding="1">
+            <tbody id="dadosApensosNaoDisponiveis">
+            <tr>
+                <td colspan="3" align="left">Não há processos apensados, entranhados e unificados a este processo.</td>
+            </tr>
+            </tbody>
+        </table>
+
+    
+    
+
+
+	                
+	            
+	        
+	            
+	                
+	                
+	                
+	                
+	                
+	                
+	                    
+
+
+
+
+
+
+
+<div style="padding-top: 10px;">
+	
+	
+		
+		
+			<h2 class="subtitle tituloDoBloco">Audiências</h2>
+		
+	
+</div>
+
+                        
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+        
+            
+            
+                
+            
+        
+    
+    
+
+<a name="audienciasPlaceHolder"></a>
+<table style="margin-left:15px; margin-top:1px;" align="center" width="98%" border="0" cellspacing="0" cellpadding="1">
+    
+        
+        
+            <tr>
+                <td id="processoSemAudiencias" colspan="3" align="left">
+                    
+                        
+                        
+                            Não há Audiências futuras vinculadas a este processo.
+                        
+                    
+                </td>
+            </tr>
+        
+    
+</table>
+
+	                
+	                
+	                
+	                
+	                
+	            
+	        
+	            
+	                
+	                
+	                
+	                
+	                
+	                
+	                
+	                    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<form id="popupCdas" style="display: none;">
+	<!--  dados da lista (CDAs) -->
+	<div style="height:210px; overflow: auto;">
+		<table id="tableCdasPrincipais" style="margin-left:10px; margin-top:1px; width: 98%;">
+			<thead>
+				<tr class="fundoClaro">
+					<th style="text-align:left;">Número CDA</th>
+					<th style="text-align:left;">Valor</th>
+					<th style="text-align:left;">Dt. CDA</th>
+					<th style="text-align:left;">Valor atualizado</th>
+					<th style="text-align:left;">Dt. atualização</th>
+					<th style="text-align:left;">Situação</th>
+				</tr>
+				<tr class="fundoEscuro" height="2" aria-hidden="true">
+					<td colspan="6"/>
+				</tr>
+			</thead>
+			<tbody>
+				
+			</tbody>
+		</table>
+	</div>
+</form>
+
+	                
+	                
+	                
+	                
+	            
+	        
+	
+	
+
+	
+
+
+
+
+
+
+
+
+
+
+
+
+	<form action="/cpopg/show.do?processo.codigo=DWZ004HSL0000&processo.foro=500&processo.numero=7010330-77.2009.8.26.0500&consultaDeRequisitorios=true" id="popupSenha" style="display: none;" method="POST">
+		<input type="hidden" name="_csrf" value="9764a40f-832f-4037-893c-4104f5eb7a71" />
+		
+		<table role="document">
+			<tr>
+				<td colspan="2" style="padding-bottom:20px">Atendendo a resolução 121 do CNJ.</td>
+			</tr>
+			
+				<tr>
+					<td colspan="2" style="padding-bottom:20px">Se for advogado(a) nesse processo, é necessário <span id="identificacao"></span></td>
+					
+						
+						
+							<script language="javascript" type="text/JavaScript" src="https://esaj.tjsp.jus.br/sajcas/conteudoIdentificacao?script=1769536180381"></script>
+						
+					
+				</tr>
+			
+			<tr align="center">
+				<td align="left" colspan="2" style="padding-bottom:20px">
+					<div style="float:left; line-height:30px;">Se for uma parte ou interessado, digite a senha do processo</div>
+					<div style="float:left;width: 140px; padding-left:15px">
+						<input type="password" name="senhaProcesso" maxlength="12" value="" rotulo="" class="form-control" id="senhaProcesso">
+						<input type="hidden" name="idRecursoQueProvocouLiberacaoPorSenha" value="">
+					</div>
+					<div class="unj-form-control-group__icon">
+						<div class="dropdown show">
+							<a href="javascript:;" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+								<span class="glyph glyph-info" aria-hidden="true"></span>
+							</a>
+							<div class="dropdown-menu tooltip-campos" aria-labelledby="dropdownMenuLink">
+								
+									É necessário informar uma senha para acessar processo em segredo de justiça, bem como para acessar autos dos demais processos.<br/><br/>
+									Se for parte do processo e ainda não possua uma senha, <b>solicite-a no cartório</b>.<br/><br/>
+								
+								
+							</div>
+						</div>
+					</div>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="2" align="center">
+					
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+	
+	    
+	<input type="button" name="btFechar" value="Cancelar" onclick="" onmouseover="B_mOver(this);" onmouseout="B_mOut(this);" class="spwBotao " id="botaoFecharPopupSenha">
+
+
+					
+						
+						
+							
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+		
+	
+	<input type="submit" name="btEnviarSenha" value="Continuar" onclick="" onmouseover="B_mOver(this);" onmouseout="B_mOut(this);" onmouseover="B_mOver(this);" onmouseout="B_mOut(this);" class="spwBotaoDefault btn-space" id="btEnviarSenha">
+
+
+						
+					
+				</td>
+			</tr>
+		</table>
+	</form>
+
+
+
+	
+
+
+
+
+
+<script language="javascript" type="text/JavaScript" src="/cpopg/js/modalRecebimentoIntimacao.js?n=3711783609"></script>
+<div id="modalRecebimentoIntimacao" class="modal-main" style="display: none">
+    <div class="modal-body">
+        <table id="spwTabelaMensagem" style="display: none; margin-bottom: 20px" width="100%" cellspacing="0" cellpadding="0" border="0" height="30" class="conteudoAvisoSenhaIncorreta tabelaMensagem" style="padding-bottom: 10px">
+            <tbody>
+            <tr>
+                <td class="tituloMensagem"><b>Erro</b>
+                </td>
+            </tr>
+            <tr>
+                <td class="errors"><img class="img-recebimento-intimacao" src="/cpopg/imagens/spw/icoError.gif">&nbsp;</td>
+                <td>
+                    <ul style="margin: 0; padding: 0;">
+                        <li id="mensagemErroProtocoladora"></li>
+                    </ul>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <div class="conteudo-modal-recebimento-intimacoes">
+            <div class="col-xs-12">
+                <p id="conteudoModalRecebimentoIntimacao"></p>
+            </div>
+        </div>
+        <div id="campoCertificado" class="conteudo-modal-recebimento-intimacoes">
+            
+
+
+
+
+
+
+
+
+
+
+<label for="certificados">Selecione o certificado que deseja utilizar:</label>
+
+<select id="certificados" style="display: inline; position: relative; width: 96%;" title="">
+    <option value="">Carregando certificados</option>
+</select>
+<a id="certificadosRecarregar" href="#" style="display: none; position: relative; "><img id="certificados-recarregar" style="vertical-align: top; margin-left: 1px;"
+                                                                                         src="/cpopg/imagens/certificado/recarregarCertificados.png" alt="Recarregar certificados"/></a>
+
+<input type="hidden" name="certificadoSelecionado" id="certificadoSelecionado">
+
+<br><br>
+
+        </div>
+        <div class="modal-footer--center">
+            <button type="button" class="btn btn-sm btn-secondary btn-close-card" name="btFechar" id="botaoFecharPopupRecebimentoIntimacao">Cancelar</button>
+            <button type="button" class="btn btn-sm btn-primary btn-close-card" name="btEnviarIncidente" id="botaoConfirmarRebebimentoIntimacao" style="">Continuar</button>
+        </div>
+    </div>
+</div>
+	
+
+
+
+
+
+
+
+
+	
+		
+
+
+
+
+
+
+
+
+
+
+
+	
+	
+		
+
+
+
+</td>
+</tr>
+</table>
+<table width="100%" border="0" cellpadding="0" cellspacing="0" class="esajTabelaRodape" summary=" " role="presentation">
+    <tr>
+        <td class="esajCelulaRodapeCentro">
+            Desenvolvido pela Softplan em parceria com a Secretaria de Tecnologia da Informação - STI
+            
+        </td>
+    </tr>
+</table>
+<link href="https://esaj.tjsp.jus.br/esaj-layout/tema/padrao/css/saj-popup-modal.css" rel="stylesheet" type="text/css">
+<link href="https://esaj.tjsp.jus.br/esaj-layout/tema/padrao/css/popup-beta.css" rel="stylesheet" type="text/css">
+
+
+<script>
+    var appEsajLayout = appEsajLayout || {};
+    appEsajLayout.tituloCertificadoDigital = 'Certificado digital';
+    appEsajLayout.cliente = 'SP';
+    appEsajLayout.emailParaContato = 'esajtjsp@softplan.com.br';
+    appEsajLayout.utilizarBotaoContato = 'true';
+    appEsajLayout.contexto = 'https://esaj.tjsp.jus.br/esaj-layout';
+    appEsajLayout.webSignerParametro = 'https://cdn.lacunasoftware.com/libs/web-pki/lacuna-web-pki-2.14.8.min.js';
+
+    if(window.jQuery) {
+        jQuery.saj = jQuery.saj || {};
+        jQuery.saj.certificado = jQuery.saj.certificado || {};
+        jQuery.saj.certificado.cliente = 'SP';
+        jQuery.saj.certificado.urlConteudoAjudaWebSigner = appEsajLayout.contexto + '/ajudaWebSigner.do';
+        jQuery.saj.certificado.licenca = 'ARkEKi50anNwLmp1cy5iciwxMC4zMy4xOTIuMTAxLDEwLjMzLjE5Mi4xMDUsMTAuMzMuMTkyLjE0NiwxMC4zMy4xOTIuMjQxLDEwLjMzLjE5Mi45MCwxMC4zMy4xOTIuOTEsMTAuMzMuMTkyLjkyLDEwLjMzLjE5Mi45NCwxMC4zMy4xOTMuMTg1LDEwLjMzLjE5My4xODYsMTAuMzMuMTkzLjE4NywxMC4zMy4xOTMuMTg4LDEwLjMzLjE5NC4yMjQsMTAuMzMuMTk0LjIyNSwxMC4zMy4xOTQuMjU1LDEwLjMzLjE5NC43NCwxMC4zMy4xOTQuNzUsMTAuMzMuMTk0Ljc2LDEwLjMzLjE5NC43NywxMC4zMy4xOTQuNzksMTAuMzMuMTk1LjEwMiwxMC4zMy4xOTUuMTAyLDEwLjMzLjE5NS4xMTksMTAuMzMuMTk1LjEyMSwxMC4zMy4xOTUuMTIyLDEwLjMzLjE5NS4xMjMsMTAuMzMuMTk1LjEyNCwxMC4zMy4xOTUuMTI1LDEwLjMzLjE5NS4xMjYsMTAuMzMuMTk1LjEyNywxMC4zMy4xOTUuMTI4LDEwLjMzLjE5NS4xMjksMTAuMzMuMTk1LjEzMCwxMC4zMy4xOTUuMTMxLDEwLjMzLjE5NS4xMzIsMTAuMzMuMTk1LjE4MywxMC4zMy4xOTUuMTg0LDEwLjMzLjE5NS4xODUsMTAuMzMuMTk1LjE4NiwxMC4zMy4xOTUuMTg3LDEwLjMzLjE5NS4xODgsMTAuMzMuMTk1LjE4OSwxMC4zMy4xOTUuMTkxLDEwLjMzLjE5NS4xOTIsMTAuMzMuMTk1LjE5MywxMC4zMy4xOTUuMTk0LDEwLjMzLjE5NS4xOTUsMTAuMzMuMTk1LjE5NSwxMC4zMy4xOTUuMTk3LDEwLjMzLjE5NS4xOTgsMTAuMzMuMTk1LjIzNCwxMC4zMy4xOTUuMjM3LDEwLjk4LjE5Mi4xMTMsMTAuOTguMTkyLjExNCwxMC45OC4xOTIuMTE3LDEwLjk4LjE5Mi4yNTAsMTAuOTguMTkyLjQyLDEwLjk4LjE5Mi43MCwxMC45OC4xOTIuNzEsMTAuOTguMTkzLjEyMSwxMC45OC4xOTMuMTIyLDEwLjk4LjE5My4xOTksMTAuOTguMTkzLjIwMCwxMC45OC4xOTMuMjAxLDEwLjk4LjE5My4yMDIsMTAuOTguMTkzLjIyNSwxMC45OC4xOTQuMTIxLDEwLjk4LjE5NC4xMjIsMTAuOTguMTk0LjE0MSwxMC45OC4xOTQuMTQyLDEwLjk4LjE5NC4xNDMsMTAuOTguMTk0LjE0NCwxMC45OC4xOTQuMTQ1LDEwLjk4LjE5NC4xNDcsMTAuOTguMzIuNzYAAAABt8T6Ov8g0lWHnOe7bekYQC1kjn/SgVPWGteqlpMDF8qEOKOxdWahBlk0uh9nfmPiUY9MXcXchlgu6V/zygYGgSfZG11odlUkrXZCAYX/pB3ArsqmrqgvMK0mxuTVOThs/flGWltXnCFEFEU1Pp6RSdlhtCOEuGx5XWov3lux8DcnB+DxL2zauU4GfGJmoXCZDMWT2g7MXIu7VjrJJEkCH/nZ0hkhUsw/k0ORu7/kXJyBufrFZYbsQ/Nadjp9CgYhlsjKXmSPSn8GU8xUetHXGX3FzFJriyk8iqcH72p4z0/Msif4S+VNz0JV3+xffRvdmKuG28jHHDUqBxIrhjs+XA==';
+        jQuery.saj.certificado.webSignerParametro = 'https://cdn.lacunasoftware.com/libs/web-pki/lacuna-web-pki-2.14.8.min.js';
+        jQuery.saj.certificado.cofreDigital = jQuery.saj.certificado.cofreDigital || {};
+        jQuery.saj.certificado.cofreDigital.habilitado = 'false' === 'true';
+        jQuery.saj.certificado.cofreDigital.enderecoBase = 'https://esaj.tjsp.jus.br/esaj-layout';
+    }
+
+</script>
+<script src="https://esaj.tjsp.jus.br/esaj-layout/js/app-bundle.js?n=2978165087"></script>
+<script src="https://esaj.tjsp.jus.br/esaj-layout/seletorVersaoBeta.js?n=32db3647-04d8-4058-8c7b-79513d6c2143&versao=1"></script>
+<script language="javascript" type="text/JavaScript" src="https://esaj.tjsp.jus.br/esaj-layout/js/softplan-websigner-2.5.1.js?n=736057767"></script>
+<script language="javascript" type="text/JavaScript" src="https://cdn.lacunasoftware.com/libs/web-pki/lacuna-web-pki-2.14.8.min.js"></script>
+
+<script language="javascript" type="text/JavaScript" src="https://esaj.tjsp.jus.br/esaj-layout/js/saj-certificado.js?n=47741893"></script>
+
+
+
+<div id="webSignerNaoInstalado" style="display: none;">
+    <p>Para utilização do certificado digital no Portal e-SAJ é necessário a instalação do plug-in Web Signer. Por favor, realize a instalação antes de continuar.</p>
+    <div class="footer_certificado">
+        <button id="redirecionarParaPaginaInstalacao" class="actionPrincipal spwBotaoDefault">Instalar</button>
+        <button class="fecharModalInstalacao spwBotao">Cancelar</button>
+        <button class="spwBotao" onclick="window.open('https://esaj.tjsp.jus.br/WebHelp//#id_instalacao_lacuna.htm','_blank')">Ajuda</button>
+    </div>
+</div>
+
+<div id="webSignerNaoSuportado" style="display: none;">
+    <p>O navegador utilizado não é compatível com a tecnologia (Web Signer) necessária para utilização do certificado digital. Por favor, utilize um dos navegadores homologados. Em caso de dúvidas, efetue a validação de requisitos <a href="https://esaj.tjsp.jus.br/petpg-verificacao/abrirVerificacaoRequisitosPet.do" target="_blank">aqui</a>.</p>
+    <div class="footer_certificado">
+        <button class="fecharModalInstalacao spwBotaoDefault actionPrincipal">OK</button>
+    </div>
+</div>
+
+
+	
+
+
+
+	
+	
+
+
+
+	
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+	
+		
+
+
+
+<footer>
+    <nav class="navbar__footer">
+        <div class="navbar__footer__container">
+
+            <ul class="navbar__footer__list-brand">
+                <li class="navbar__footer__list-brand__item">
+                    <a href="https://www.softplan.com.br/solucoes/saj-tribunais/" class="navbar__footer__list-brand__item__link link_softplan_tribunais">
+                        <img src="https://esaj.tjsp.jus.br/esaj-layout/img/brand/icon-saj.png" alt="SAJ">
+                    </a>
+                </li>
+                <li class="navbar__footer__list-brand__item">
+                    <a href="https://www.softplan.com.br/" class="navbar__footer__list-brand__item__link link_softplan">
+                        <img src="https://esaj.tjsp.jus.br/esaj-layout/img/brand/icon-softplan.png" alt="Softplan">
+                    </a>
+                </li>
+            </ul>
+
+            <ul class="navbar__footer__list-actions">
+            </ul>
+        </div>
+    </nav>
+</footer>
+
+	
+
+
+
+
+</body>
+</html>

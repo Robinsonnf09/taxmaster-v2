@@ -1,0 +1,6 @@
+{
+  "numero": "5540052-47.2020.8.09.0072",
+  "tribunal": "TJGO",
+  "erro": "Message: \nStacktrace:\nSymbols not available. Dumping unresolved backtrace:\n\t0xdf8543\n\t0xdf8584\n\t0xbeb4e0\n\t0xc3594a\n\t0xc35beb\n\t0xc77bb2\n\t0xc58264\n\t0xc753a1\n\t0xc57fb6\n\t0xc296f9\n\t0xc2a4b4\n\t0x104d034\n\t0x10482c9\n\t0x1066460\n\t0xe11a68\n\t0xe1988d\n\t0xe00df8\n\t0xe00fc2\n\t0xdeab3a\n\t0x758d5d49\n\t0x7734d5db\n\t0x7734d561\n",
+  "modo": "SCRAPING_ERRO"
+}

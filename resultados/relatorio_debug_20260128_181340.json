@@ -1,0 +1,111 @@
+{
+  "timestamp": "20260128_181340",
+  "total_processos_analisados": 10,
+  "documentos_encontrados_total": 0,
+  "documentos_baixados_total": 0,
+  "processos_com_documentos": 0,
+  "processos_sem_documentos": 10,
+  "processos_com_erro": 0,
+  "detalhes": [
+    {
+      "numero": "7009390-15.2009.8.26.0500",
+      "status": "sem_documentos",
+      "titulo_pagina": "Portal de Serviços e-SAJ",
+      "url_final": "https://esaj.tjsp.jus.br/cpopg/show.do?processo.codigo=DWZ004G2O0000&processo.foro=500&processo.numero=7009390-15.2009.8.26.0500&consultaDeRequisitorios=true",
+      "mensagem_erro": null,
+      "screenshot": "debug_screenshots\\0001_7009390_15_2009_8_26_0500.png",
+      "html": "debug_screenshots\\0001_7009390_15_2009_8_26_0500.html",
+      "timestamp": "2026-01-28T18:12:39.124195"
+    },
+    {
+      "numero": "7009727-04.2009.8.26.0500",
+      "status": "sem_documentos",
+      "titulo_pagina": "Portal de Serviços e-SAJ",
+      "url_final": "https://esaj.tjsp.jus.br/cpopg/show.do?processo.codigo=DWZ004GBZ0000&processo.foro=500&processo.numero=7009727-04.2009.8.26.0500&consultaDeRequisitorios=true",
+      "mensagem_erro": null,
+      "screenshot": "debug_screenshots\\0002_7009727_04_2009_8_26_0500.png",
+      "html": "debug_screenshots\\0002_7009727_04_2009_8_26_0500.html",
+      "timestamp": "2026-01-28T18:12:45.425314"
+    },
+    {
+      "numero": "7009926-26.2009.8.26.0500",
+      "status": "sem_documentos",
+      "titulo_pagina": "Portal de Serviços e-SAJ",
+      "url_final": "https://esaj.tjsp.jus.br/cpopg/show.do?processo.codigo=DWZ004GGF0000&processo.foro=500&processo.numero=7009926-26.2009.8.26.0500&consultaDeRequisitorios=true",
+      "mensagem_erro": null,
+      "screenshot": "debug_screenshots\\0003_7009926_26_2009_8_26_0500.png",
+      "html": "debug_screenshots\\0003_7009926_26_2009_8_26_0500.html",
+      "timestamp": "2026-01-28T18:12:51.738214"
+    },
+    {
+      "numero": "7009927-11.2009.8.26.0500",
+      "status": "sem_documentos",
+      "titulo_pagina": "Portal de Serviços e-SAJ",
+      "url_final": "https://esaj.tjsp.jus.br/cpopg/show.do?processo.codigo=DWZ004GGG0000&processo.foro=500&processo.numero=7009927-11.2009.8.26.0500&consultaDeRequisitorios=true",
+      "mensagem_erro": null,
+      "screenshot": "debug_screenshots\\0004_7009927_11_2009_8_26_0500.png",
+      "html": "debug_screenshots\\0004_7009927_11_2009_8_26_0500.html",
+      "timestamp": "2026-01-28T18:12:58.088211"
+    },
+    {
+      "numero": "7010330-77.2009.8.26.0500",
+      "status": "sem_documentos",
+      "titulo_pagina": "Portal de Serviços e-SAJ",
+      "url_final": "https://esaj.tjsp.jus.br/cpopg/show.do?processo.codigo=DWZ004HSL0000&processo.foro=500&processo.numero=7010330-77.2009.8.26.0500&consultaDeRequisitorios=true",
+      "mensagem_erro": null,
+      "screenshot": "debug_screenshots\\0005_7010330_77_2009_8_26_0500.png",
+      "html": "debug_screenshots\\0005_7010330_77_2009_8_26_0500.html",
+      "timestamp": "2026-01-28T18:13:04.471331"
+    },
+    {
+      "numero": "7001962-69.2015.8.26.0500",
+      "status": "sem_documentos",
+      "titulo_pagina": "Portal de Serviços e-SAJ",
+      "url_final": "https://esaj.tjsp.jus.br/cpopg/show.do?processo.codigo=DWZ005FG10000&processo.foro=500&processo.numero=7001962-69.2015.8.26.0500&consultaDeRequisitorios=true",
+      "mensagem_erro": null,
+      "screenshot": "debug_screenshots\\0006_7001962_69_2015_8_26_0500.png",
+      "html": "debug_screenshots\\0006_7001962_69_2015_8_26_0500.html",
+      "timestamp": "2026-01-28T18:13:10.787202"
+    },
+    {
+      "numero": "7001963-54.2015.8.26.0500",
+      "status": "sem_documentos",
+      "titulo_pagina": "Portal de Serviços e-SAJ",
+      "url_final": "https://esaj.tjsp.jus.br/cpopg/show.do?processo.codigo=DWZ005FG20000&processo.foro=500&processo.numero=7001963-54.2015.8.26.0500&consultaDeRequisitorios=true",
+      "mensagem_erro": null,
+      "screenshot": "debug_screenshots\\0007_7001963_54_2015_8_26_0500.png",
+      "html": "debug_screenshots\\0007_7001963_54_2015_8_26_0500.html",
+      "timestamp": "2026-01-28T18:13:17.087328"
+    },
+    {
+      "numero": "7001974-83.2015.8.26.0500",
+      "status": "sem_documentos",
+      "titulo_pagina": "Portal de Serviços e-SAJ",
+      "url_final": "https://esaj.tjsp.jus.br/cpopg/show.do?processo.codigo=DWZ005FG80000&processo.foro=500&processo.numero=7001974-83.2015.8.26.0500&consultaDeRequisitorios=true",
+      "mensagem_erro": null,
+      "screenshot": "debug_screenshots\\0008_7001974_83_2015_8_26_0500.png",
+      "html": "debug_screenshots\\0008_7001974_83_2015_8_26_0500.html",
+      "timestamp": "2026-01-28T18:13:23.370157"
+    },
+    {
+      "numero": "7001992-07.2015.8.26.0500",
+      "status": "sem_documentos",
+      "titulo_pagina": "Portal de Serviços e-SAJ",
+      "url_final": "https://esaj.tjsp.jus.br/cpopg/show.do?processo.codigo=DWZ005FHQ0000&processo.foro=500&processo.numero=7001992-07.2015.8.26.0500&consultaDeRequisitorios=true",
+      "mensagem_erro": null,
+      "screenshot": "debug_screenshots\\0009_7001992_07_2015_8_26_0500.png",
+      "html": "debug_screenshots\\0009_7001992_07_2015_8_26_0500.html",
+      "timestamp": "2026-01-28T18:13:29.670691"
+    },
+    {
+      "numero": "7002001-66.2015.8.26.0500",
+      "status": "sem_documentos",
+      "titulo_pagina": "Portal de Serviços e-SAJ",
+      "url_final": "https://esaj.tjsp.jus.br/cpopg/show.do?processo.codigo=DWZ005FHZ0000&processo.foro=500&processo.numero=7002001-66.2015.8.26.0500&consultaDeRequisitorios=true",
+      "mensagem_erro": null,
+      "screenshot": "debug_screenshots\\0010_7002001_66_2015_8_26_0500.png",
+      "html": "debug_screenshots\\0010_7002001_66_2015_8_26_0500.html",
+      "timestamp": "2026-01-28T18:13:35.953306"
+    }
+  ]
+}

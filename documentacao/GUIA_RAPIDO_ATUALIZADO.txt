@@ -1,0 +1,176 @@
+﻿═══════════════════════════════════════════════════════════════
+  SISTEMA DE PRECATÓRIOS - GUIA DE USO RÁPIDO
+  ✅ ATUALIZADO COM API KEY PÚBLICA
+═══════════════════════════════════════════════════════════════
+
+📌 API KEY PÚBLICA DATAJUD CNJ (Válida até alteração pelo CNJ)
+   
+   cDZHYzlZa0JadVREZDJCendQbXY6SkJlTzNjLV9TRENyQk1RdnFKZGRQdw==
+
+   ⚠️  Esta chave é PÚBLICA e pode ser alterada pelo CNJ.
+   📖 Sempre consulte: https://datajud.cnj.jus.br/
+
+═══════════════════════════════════════════════════════════════
+
+🚀 COMANDOS PRONTOS PARA USO
+
+1️⃣  TESTAR CONECTIVIDADE
+
+.\scripts\Test-APIDataJud.ps1 -ApiKey "cDZHYzlZa0JadVREZDJCendQbXY6SkJlTzNjLV9TRENyQk1RdnFKZGRQdw=="
+
+═══════════════════════════════════════════════════════════════
+
+2️⃣  CONSULTAR PROCESSOS
+
+Por número de processo:
+.\scripts\Get-ProcessosPrecatorios.ps1 -Tribunal "TJGO" -ApiKey "cDZHYzlZa0JadVREZDJCendQbXY6SkJlTzNjLV9TRENyQk1RdnFKZGRQdw==" -NumeroProcesso "5273405-44.2025.8.09.0051"
+
+Por CPF:
+.\scripts\Get-ProcessosPrecatorios.ps1 -Tribunal "TJGO" -ApiKey "cDZHYzlZa0JadVREZDJCendQbXY6SkJlTzNjLV9TRENyQk1RdnFKZGRQdw==" -CPF "027.691.641-71"
+
+Por nome da parte:
+.\scripts\Get-ProcessosPrecatorios.ps1 -Tribunal "TJGO" -ApiKey "cDZHYzlZa0JadVREZDJCendQbXY6SkJlTzNjLV9TRENyQk1RdnFKZGRQdw==" -NomeParte "IGOR JACOMO"
+
+Por CNPJ:
+.\scripts\Get-ProcessosPrecatorios.ps1 -Tribunal "TJGO" -ApiKey "cDZHYzlZa0JadVREZDJCendQbXY6SkJlTzNjLV9TRENyQk1RdnFKZGRQdw==" -CPF "01.409.580/0001-38"
+
+═══════════════════════════════════════════════════════════════
+
+3️⃣  IMPORTAR RESULTADOS PARA EXCEL
+
+.\scripts\Export-PrecatoriosToExcel.ps1 -JsonPath ".\resultados\processos_TJGO_*.json"
+
+═══════════════════════════════════════════════════════════════
+
+📊 TRIBUNAIS SUPORTADOS
+
+✅ Tribunais de Justiça Estaduais:
+   - TJGO (Goiás)
+   - TJSP (São Paulo)
+   - TJRJ (Rio de Janeiro)
+   - TJBA (Bahia)
+   - TJMG (Minas Gerais)
+   - TJRS (Rio Grande do Sul)
+   - TJPR (Paraná)
+   - TJSC (Santa Catarina)
+   - TJCE (Ceará)
+   - TJPE (Pernambuco)
+   - E todos os outros TJs
+
+✅ Tribunais Regionais Federais:
+   - TRF1 (DF, GO, TO, MT, BA, PI, MA, PA, AP, RR, RO, AC, AM)
+   - TRF2 (RJ, ES)
+   - TRF3 (SP, MS)
+   - TRF4 (RS, SC, PR)
+   - TRF5 (CE, AL, SE, RN, PB, PE)
+
+✅ Tribunais Superiores:
+   - STJ (Superior Tribunal de Justiça)
+   - STF (Supremo Tribunal Federal)
+
+═══════════════════════════════════════════════════════════════
+
+💾 CONFIGURAÇÃO PERMANENTE (Opcional)
+
+Para não digitar a API Key toda vez, execute UMA VEZ:
+
+$apiKey = "cDZHYzlZa0JadVREZDJCendQbXY6SkJlTzNjLV9TRENyQk1RdnFKZGRQdw=="
+$apiKey | Out-File -FilePath ".\dados\api_key.txt" -Encoding UTF8
+
+Depois, use nos comandos:
+-ApiKey (Get-Content .\dados\api_key.txt)
+
+Exemplo:
+.\scripts\Test-APIDataJud.ps1 -ApiKey (Get-Content .\dados\api_key.txt)
+
+═══════════════════════════════════════════════════════════════
+
+🔍 EXEMPLOS PRÁTICOS - SEUS PROCESSOS
+
+Processo precatório TJGO (exemplo fornecido):
+.\scripts\Get-ProcessosPrecatorios.ps1 -Tribunal "TJGO" -ApiKey "cDZHYzlZa0JadVREZDJCendQbXY6SkJlTzNjLV9TRENyQk1RdnFKZGRQdw==" -NumeroProcesso "5273405-44.2025.8.09.0051"
+
+Buscar por devedor (Estado de Goiás):
+.\scripts\Get-ProcessosPrecatorios.ps1 -Tribunal "TJGO" -ApiKey "cDZHYzlZa0JadVREZDJCendQbXY6SkJlTzNjLV9TRENyQk1RdnFKZGRQdw==" -CPF "01.409.580/0001-38"
+
+Buscar por credor (Igor Jacomo):
+.\scripts\Get-ProcessosPrecatorios.ps1 -Tribunal "TJGO" -ApiKey "cDZHYzlZa0JadVREZDJCendQbXY6SkJlTzNjLV9TRENyQk1RdnFKZGRQdw==" -CPF "027.691.641-71"
+
+═══════════════════════════════════════════════════════════════
+
+📁 ESTRUTURA DE ARQUIVOS
+
+scripts\
+├── Test-APIDataJud.ps1              → Testa conectividade
+├── Get-ProcessosPrecatorios.ps1     → Busca processos
+└── Export-PrecatoriosToExcel.ps1    → Exporta para Excel
+
+dados\
+├── cache\                           → Cache de consultas
+├── backup\                          → Backups automáticos
+└── logs\                            → Logs de operações
+
+resultados\
+└── processos_*.json                 → Resultados das buscas
+└── processos_*.csv                  → Resultados em CSV
+
+documentacao\
+└── GUIA_RAPIDO.txt                  → Este guia
+
+═══════════════════════════════════════════════════════════════
+
+🆘 SOLUÇÃO DE PROBLEMAS
+
+❌ Erro 401 (Unauthorized):
+   → API Key inválida ou expirada
+   → Verificar se copiou a chave completa
+   → Consultar https://datajud.cnj.jus.br/ para nova chave
+
+❌ Erro 404 (Not Found):
+   → Tribunal incorreto (usar sigla: TJGO, TJSP, etc.)
+   → Processo não existe ou número errado
+
+❌ Erro de conexão:
+   → Verificar internet
+   → Firewall/proxy bloqueando
+   → API temporariamente indisponível
+
+✅ Nenhum resultado encontrado:
+   → Normal! Nem todos os processos estão no DataJud
+   → Processo pode ser sigiloso
+   → Dados podem não ter sido enviados pelo tribunal
+
+═══════════════════════════════════════════════════════════════
+
+📞 SUPORTE E DOCUMENTAÇÃO OFICIAL
+
+🌐 Portal DataJud CNJ:
+   https://datajud.cnj.jus.br/
+
+📖 Documentação da API:
+   https://datajud.cnj.jus.br/api-publica
+
+📊 Painel de Estatísticas:
+   https://paineisanalytics.cnj.jus.br/
+
+⚖️  Portaria CNJ Nº 160/2020:
+   https://atos.cnj.jus.br/atos/detalhar/3451
+
+═══════════════════════════════════════════════════════════════
+
+📝 NOTAS IMPORTANTES
+
+1. A API Key pública pode ser alterada pelo CNJ a qualquer momento
+2. Os dados disponibilizados são METADADOS dos processos públicos
+3. Processos sob segredo de justiça NÃO são retornados
+4. A atualização dos dados depende do envio pelos tribunais
+5. Não há garantia de disponibilidade 24/7 da API
+6. Respeite os limites de requisições (rate limiting)
+
+═══════════════════════════════════════════════════════════════
+
+Criado em: 28/01/2026
+Sistema: TAX_MASTER - Consultoria e Recuperação de Impostos
+Versão: 2.0 (com API Key Pública)
+
+═══════════════════════════════════════════════════════════════

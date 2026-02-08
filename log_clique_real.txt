@@ -1,0 +1,23 @@
+[02:20:33.229] Edge iniciado - Handle: 0A2253F686433618B46ACDF0D67A7E6C
+[02:20:33.231] LOGIN - Iniciando
+[02:20:51.333] LOGIN - Concluído: https://esaj.tjsp.jus.br/cpopg/open.do
+[02:20:51.334] 
+======================================================================
+[02:20:51.334] PROCESSO: 0051675-54.2023.8.26.0500
+[02:20:51.334] ======================================================================
+[02:20:56.197] Código encontrado: DW001V6JJ0000
+[02:20:56.197] URL: https://esaj.tjsp.jus.br/cpopg/show.do?processo.codigo=DW001V6JJ0000&processo.foro=500&processo.numero=0051675-54.2023.8.26.0500&consultaDeRequisitorios=true
+[02:21:00.393] Página atual: https://esaj.tjsp.jus.br/cpopg/show.do?processo.codigo=DW001V6JJ0000&processo.foro=500&processo.numero=0051675-54.2023.8.26.0500&consultaDeRequisitorios=true
+[02:21:00.403] Documentos encontrados: 14
+[02:21:00.403] 
+PRIMEIRO DOCUMENTO:
+[02:21:00.403]   Texto: DEPRE - Comunicação da realização do pagamento
+[02:21:00.403]   URL: https://esaj.tjsp.jus.br/cpopg/show.do?processo.codigo=DW001V6JJ0000&processo.foro=500&processo.numero=0051675-54.2023.8.26.0500&consultaDeRequisitorios=true#liberarAutoPorSenha
+[02:21:00.403]   OnClick: javascript:jQuery.saj.validarAberturaIntimacaoNaoRecebida(event, this, 'DW001V6JJ0000', 52, '#liberarAutoPorSenha')
+[02:21:00.404] Pasta de downloads limpa
+[02:21:00.405] Janelas ANTES: 1
+[02:21:00.433] Elemento localizado
+[02:21:01.449] Scroll realizado
+[02:21:02.296] Clique real executado via ActionChains
+[02:21:07.298] Janelas DEPOIS: 1
+[02:21:07.298] ERRO - Nenhuma aba nova

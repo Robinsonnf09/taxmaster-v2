@@ -8,7 +8,46 @@ from selenium import webdriver
 from selenium.webdriver.edge.service import Service
 from selenium.webdriver.common.by import By
 
-app = FastAPI(title="Robô de Ofícios", version="0.7.0")
+# ========== CRIAR APP PRIMEIRO ==========
+app = FastAPI(title="Tax Master CRM - Sistema Completo", version="2.0.0")
+# ========================================
+
+# ========== IMPORTAR MÓDULOS ==========
+try:
+    from api_cotacao_precatorios import router as cotacao_router
+    app.include_router(cotacao_router)
+    print("✅ Módulo Cotação carregado")
+except Exception as e:
+    print(f"⚠️ Módulo Cotação não carregado: {e}")
+
+try:
+    from calculadora_desagio import router as calculadora_router
+    app.include_router(calculadora_router)
+    print("✅ Módulo Calculadora carregado")
+except Exception as e:
+    print(f"⚠️ Módulo Calculadora não carregado: {e}")
+
+try:
+    from leilao_reverso import router as leilao_router
+    app.include_router(leilao_router)
+    print("✅ Módulo Leilão carregado")
+except Exception as e:
+    print(f"⚠️ Módulo Leilão não carregado: {e}")
+
+try:
+    from kyc_aml_validator import router as kyc_router
+    app.include_router(kyc_router)
+    print("✅ Módulo KYC/AML carregado")
+except Exception as e:
+    print(f"⚠️ Módulo KYC/AML não carregado: {e}")
+
+try:
+    from blockchain_api import router as blockchain_router
+    app.include_router(blockchain_router)
+    print("✅ Módulo Blockchain carregado")
+except Exception as e:
+    print(f"⚠️ Módulo Blockchain não carregado: {e}")
+# =======================================
 
 STORAGE_DIR = "storage"
 os.makedirs(STORAGE_DIR, exist_ok=True)
@@ -25,8 +64,17 @@ class CrawlRequest(BaseModel):
 @app.get("/")
 def read_root():
     return {
-        "message": "Robô de Ofícios rodando com sucesso!",
-        "endpoints": ["/fetch", "/documents", "/crawl"]
+        "message": "Tax Master CRM - Sistema Completo Operacional!",
+        "version": "2.0.0",
+        "modulos": [
+            "Robô de Ofícios",
+            "Cotação Automática",
+            "Calculadora de Deságio",
+            "Leilão Reverso",
+            "KYC/AML Validator",
+            "Blockchain Registry"
+        ],
+        "endpoints": ["/fetch", "/documents", "/crawl", "/docs"]
     }
 
 @app.post("/fetch")
@@ -106,4 +154,3 @@ def crawl_pdfs(request: CrawlRequest):
                 driver.quit()
             except:
                 pass
-

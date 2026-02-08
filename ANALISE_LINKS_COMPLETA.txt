@@ -1,0 +1,183 @@
+ANÁLISE COMPLETA DOS LINKS
+======================================================================
+
+[1] Requisitórios
+    URL: https://esaj.tjsp.jus.br/cpopg/show.do?processo.codigo=DW001V6JJ0000&processo.foro=500&processo.numero=0051675-54.2023.8.26.0500&consultaDeRequisitorios=true#
+    OnClick: None
+    Target: None
+    Class: aside-nav__main-menu__list__item__link
+    ID: 
+    Visível: True
+    Posição: x=0, y=0
+
+[2] Consulta de Requisitórios
+    URL: https://esaj.tjsp.jus.br/cpopg/abrirConsultaDeRequisitorios.do
+    OnClick: None
+    Target: None
+    Class: aside-nav__main-menu__list__item__link
+    ID: 
+    Visível: True
+    Posição: x=0, y=0
+
+[3] Notificação de Requisitórios
+    URL: https://esaj.tjsp.jus.br/cpopg/show.do?processo.codigo=DW001V6JJ0000&processo.foro=500&processo.numero=0051675-54.2023.8.26.0500&consultaDeRequisitorios=true#
+    OnClick: None
+    Target: None
+    Class: aside-nav__main-menu__list__item__link
+    ID: 
+    Visível: True
+    Posição: x=0, y=0
+
+[4] Requisitórios Pendentes de Recebimento
+    URL: https://esaj.tjsp.jus.br/portalDevedor/abrirConsultaNotificacoesRequisitoriosNaoRecebidas.do
+    OnClick: None
+    Target: None
+    Class: aside-nav__main-menu__list__item__link
+    ID: 
+    Visível: True
+    Posição: x=0, y=0
+
+[5] Requisitórios Recebidos
+    URL: https://esaj.tjsp.jus.br/portalDevedor/abrirConsultaNotificacoesRequisitoriosRecebidas.do
+    OnClick: None
+    Target: None
+    Class: aside-nav__main-menu__list__item__link
+    ID: 
+    Visível: True
+    Posição: x=0, y=0
+
+[6] Peticionamento de intermediaria de 1º Grau Requisitórios
+    URL: https://esaj.tjsp.jus.br/securitycasapireq/api/cas/authenticate?serviceurl=https://esaj.tjsp.jus.br/petpgreq
+    OnClick: None
+    Target: None
+    Class: aside-nav__main-menu__list__item__link
+    ID: 
+    Visível: True
+    Posição: x=0, y=0
+
+[7] DEPRE - Comunicação da realização do pagamento
+    URL: https://esaj.tjsp.jus.br/cpopg/show.do?processo.codigo=DW001V6JJ0000&processo.foro=500&processo.numero=0051675-54.2023.8.26.0500&consultaDeRequisitorios=true#liberarAutoPorSenha
+    OnClick: javascript:jQuery.saj.validarAberturaIntimacaoNaoRecebida(event, this, 'DW001V6JJ0000', 52, '#liberarAutoPorSenha')
+    Target: _blank
+    Class: linkMovVincProc
+    ID: linkMovVincProc-2-20023584
+    Visível: True
+    Posição: x=0, y=8
+
+[8] DEPRE - Comunicação da realização do pagamento
+    URL: https://esaj.tjsp.jus.br/cpopg/show.do?processo.codigo=DW001V6JJ0000&processo.foro=500&processo.numero=0051675-54.2023.8.26.0500&consultaDeRequisitorios=true#liberarAutoPorSenha
+    OnClick: javascript:jQuery.saj.validarAberturaIntimacaoNaoRecebida(event, this, 'DW001V6JJ0000', 52, '#liberarAutoPorSenha')
+    Target: _blank
+    Class: linkMovVincProc
+    ID: linkMovVincProc-2-20023584
+    Visível: True
+    Posição: x=0, y=0
+
+[9] DEPRE - Comunicação da realização do pagamento
+    URL: https://esaj.tjsp.jus.br/cpopg/show.do?processo.codigo=DW001V6JJ0000&processo.foro=500&processo.numero=0051675-54.2023.8.26.0500&consultaDeRequisitorios=true#liberarAutoPorSenha
+    OnClick: javascript:jQuery.saj.validarAberturaIntimacaoNaoRecebida(event, this, 'DW001V6JJ0000', 47, '#liberarAutoPorSenha')
+    Target: _blank
+    Class: linkMovVincProc
+    ID: linkMovVincProc-2-19926464
+    Visível: True
+    Posição: x=0, y=0
+
+[10] DEPRE - Certidão de Decurso do Prazo
+    URL: https://esaj.tjsp.jus.br/cpopg/show.do?processo.codigo=DW001V6JJ0000&processo.foro=500&processo.numero=0051675-54.2023.8.26.0500&consultaDeRequisitorios=true#liberarAutoPorSenha
+    OnClick: javascript:jQuery.saj.validarAberturaIntimacaoNaoRecebida(event, this, 'DW001V6JJ0000', 45, '#liberarAutoPorSenha')
+    Target: _blank
+    Class: linkMovVincProc
+    ID: linkMovVincProc-2-19730113
+    Visível: True
+    Posição: x=0, y=0
+
+[11] DEPRE - Comunicação da realização do pagamento
+    URL: https://esaj.tjsp.jus.br/cpopg/show.do?processo.codigo=DW001V6JJ0000&processo.foro=500&processo.numero=0051675-54.2023.8.26.0500&consultaDeRequisitorios=true#liberarAutoPorSenha
+    OnClick: javascript:jQuery.saj.validarAberturaIntimacaoNaoRecebida(event, this, 'DW001V6JJ0000', 41, '#liberarAutoPorSenha')
+    Target: _blank
+    Class: linkMovVincProc
+    ID: linkMovVincProc-2-19382567
+    Visível: True
+    Posição: x=0, y=0
+
+[12] DEPRE  Ofício Resposta
+    URL: https://esaj.tjsp.jus.br/cpopg/show.do?processo.codigo=DW001V6JJ0000&processo.foro=500&processo.numero=0051675-54.2023.8.26.0500&consultaDeRequisitorios=true#liberarAutoPorSenha
+    OnClick: javascript:jQuery.saj.validarAberturaIntimacaoNaoRecebida(event, this, 'DW001V6JJ0000', 33, '#liberarAutoPorSenha')
+    Target: _blank
+    Class: linkMovVincProc
+    ID: linkMovVincProc-2-18891731
+    Visível: True
+    Posição: x=0, y=0
+
+[13] DEPRE Decisão Publicável
+    URL: https://esaj.tjsp.jus.br/cpopg/show.do?processo.codigo=DW001V6JJ0000&processo.foro=500&processo.numero=0051675-54.2023.8.26.0500&consultaDeRequisitorios=true#liberarAutoPorSenha
+    OnClick: javascript:jQuery.saj.validarAberturaIntimacaoNaoRecebida(event, this, 'DW001V6JJ0000', 30, '#liberarAutoPorSenha')
+    Target: _blank
+    Class: linkMovVincProc
+    ID: linkMovVincProc-2-18497073
+    Visível: True
+    Posição: x=0, y=0
+
+[14] DEPRE  Ofício Resposta
+    URL: https://esaj.tjsp.jus.br/cpopg/show.do?processo.codigo=DW001V6JJ0000&processo.foro=500&processo.numero=0051675-54.2023.8.26.0500&consultaDeRequisitorios=true#liberarAutoPorSenha
+    OnClick: javascript:jQuery.saj.validarAberturaIntimacaoNaoRecebida(event, this, 'DW001V6JJ0000', 22, '#liberarAutoPorSenha')
+    Target: _blank
+    Class: linkMovVincProc
+    ID: linkMovVincProc-2-18489878
+    Visível: True
+    Posição: x=0, y=0
+
+[15] DEPRE  Ofício Resposta
+    URL: https://esaj.tjsp.jus.br/cpopg/show.do?processo.codigo=DW001V6JJ0000&processo.foro=500&processo.numero=0051675-54.2023.8.26.0500&consultaDeRequisitorios=true#liberarAutoPorSenha
+    OnClick: javascript:jQuery.saj.validarAberturaIntimacaoNaoRecebida(event, this, 'DW001V6JJ0000', 21, '#liberarAutoPorSenha')
+    Target: _blank
+    Class: linkMovVincProc
+    ID: linkMovVincProc-2-18489873
+    Visível: True
+    Posição: x=0, y=0
+
+[16] DEPRE Decisão Publicável
+    URL: https://esaj.tjsp.jus.br/cpopg/show.do?processo.codigo=DW001V6JJ0000&processo.foro=500&processo.numero=0051675-54.2023.8.26.0500&consultaDeRequisitorios=true#liberarAutoPorSenha
+    OnClick: javascript:jQuery.saj.validarAberturaIntimacaoNaoRecebida(event, this, 'DW001V6JJ0000', 20, '#liberarAutoPorSenha')
+    Target: _blank
+    Class: linkMovVincProc
+    ID: linkMovVincProc-2-17733903
+    Visível: True
+    Posição: x=0, y=0
+
+[17] DEPRE - Informação de Cessão de Crédito
+    URL: https://esaj.tjsp.jus.br/cpopg/show.do?processo.codigo=DW001V6JJ0000&processo.foro=500&processo.numero=0051675-54.2023.8.26.0500&consultaDeRequisitorios=true#liberarAutoPorSenha
+    OnClick: javascript:jQuery.saj.validarAberturaIntimacaoNaoRecebida(event, this, 'DW001V6JJ0000', 15, '#liberarAutoPorSenha')
+    Target: _blank
+    Class: linkMovVincProc
+    ID: linkMovVincProc-2-16564302
+    Visível: True
+    Posição: x=0, y=0
+
+[18] DEPRE  Decisão Proferida
+    URL: https://esaj.tjsp.jus.br/cpopg/show.do?processo.codigo=DW001V6JJ0000&processo.foro=500&processo.numero=0051675-54.2023.8.26.0500&consultaDeRequisitorios=true#liberarAutoPorSenha
+    OnClick: javascript:jQuery.saj.validarAberturaIntimacaoNaoRecebida(event, this, 'DW001V6JJ0000', 12, '#liberarAutoPorSenha')
+    Target: _blank
+    Class: linkMovVincProc
+    ID: linkMovVincProc-2-13438442
+    Visível: True
+    Posição: x=0, y=0
+
+[19] DEPRE - Ofício de Processamento Expedido
+    URL: https://esaj.tjsp.jus.br/cpopg/show.do?processo.codigo=DW001V6JJ0000&processo.foro=500&processo.numero=0051675-54.2023.8.26.0500&consultaDeRequisitorios=true#liberarAutoPorSenha
+    OnClick: javascript:jQuery.saj.validarAberturaIntimacaoNaoRecebida(event, this, 'DW001V6JJ0000', 7, '#liberarAutoPorSenha')
+    Target: _blank
+    Class: linkMovVincProc
+    ID: linkMovVincProc-2-11840901
+    Visível: True
+    Posição: x=0, y=0
+
+[20] DEPRE - Decisão Proferida
+    URL: https://esaj.tjsp.jus.br/cpopg/show.do?processo.codigo=DW001V6JJ0000&processo.foro=500&processo.numero=0051675-54.2023.8.26.0500&consultaDeRequisitorios=true#liberarAutoPorSenha
+    OnClick: javascript:jQuery.saj.validarAberturaIntimacaoNaoRecebida(event, this, 'DW001V6JJ0000', 6, '#liberarAutoPorSenha')
+    Target: _blank
+    Class: linkMovVincProc
+    ID: linkMovVincProc-2-11776830
+    Visível: True
+    Posição: x=0, y=0
+
