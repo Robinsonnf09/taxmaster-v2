@@ -1,9 +1,0 @@
-﻿node_modules
-npm-debug.log
-.git
-.env
-*.md
-.DS_Store
-!pages
-!pages/dashboard.html
-!pages/processos.html
