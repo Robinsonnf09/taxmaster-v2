@@ -24,8 +24,9 @@ Base = declarative_base()
 def init_db():
     """Inicializa o banco de dados"""
     from models_atualizado import Base as ModelsBase
-    ModelsBase.metadata.create_all(bind=engine)
+    ModelsBase.metadata.create_all(bind=engine, checkfirst=True)
     print("[OK] Banco SQLite criado com sucesso: taxmaster.db")
 
 # Criar banco automaticamente ao importar
 init_db()
+
