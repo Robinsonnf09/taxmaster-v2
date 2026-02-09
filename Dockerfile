@@ -7,9 +7,10 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . .
 
-# Debug: verificar se templates foi copiado
-RUN echo "=== ARQUIVOS EM /app ===" && ls -la /app
-RUN echo "=== ARQUIVOS EM /app/templates ===" && ls -la /app/templates
+# Timestamp: 2026-02-08 22:23:52
+RUN echo "Build timestamp: 2026-02-08 22:23:52"
+RUN echo "=== CONTEUDO DE /app ===" && ls -la /app | head -20
+RUN echo "=== CONTEUDO DE /app/templates ===" && ls -la /app/templates | head -20
 
 EXPOSE 8080
 
