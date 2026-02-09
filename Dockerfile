@@ -1,4 +1,4 @@
-﻿FROM python:3.12-slim
+﻿FROM --platform=linux/amd64 python:3.12-slim
 
 WORKDIR /app
 
@@ -7,8 +7,8 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . .
 
-RUN chmod +x entrypoint.sh
+RUN chmod +x /app/entrypoint.sh
 
-EXPOSE 8080
+EXPOSE 8000
 
-CMD ["./entrypoint.sh"]
+ENTRYPOINT ["/app/entrypoint.sh"]
