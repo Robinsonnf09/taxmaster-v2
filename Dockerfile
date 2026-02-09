@@ -6,6 +6,8 @@ COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . .
-COPY templates/ /app/templates/
 
-CMD ["sh", "-c", "gunicorn --bind 0.0.0.0:8080 --workers 1 app:app"]
+# Debug: listar estrutura copiada
+RUN ls -la /app && ls -la /app/templates || echo "Templates não encontrado"
+
+CMD ["sh", "-c", "gunicorn --bind 0.0.0.0:\ --workers 1 app:app"]
